@@ -1,9 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Rover {
     public int X;
@@ -14,22 +15,43 @@ public class Rover {
 
 public class GridManager : MonoBehaviour
 {
-    public GameObject gridCtrl;
+    public GameObject GridCtrl;
     public int GridWidth;
     public int GridHeight;
     [Range(0,5)]
-    public int distanceX;
+    public int DistanceX;
     [Range(0,5)]
-    public int distanceY;
-    public Transform spawnPoint;
-    public GameObject myPrefab;
+    public int DistanceY;
+    public Transform SpawnPoint;
+    public GameObject MyPrefab;
     public GameObject RoverObject;
-    public List<GameObject> list = new List<GameObject>();
-
+    public List<GameObject> GridList = new List<GameObject>();
+    public GameObject ObjTurnLeft;
+    public GameObject ObjTurnRight;
+    public Rover Rover;
 
     void Start()
     {
+        Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
+        Button btnTurnRight = ObjTurnRight.GetComponent<Button>();
+
         CreateGrid();
+
+        btnTurnLeft.onClick.AddListener(delegate { ActionButtonClicked("TurnLeft"); });
+        btnTurnRight.onClick.AddListener(delegate { ActionButtonClicked("TurnRight"); });
+    }
+
+    public void ActionButtonClicked(string action)
+    {
+        Debug.Log(action);
+        if (action == "TurnLeft")
+        {
+            Rover.GameObject.transform.Rotate(0, 0, 90, Space.World);
+        }
+        else if (action == "TurnRight")
+        {
+            Rover.GameObject.transform.Rotate(0, 0, -90, Space.World);
+        }
     }
 
     public List<int> InitGrid() {
@@ -38,7 +60,7 @@ public class GridManager : MonoBehaviour
         return grid;
     }
 
-    public void GenMap(float offsetLeft, float offsetBottom, int distanceX, int distanceY, GameObject gameObject)
+    public void GenMap(float offsetX, float offsetY, int DistanceX, int DistanceY, GameObject gameObject)
     {
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
@@ -74,7 +96,9 @@ public class GridManager : MonoBehaviour
         Debug.Log(rover.Y);
         Debug.Log(rover.GameObject);
         rover.GameObject.transform.parent = gameObject.transform;
-        //rover.GameObject.transform.position = new Vector3(offsetLeft, offsetBottom, 2f);
+        rover.GameObject.transform.position = new Vector3(offsetX + rover.X, offsetY + rover.Y, 199f);
+
+        Rover = rover;
     }
 
     public void CreateGrid()
@@ -84,43 +108,44 @@ public class GridManager : MonoBehaviour
         newEmptyGameObject.transform.position = Vector3.zero;
 
         // align to middle
-        float offsetLeft = (-GridWidth / 2f) * distanceX + distanceX / 2f;
-        float offsetBottom = -((-GridHeight / 2f) * distanceY + distanceY / 2f);
+        float offsetX = -(GridWidth - 1) * DistanceX / 2f;
+        float offsetY = -(GridHeight - 1) * DistanceY / 2f ;
+
         // align to top left corner
         /*
         Camera cam = Camera.main;
         float height = 2f * cam.orthographicSize;
         float width = height * cam.aspect;
-        float offsetLeft = (-width / 2f) * distanceX + distanceX / 2f;
-        float offsetBottom = (-height / 2f) * distanceY + distanceY / 2f + (height - (GridHeight * distanceY));
+        float offsetX = (-width / 2f) * DistanceX + DistanceX / 2f;
+        float offsetY = (-height / 2f) * DistanceY + DistanceY / 2f + (height - (GridHeight * DistanceY));
         */
 
         // set it as first spawn position (z=1 because you had it in your script)
-        Vector3 nextPosition = new Vector3(offsetLeft, offsetBottom, 1f);
+        Vector3 nextPosition = new Vector3(offsetX, offsetY, 200f);
 
         for (int y = 0; y < GridHeight; y++)
         {
             for (int x = 0; x < GridWidth; x++)
             {
-                GameObject clone = Instantiate(myPrefab, nextPosition, Quaternion.identity) as GameObject;
+                GameObject clone = Instantiate(MyPrefab, nextPosition, Quaternion.identity) as GameObject;
                 clone.transform.parent = newEmptyGameObject.transform;
                 clone.transform.GetChild(0).GetComponent<TextMeshPro>().text = x.ToString() + ',' + y.ToString();
                 //clone.transform.localScale += new Vector3(0f, 0f, 0f);
                 // add to list
-                list.Add(clone);
+                GridList.Add(clone);
 
                 // add x distance
-                nextPosition.x += distanceX;
+                nextPosition.x += DistanceX;
             }
             // reset x position and add y distance
-            nextPosition.x = offsetLeft;
-            nextPosition.y -= distanceY;
+            nextPosition.x = offsetX;
+            nextPosition.y += DistanceY;
         }
-        // move the whole grid to the spawnPoint, if there is one
-        if (spawnPoint != null)
-            newEmptyGameObject.transform.position = spawnPoint.position;
+        // move the whole grid to the SpawnPoint, if there is one
+        if (SpawnPoint != null)
+            newEmptyGameObject.transform.position = SpawnPoint.position;
 
 
-        GenMap(offsetLeft, offsetBottom, distanceX, distanceY, newEmptyGameObject);
+        GenMap(offsetX, offsetY, DistanceX, DistanceY, newEmptyGameObject);
     }
 }
