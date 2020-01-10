@@ -13,22 +13,38 @@ public class Rover {
 
 }
 
+public class Rock
+{
+    public int X;
+    public int Y;
+    public GameObject GameObject;
+
+}
+
 public class GridManager : MonoBehaviour
 {
     public GameObject GridCtrl;
-    public int GridWidth;
-    public int GridHeight;
-    [Range(0,5)]
-    public int DistanceX;
-    [Range(0,5)]
-    public int DistanceY;
-    public Transform SpawnPoint;
     public GameObject MyPrefab;
-    public GameObject RoverObject;
-    public List<GameObject> GridList = new List<GameObject>();
+    public GameObject RoverPrefab;
+    public GameObject RockPrefab;
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
+
+    public int GridWidth;
+    public int GridHeight;
+    public float ObjPosZ = 199f;
+    public float GridPosZ = 200f;
+
+    public float Scale = 0.5f;
+    public float DistanceX = 1f;
+    public float DistanceY = 1f;
+    public int RockQty = 5;
+
+    public Transform SpawnPoint;
+
+    public List<GameObject> GridList = new List<GameObject>();
     public Rover Rover;
+    public List<Rock> RockList = new List<Rock>();
 
     void Start()
     {
@@ -60,7 +76,7 @@ public class GridManager : MonoBehaviour
         return grid;
     }
 
-    public void GenMap(float offsetX, float offsetY, int DistanceX, int DistanceY, GameObject gameObject)
+    public void GenMap(float offsetX, float offsetY, float DistanceX, float DistanceY, GameObject gameObject)
     {
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
@@ -86,19 +102,37 @@ public class GridManager : MonoBehaviour
         Debug.Log(string.Join(", ", allCord));
 
         System.Random random = new System.Random();
-        int randomX = random.Next(0, allCord.Count);
+        int randomIndex = random.Next(0, allCord.Count);
         Rover rover = new Rover();
-        rover.GameObject = RoverObject;
-        rover.X = allCord[randomX].X;
-        rover.Y = allCord[randomX].Y;
-
+        rover.GameObject = RoverPrefab;
+        rover.X = allCord[randomIndex].X;
+        rover.Y = allCord[randomIndex].Y;
         Debug.Log(rover.X);
         Debug.Log(rover.Y);
         Debug.Log(rover.GameObject);
         rover.GameObject.transform.parent = gameObject.transform;
-        rover.GameObject.transform.position = new Vector3(offsetX + rover.X, offsetY + rover.Y, 199f);
+        rover.GameObject.transform.position = new Vector3(offsetX + rover.X, offsetY + rover.Y, ObjPosZ);
 
         Rover = rover;
+        Debug.Log("allCord.count=>" + allCord.Count);
+        allCord.RemoveAt(randomIndex);
+        Debug.Log("allCord.count=>" + allCord.Count);
+
+        List<int> rockList = Enumerable.Range(0, RockQty).ToList();
+        rockList.ForEach(i =>
+        {
+            Debug.Log(i);
+            randomIndex = random.Next(0, allCord.Count);
+            Rock rock = new Rock();
+            rock.X = allCord[randomIndex].X;
+            rock.Y = allCord[randomIndex].Y;
+            rock.GameObject = Instantiate(RockPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            rock.GameObject.transform.parent = gameObject.transform;
+            rock.GameObject.transform.position = new Vector3(offsetX + rock.X, offsetY + rock.Y, ObjPosZ);
+            rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
+            RockList.Add(rock);
+            allCord.RemoveAt(randomIndex);
+        });
     }
 
     public void CreateGrid()
@@ -109,7 +143,7 @@ public class GridManager : MonoBehaviour
 
         // align to middle
         float offsetX = -(GridWidth - 1) * DistanceX / 2f;
-        float offsetY = -(GridHeight - 1) * DistanceY / 2f ;
+        float offsetY = -(GridHeight - 1) * DistanceY / 2f + 4f;
 
         // align to top left corner
         /*
@@ -121,7 +155,7 @@ public class GridManager : MonoBehaviour
         */
 
         // set it as first spawn position (z=1 because you had it in your script)
-        Vector3 nextPosition = new Vector3(offsetX, offsetY, 200f);
+        Vector3 nextPosition = new Vector3(offsetX, offsetY, GridPosZ);
 
         for (int y = 0; y < GridHeight; y++)
         {
@@ -147,5 +181,10 @@ public class GridManager : MonoBehaviour
 
 
         GenMap(offsetX, offsetY, DistanceX, DistanceY, newEmptyGameObject);
+
+
+        Vector3 scale = transform.localScale;
+        scale.Set(Scale, Scale, 1);
+        newEmptyGameObject.transform.localScale = scale;
     }
 }
