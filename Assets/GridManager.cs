@@ -20,6 +20,13 @@ public class Rock
     public GameObject GameObject;
 
 }
+public class Star
+{
+    public int X;
+    public int Y;
+    public GameObject GameObject;
+
+}
 
 public class GridManager : MonoBehaviour
 {
@@ -27,6 +34,7 @@ public class GridManager : MonoBehaviour
     public GameObject MyPrefab;
     public GameObject RoverPrefab;
     public GameObject RockPrefab;
+    public GameObject StarPrefab;
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
 
@@ -39,12 +47,14 @@ public class GridManager : MonoBehaviour
     public float DistanceX = 1f;
     public float DistanceY = 1f;
     public int RockQty = 5;
+    public int StarQty = 3;
 
     public Transform SpawnPoint;
 
     public List<GameObject> GridList = new List<GameObject>();
     public Rover Rover;
     public List<Rock> RockList = new List<Rock>();
+    public List<Star> StarList = new List<Star>();
 
     void Start()
     {
@@ -133,6 +143,21 @@ public class GridManager : MonoBehaviour
             RockList.Add(rock);
             allCord.RemoveAt(randomIndex);
         });
+
+        List<int> starList = Enumerable.Range(0, StarQty).ToList();
+        starList.ForEach(i =>
+        {
+            Debug.Log(i);
+            randomIndex = random.Next(0, allCord.Count);
+            Star star = new Star();
+            star.X = allCord[randomIndex].X;
+            star.Y = allCord[randomIndex].Y;
+            star.GameObject = Instantiate(StarPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            star.GameObject.transform.parent = gameObject.transform;
+            star.GameObject.transform.position = new Vector3(offsetX + star.X, offsetY + star.Y, ObjPosZ);
+            StarList.Add(star);
+            allCord.RemoveAt(randomIndex);
+        });
     }
 
     public void CreateGrid()
@@ -142,8 +167,8 @@ public class GridManager : MonoBehaviour
         newEmptyGameObject.transform.position = Vector3.zero;
 
         // align to middle
-        float offsetX = -(GridWidth - 1) * DistanceX / 2f;
-        float offsetY = -(GridHeight - 1) * DistanceY / 2f + 4f;
+        float offsetX = -(GridWidth - 1) * DistanceX / 2f - 1f;
+        float offsetY = -(GridHeight - 1) * DistanceY / 2f + 2f;
 
         // align to top left corner
         /*
