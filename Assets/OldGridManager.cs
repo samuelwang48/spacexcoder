@@ -1,55 +1,37 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
-public class Rover
+
+public class OldGridManager : MonoBehaviour
 {
-    public int X;
-    public int Y;
-    public int dir = 0;
-    public GameObject GameObject;
-
-}
-
-public class Rock
-{
-    public int X;
-    public int Y;
-    public GameObject GameObject;
-
-}
-public class Star
-{
-    public int X;
-    public int Y;
-    public GameObject GameObject;
-
-}
-
-public class GridManager : MonoBehaviour
-{
-    public GameObject prefab;
+    public GameObject GridCtrl;
+    public GameObject MyPrefab;
     public GameObject RoverPrefab;
     public GameObject RockPrefab;
     public GameObject StarPrefab;
-
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
     public GameObject ObjForward;
     public GameObject ObjUndo;
     public GameObject ObjSend;
 
-
     public int GridWidth;
     public int GridHeight;
+    public float ObjPosZ = 199f;
+    public float GridPosZ = 200f;
+
+    public float Scale = 0.5f;
     public float DistanceX = 1f;
     public float DistanceY = 1f;
-    public float ObjPosZ = -1f;
     public int RockQty = 5;
     public int StarQty = 3;
+
+    public Transform SpawnPoint;
 
     public List<GameObject> GridList = new List<GameObject>();
     public Rover Rover;
@@ -57,21 +39,17 @@ public class GridManager : MonoBehaviour
     public List<Star> StarList = new List<Star>();
     public List<string> Instruction = new List<string>();
 
+    private string[] DIR = { "Up", "Right", "Down", "Left" };
 
     void Start()
     {
-        //Debug.Log("Start");
-
-        GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
-        glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-        glg.constraintCount = GridHeight;
-        Populate();
-
         Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
         Button btnTurnRight = ObjTurnRight.GetComponent<Button>();
         Button btnFoward = ObjForward.GetComponent<Button>();
         Button btnUndo = ObjUndo.GetComponent<Button>();
         Button btnSend = ObjSend.GetComponent<Button>();
+
+        CreateGrid();
 
         btnTurnLeft.onClick.AddListener(delegate { ActionButtonClicked("TurnLeft"); });
         btnTurnRight.onClick.AddListener(delegate { ActionButtonClicked("TurnRight"); });
@@ -82,22 +60,13 @@ public class GridManager : MonoBehaviour
 
     public void ActionButtonClicked(string action)
     {
-        //Debug.Log(action);
+        Debug.Log(action);
         Instruction.Add(action);
-
-        if (action == "TurnLeft")
-        {
-            Rover.GameObject.transform.Rotate(0, 0, 90, Space.World);
-        }
-        else if (action == "TurnRight")
-        {
-            Rover.GameObject.transform.Rotate(0, 0, -90, Space.World);
-        }
     }
 
     public void SendInstruction(string action)
     {
-        //Debug.Log("[" + string.Join(", ", Instruction) + "]");
+        Debug.Log("[" + string.Join(", ", Instruction) + "]");
         /*
         if (action == "TurnLeft")
         {
@@ -122,23 +91,22 @@ public class GridManager : MonoBehaviour
         */
     }
 
-    void Update()
-    {
-
+    public List<int> InitGrid() {
+        List<int> grid = new List<int>();
+        Debug.Log(grid);
+        return grid;
     }
 
-    //IEnumerator GenMap()
-    void GenMap()
+    public void GenMap(float offsetX, float offsetY, float DistanceX, float DistanceY, GameObject gameObject)
     {
-        //yield return new WaitForEndOfFrame();
-
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
         List<Point> allCord = new List<Point>();
         List<List<int>> grid = new List<List<int>>();
 
-        //Debug.Log("[" + string.Join(", ", allX) + "]");
-        //Debug.Log("[" + string.Join(", ", allY) + "]");
+
+        Debug.Log("[" + string.Join(", ", allX) + "]");
+        Debug.Log("[" + string.Join(", ", allY) + "]");
 
         allY.ForEach(y =>
         {
@@ -148,60 +116,41 @@ public class GridManager : MonoBehaviour
                 allCord.Add(new Point(x, y));
                 row.Add(0);
             });
-            //Debug.Log(string.Format("row: {0} [{1}]", y, string.Join(", ", row)));
+            Debug.Log(string.Format("row: {0} [{1}]", y, string.Join(", ", row)));
             grid.Add(row);
         });
 
-        //Debug.Log(string.Join(", ", allCord));
+        Debug.Log(string.Join(", ", allCord));
 
         System.Random random = new System.Random();
         int randomIndex = random.Next(0, allCord.Count);
         Rover rover = new Rover();
+        rover.GameObject = RoverPrefab;
         rover.X = allCord[randomIndex].X;
         rover.Y = allCord[randomIndex].Y;
-        //Debug.Log(rover.X);
-        //Debug.Log(rover.Y);
-        //Debug.Log(((rover.Y * GridWidth) + rover.X + 1));
-        //Debug.Log(GridList.Count);
-        GameObject cell = GridList[(rover.Y * GridWidth) + rover.X];
-        //Vector3 pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
-        //Vector3 localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
-        
-        Vector3 roverScale = transform.localScale;
-        roverScale.Set(0.4f, 0.4f, 1f);
-
-        rover.GameObject = Instantiate(RoverPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        rover.GameObject.transform.SetParent(cell.gameObject.transform);
-        rover.GameObject.transform.localPosition = Vector3.zero;
-        rover.GameObject.transform.localScale = roverScale;
+        Debug.Log(rover.X);
+        Debug.Log(rover.Y);
+        Debug.Log(rover.GameObject);
+        rover.GameObject.transform.parent = gameObject.transform;
+        rover.GameObject.transform.position = new Vector3(offsetX + rover.X, offsetY + rover.Y, ObjPosZ);
 
         Rover = rover;
-        //Debug.Log("allCord.count=>" + allCord.Count);
+        Debug.Log("allCord.count=>" + allCord.Count);
         allCord.RemoveAt(randomIndex);
-        //Debug.Log("allCord.count=>" + allCord.Count);
-        
+        Debug.Log("allCord.count=>" + allCord.Count);
+
         List<int> rockList = Enumerable.Range(0, RockQty).ToList();
         rockList.ForEach(i =>
         {
-            //Debug.Log(i);
+            Debug.Log(i);
             randomIndex = random.Next(0, allCord.Count);
             Rock rock = new Rock();
             rock.X = allCord[randomIndex].X;
             rock.Y = allCord[randomIndex].Y;
-
-            cell = GridList[(rock.Y * GridWidth) + rock.X];
-            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
-            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
-
-            Vector3 scale = transform.localScale;
-            scale.Set(150f, 150f, 150f);
-
             rock.GameObject = Instantiate(RockPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            rock.GameObject.transform.SetParent(cell.gameObject.transform);
-            rock.GameObject.transform.localPosition = Vector3.zero;
-            rock.GameObject.transform.localScale = scale;
+            rock.GameObject.transform.parent = gameObject.transform;
+            rock.GameObject.transform.position = new Vector3(offsetX + rock.X, offsetY + rock.Y, ObjPosZ);
             rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
-
             RockList.Add(rock);
             allCord.RemoveAt(randomIndex);
         });
@@ -209,48 +158,69 @@ public class GridManager : MonoBehaviour
         List<int> starList = Enumerable.Range(0, StarQty).ToList();
         starList.ForEach(i =>
         {
-            //Debug.Log(i);
+            Debug.Log(i);
             randomIndex = random.Next(0, allCord.Count);
             Star star = new Star();
             star.X = allCord[randomIndex].X;
             star.Y = allCord[randomIndex].Y;
-
-            cell = GridList[(star.Y * GridWidth) + star.X];
-            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
-            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
-
-            Vector3 scale = transform.localScale;
-            scale.Set(0.3f, 0.3f, 1);
-
             star.GameObject = Instantiate(StarPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            star.GameObject.transform.SetParent(cell.gameObject.transform);
-            star.GameObject.transform.localPosition = Vector3.zero;
-            star.GameObject.transform.localScale = scale;
-
+            star.GameObject.transform.parent = gameObject.transform;
+            star.GameObject.transform.position = new Vector3(offsetX + star.X, offsetY + star.Y, ObjPosZ);
             StarList.Add(star);
             allCord.RemoveAt(randomIndex);
         });
     }
 
-
-    void Populate()
+    public void CreateGrid()
     {
+        GameObject newEmptyGameObject = new GameObject("Grid");
+        // following line is probably not neccessary
+        newEmptyGameObject.transform.position = Vector3.zero;
+
         // align to middle
-        //float offsetX = -(GridWidth - 1) * DistanceX / 2f;
-        //float offsetY = -(GridHeight - 1) * DistanceY / 2f;
-        int numberToCreate = GridWidth * GridHeight;
+        float offsetX = -(GridWidth - 1) * DistanceX / 2f - 1f;
+        float offsetY = -(GridHeight - 1) * DistanceY / 2f + 2f;
 
-        GameObject newObj;
+        // align to top left corner
+        /*
+        Camera cam = Camera.main;
+        float height = 2f * cam.orthographicSize;
+        float width = height * cam.aspect;
+        float offsetX = (-width / 2f) * DistanceX + DistanceX / 2f;
+        float offsetY = (-height / 2f) * DistanceY + DistanceY / 2f + (height - (GridHeight * DistanceY));
+        */
 
-        for (int i = 0; i < numberToCreate; i++)
+        // set it as first spawn position (z=1 because you had it in your script)
+        Vector3 nextPosition = new Vector3(offsetX, offsetY, GridPosZ);
+
+        for (int y = 0; y < GridHeight; y++)
         {
-            newObj = (GameObject)Instantiate(prefab, transform);
-            GridList.Add(newObj);
+            for (int x = 0; x < GridWidth; x++)
+            {
+                GameObject clone = Instantiate(MyPrefab, nextPosition, Quaternion.identity) as GameObject;
+                clone.transform.parent = newEmptyGameObject.transform;
+                clone.transform.GetChild(0).GetComponent<TextMeshPro>().text = x.ToString() + ',' + y.ToString();
+                //clone.transform.localScale += new Vector3(0f, 0f, 0f);
+                // add to list
+                GridList.Add(clone);
 
-            //newObj.GetComponent<Image>().color = Random.ColorHSV();
+                // add x distance
+                nextPosition.x += DistanceX;
+            }
+            // reset x position and add y distance
+            nextPosition.x = offsetX;
+            nextPosition.y += DistanceY;
         }
-        //GenMap(offsetX, offsetY, DistanceX, DistanceY, GridContainer);
-        //StartCoroutine(GenMap());
-        GenMap();
+        // move the whole grid to the SpawnPoint, if there is one
+        if (SpawnPoint != null)
+            newEmptyGameObject.transform.position = SpawnPoint.position;
+
+
+        GenMap(offsetX, offsetY, DistanceX, DistanceY, newEmptyGameObject);
+
+
+        Vector3 scale = transform.localScale;
+        scale.Set(Scale, Scale, 1);
+        newEmptyGameObject.transform.localScale = scale;
     }
 }
