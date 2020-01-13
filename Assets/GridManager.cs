@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using EpPathFinding.cs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -135,21 +136,19 @@ public class GridManager : MonoBehaviour
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
         List<Point> allCord = new List<Point>();
-        List<List<int>> grid = new List<List<int>>();
+        bool[][] grid = new bool[GridWidth][];
 
         //Debug.Log("[" + string.Join(", ", allX) + "]");
         //Debug.Log("[" + string.Join(", ", allY) + "]");
 
-        allY.ForEach(y =>
+        allX.ForEach(x =>
         {
-            List<int> row = new List<int>();
-            allX.ForEach(x =>
+            grid[x] = new bool[GridHeight];
+            allY.ForEach(y =>
             {
                 allCord.Add(new Point(x, y));
-                row.Add(0);
+                grid[x][y] = true;
             });
-            //Debug.Log(string.Format("row: {0} [{1}]", y, string.Join(", ", row)));
-            grid.Add(row);
         });
 
         //Debug.Log(string.Join(", ", allCord));
@@ -188,6 +187,7 @@ public class GridManager : MonoBehaviour
             Rock rock = new Rock();
             rock.X = allCord[randomIndex].X;
             rock.Y = allCord[randomIndex].Y;
+            grid[rock.X][rock.Y] = false;
 
             cell = GridList[(rock.Y * GridWidth) + rock.X];
             //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
@@ -230,6 +230,30 @@ public class GridManager : MonoBehaviour
             StarList.Add(star);
             allCord.RemoveAt(randomIndex);
         });
+
+        /*
+        for (int i = 0; i < grid.Length; i++)
+        {
+            Debug.Log(string.Format("col: {0} [{1}]", i, string.Join(", ", grid[i])));
+        }
+        */
+
+        Debug.Log("rover: " + rover.X + "," + rover.Y);
+        Debug.Log("star: " + StarList[0].X + "," + StarList[0].Y);
+
+        BaseGrid searchGrid = new StaticGrid(GridWidth, GridHeight, grid);
+        JumpPointParam jpParam = new JumpPointParam(searchGrid, EndNodeUnWalkableTreatment.ALLOW, DiagonalMovement.Never);
+        jpParam.SetHeuristic(HeuristicMode.BESTFIRSTFINDER);
+        GridPos startPos = new GridPos(rover.X, rover.Y);
+
+        StarList.ForEach(endStar =>
+        {
+            GridPos endPos = new GridPos(endStar.X, endStar.Y);
+            jpParam.Reset(startPos, endPos);
+            List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
+            Debug.Log("resultPath: [" + string.Join(", ", resultPathList) + "]");
+        });
+        
     }
 
 
