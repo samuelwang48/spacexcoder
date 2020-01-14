@@ -589,7 +589,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000019073486, y: 0}
+  m_AnchoredPosition: {x: 0.000002861023, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &253252458
@@ -625,6 +625,7 @@ MonoBehaviour:
     type: 3}
   StarPrefab: {fileID: 6214141787357150525, guid: 78095958e5a1f49f5ba22e1be59f75c5,
     type: 3}
+  InstructionView: {fileID: 946028589}
   ObjTurnLeft: {fileID: 944266815}
   ObjTurnRight: {fileID: 564665740}
   ObjForward: {fileID: 162043438}
@@ -701,7 +702,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 296, y: 77.63989}
+  m_AnchoredPosition: {x: 300, y: 77.63989}
   m_SizeDelta: {x: 592.1, y: 155.48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &265137531
@@ -1321,7 +1322,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 673291229}
   m_HandleRect: {fileID: 673291228}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1936,7 +1937,7 @@ GameObject:
   - component: {fileID: 946028591}
   - component: {fileID: 946028593}
   m_Layer: 5
-  m_Name: Content
+  m_Name: Instruction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1958,7 +1959,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0007045799, y: 0.00046021972}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &946028591
@@ -2012,7 +2013,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8356503465158171516, guid: f253edee6137244f5ace0db689c31fb1, type: 3}
-  numberToCreate: 64
+  pfTurnLeft: {fileID: 608587086942888161, guid: 9a0de5724b352479c83464f9b1a245cc,
+    type: 3}
+  pfTurnRight: {fileID: 4576062468531937604, guid: 6556dd355106e432db4de3a72a9b9a3d,
+    type: 3}
+  pfForward: {fileID: 1043347121020890779, guid: 311d55b850cb7478f89260b9d664815b,
+    type: 3}
+  InstructionList: []
+  numberToCreate: 0
 --- !u!1 &981926137
 GameObject:
   m_ObjectHideFlags: 0
@@ -3051,7 +3059,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1224213056}
   m_HandleRect: {fileID: 1224213055}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

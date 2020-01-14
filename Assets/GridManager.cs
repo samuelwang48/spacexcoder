@@ -35,6 +35,7 @@ public class GridManager : MonoBehaviour
     public GameObject RoverPrefab;
     public GameObject RockPrefab;
     public GameObject StarPrefab;
+    public GameObject InstructionView;
 
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
@@ -60,7 +61,8 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        //Debug.Log("Start");
+        InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
+        InstMgr.Ring();
 
         GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
         glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
@@ -73,26 +75,31 @@ public class GridManager : MonoBehaviour
         Button btnUndo = ObjUndo.GetComponent<Button>();
         Button btnSend = ObjSend.GetComponent<Button>();
 
-        btnTurnLeft.onClick.AddListener(delegate { ActionButtonClicked("TurnLeft"); });
-        btnTurnRight.onClick.AddListener(delegate { ActionButtonClicked("TurnRight"); });
-        btnFoward.onClick.AddListener(delegate { ActionButtonClicked("Forward"); });
-        btnUndo.onClick.AddListener(delegate { ActionButtonClicked("Undo"); });
+        btnTurnLeft.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
+        btnTurnRight.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
+        btnFoward.onClick.AddListener(delegate { AppendInstruction("Forward"); });
+        btnUndo.onClick.AddListener(delegate { UndoInstruction("Undo"); });
         btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
     }
 
-    public void ActionButtonClicked(string action)
+    public void AppendInstruction(string action)
     {
         //Debug.Log(action);
         Instruction.Add(action);
 
-        if (action == "TurnLeft")
-        {
-            Rover.GameObject.transform.Rotate(0, 0, 90, Space.World);
-        }
-        else if (action == "TurnRight")
-        {
-            Rover.GameObject.transform.Rotate(0, 0, -90, Space.World);
-        }
+        InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
+        InstMgr.PopulateOne(action);
+    }
+
+    public void UndoInstruction(string action)
+    {
+        //Debug.Log(action);
+
+        Instruction.RemoveAt(Instruction.Count - 1);
+
+        InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
+        InstMgr.Undo();
+
     }
 
     public void SendInstruction(string action)
