@@ -631,7 +631,7 @@ MonoBehaviour:
   ObjUndo: {fileID: 1495564591}
   ObjSend: {fileID: 175031211}
   GridWidth: 20
-  GridHeight: 14
+  GridHeight: 12
   DistanceX: 1
   DistanceY: 1
   ObjPosZ: -150

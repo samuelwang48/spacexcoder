@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using EpPathFinding.cs;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -137,20 +135,18 @@ public class GridManager : MonoBehaviour
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
         List<Point> allCord = new List<Point>();
-        bool[][] grid = new bool[GridWidth][];
-        List<GridPos> walkableGridPosList = new List<GridPos>();
+        int[][] grid = new int[GridHeight][];
 
         //Debug.Log("[" + string.Join(", ", allX) + "]");
         //Debug.Log("[" + string.Join(", ", allY) + "]");
 
-        allX.ForEach(x =>
+        allY.ForEach(y =>
         {
-            grid[x] = new bool[GridHeight];
-            allY.ForEach(y =>
+            grid[y] = new int[GridWidth];
+            allX.ForEach(x =>
             {
                 allCord.Add(new Point(x, y));
-                grid[x][y] = true;
-                walkableGridPosList.Add(new GridPos(x, y));
+                grid[y][x] = 0;
             });
         });
 
@@ -168,7 +164,7 @@ public class GridManager : MonoBehaviour
         GameObject cell = GridList[(rover.Y * GridWidth) + rover.X];
         //Vector3 pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
         //Vector3 localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
-        
+
         Vector3 roverScale = transform.localScale;
         roverScale.Set(0.4f, 0.4f, 1f);
 
@@ -181,7 +177,7 @@ public class GridManager : MonoBehaviour
         //Debug.Log("allCord.count=>" + allCord.Count);
         allCord.RemoveAt(randomIndex);
         //Debug.Log("allCord.count=>" + allCord.Count);
-        
+
         List<int> rockList = Enumerable.Range(0, RockQty).ToList();
         rockList.ForEach(i =>
         {
@@ -190,8 +186,7 @@ public class GridManager : MonoBehaviour
             Rock rock = new Rock();
             rock.X = allCord[randomIndex].X;
             rock.Y = allCord[randomIndex].Y;
-            grid[rock.X][rock.Y] = false;
-            walkableGridPosList.RemoveAt(randomIndex);
+            grid[rock.Y][rock.X] = 1;
 
             cell = GridList[(rock.Y * GridWidth) + rock.X];
             //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
@@ -239,47 +234,33 @@ public class GridManager : MonoBehaviour
         /*
         for (int i = 0; i < grid.Length; i++)
         {
-            Debug.Log(string.Format("col: {0} [{1}]", i, string.Join(", ", grid[i])));
+            Debug.Log(string.Format("row: {0} [{1}]", i, string.Join(", ", grid[i])));
         }
-        */
+        //*/
 
         Debug.Log("rover: " + rover.X + "," + rover.Y);
         Debug.Log("star: " + StarList[0].X + "," + StarList[0].Y);
-        Debug.Log("walkable: " + walkableGridPosList.Count);
 
 
-        //BaseGrid searchGrid = new StaticGrid(GridWidth, GridHeight, grid);
-        //BaseGrid searchGrid = new DynamicGrid(walkableGridPosList);
+        int[] startPos = { rover.X, rover.Y};
 
-        //JumpPointParam jpParam = new JumpPointParam(searchGrid, EndNodeUnWalkableTreatment.DISALLOW, DiagonalMovement.Never);
-        //jpParam.SetHeuristic(HeuristicMode.BESTFIRSTFINDER);
-        //jpParam.CurIterationType = IterationType.RECURSIVE;
-
-        GridPos startPos = new GridPos(rover.X, rover.Y);
-
-        //*
-        StarList.ForEach(endStar =>
+        for (int i = 0; i < StarList.Count; i++)
         {
-            BaseGrid searchGrid = new DynamicGrid(walkableGridPosList);
-
-            JumpPointParam jpParam = new JumpPointParam(searchGrid, EndNodeUnWalkableTreatment.DISALLOW, DiagonalMovement.Never);
-            jpParam.SetHeuristic(HeuristicMode.BESTFIRSTFINDER);
-            jpParam.CurIterationType = IterationType.RECURSIVE;
-
-            GridPos endPos = new GridPos(endStar.X, endStar.Y);
-            jpParam.Reset(startPos, endPos);
-
-            StartCoroutine(FindGamePath(walkableGridPosList, jpParam, startPos, endPos));
-        });
-        //*/
+            Star endStar = StarList[i];
+            int[] endPos = { endStar.X, endStar.Y };
+            //StartCoroutine(AStarFind(grid, startPos, endPos, i));
+            AStarFind(grid, startPos, endPos, i);
+        }
+        Debug.Log(Time.realtimeSinceStartup);
     }
 
-    IEnumerator FindGamePath(List<GridPos> walkableGridPosList, JumpPointParam jpParam, GridPos startPos, GridPos endPos)
+    //IEnumerator AStarFind(int[][] map, int[] start, int[] end, int i)
+    void AStarFind(int[][] map, int[] start, int[] end, int i)
     {
-        yield return new WaitForEndOfFrame();
-        //yield return new WaitForSeconds(1.0f);
-        List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
-        Debug.Log("resultPath: [" + string.Join(", ", resultPathList) + "]");
+        //yield return new WaitForEndOfFrame();
+        //yield return new WaitForSeconds(i * .2f);
+        List<Vector2> path = new Astar(map, start, end, "Diagonal").result;
+        Debug.Log("resultPath: [" + string.Join(", ", path) + "]");
     }
 
     void Populate()
