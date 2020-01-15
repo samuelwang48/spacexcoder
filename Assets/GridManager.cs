@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System;
 
@@ -59,6 +59,9 @@ public class GridManager : MonoBehaviour
     public List<Rock> RockList = new List<Rock>();
     public List<Star> StarList = new List<Star>();
     public List<string> Instruction = new List<string>();
+
+    public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
+    public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
 
 
     void Start()
@@ -170,11 +173,22 @@ public class GridManager : MonoBehaviour
                     {
                         dx = dx - 1;
                     }
-                    GameObject cell = GridList[(dy * GridWidth) + dx];
-                    Rover.GameObject.transform.SetParent(cell.gameObject.transform);
-                    Rover.GameObject.transform.localPosition = Vector3.zero;
-                    Rover.X = dx;
-                    Rover.Y = dy;
+
+                    Rock foundRock = RockList.Find(rock => rock.X == dx && rock.Y == dy);
+                    if (foundRock != null)
+                    {
+                        Debug.Log("Found Rock Conflict: " + foundRock);
+                        foundRock.GameObject.GetComponent<Image>().color = ColorRockError;
+                    }
+                    else
+                    {
+                        GameObject cell = GridList[(dy * GridWidth) + dx];
+                        Rover.GameObject.transform.SetParent(cell.gameObject.transform);
+                        Rover.GameObject.transform.localPosition = Vector3.zero;
+                        Rover.X = dx;
+                        Rover.Y = dy;
+                    }
+
                 }, i));
             }
         }
@@ -293,6 +307,7 @@ public class GridManager : MonoBehaviour
             rock.GameObject.transform.SetParent(cell.gameObject.transform);
             rock.GameObject.transform.localPosition = Vector3.zero;
             rock.GameObject.transform.localScale = scale;
+            rock.GameObject.GetComponent<Image>().color = ColorRockNormal;
             //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
 
             RockList.Add(rock);
@@ -369,6 +384,10 @@ public class GridManager : MonoBehaviour
         {
             newObj = (GameObject)Instantiate(prefab, transform);
             GridList.Add(newObj);
+
+            //UnityEngine.Color myColor = new UnityEngine.Color();
+            //UnityEngine.ColorUtility.TryParseHtmlString("#FF0100", out myColor);
+            //newObj.GetComponent<Image>().color = myColor;
 
             //newObj.GetComponent<Image>().color = Random.ColorHSV();
         }

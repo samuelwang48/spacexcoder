@@ -427,7 +427,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.004413948, y: -0.000039815903}
+  m_AnchoredPosition: {x: 0.0000064901706, y: -0.000039815903}
   m_SizeDelta: {x: -388, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &253252458
@@ -474,7 +474,7 @@ MonoBehaviour:
   DistanceX: 1
   DistanceY: 1
   ObjPosZ: -150
-  RockQty: 30
+  RockQty: 50
   StarQty: 4
   DIR:
   - Up
@@ -483,6 +483,8 @@ MonoBehaviour:
   - Left
   GridList: []
   Instruction: []
+  ColorRockNormal: {r: 0.84313726, g: 0.81960785, b: 1, a: 1}
+  ColorRockError: {r: 1, g: 0.003921569, b: 0, a: 1}
 --- !u!114 &253252460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,7 +547,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 256.59998, y: 123.900024}
+  m_AnchoredPosition: {x: 256.6001, y: 123.90039}
   m_SizeDelta: {x: 505.5, y: 247.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &265137531
@@ -1378,8 +1380,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 673291229}
   m_HandleRect: {fileID: 673291228}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.9999927
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1457,7 +1459,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -141.40002, y: 123.900024}
+  m_AnchoredPosition: {x: -141.3999, y: 123.90039}
   m_SizeDelta: {x: 282.9, y: 247.8}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!1 &637134823
