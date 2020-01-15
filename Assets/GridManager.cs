@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class Rover
 {
@@ -51,6 +52,7 @@ public class GridManager : MonoBehaviour
     public float ObjPosZ = -1f;
     public int RockQty = 5;
     public int StarQty = 3;
+    public string[] DIR = { "Up", "Right", "Down", "Left" };
 
     public List<GameObject> GridList = new List<GameObject>();
     public Rover Rover;
@@ -102,9 +104,81 @@ public class GridManager : MonoBehaviour
 
     }
 
-    public void SendInstruction(string action)
+
+    IEnumerator ExecuteInstruction(Action action, int i)
     {
-        //Debug.Log("[" + string.Join(", ", Instruction) + "]");
+        yield return new WaitForSeconds(i * .2f);
+        action();
+
+        InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
+        InstMgr.ClearFirst();
+
+        if (i == Instruction.Count - 1)
+        {
+            Instruction.Clear();
+        }
+    }
+
+
+        public void SendInstruction(string action)
+    {
+        //Debug.Log(action);
+
+        int dl = DIR.Length;
+        for (int i = 0; i < Instruction.Count; i++)
+        {
+            string inst = Instruction[i];
+            Debug.Log(inst);
+            if (inst == "TurnLeft")
+            {
+                StartCoroutine(ExecuteInstruction(() =>
+                {
+                    Rover.GameObject.transform.Rotate(0, 0, 90, Space.World);
+                    Rover.dir = (Rover.dir + dl - 1) % dl;
+                }, i));
+                
+            }
+            else if (inst == "TurnRight")
+            {
+                StartCoroutine(ExecuteInstruction(() =>
+                {
+                    Rover.GameObject.transform.Rotate(0, 0, -90, Space.World);
+                    Rover.dir = (Rover.dir + 1) % dl;
+                }, i));
+            }
+            else if (inst == "Forward")
+            {
+                StartCoroutine(ExecuteInstruction(() =>
+                {
+                    Debug.Log("Rover Pos x: " + Rover.X + ", y: " + Rover.Y + " dir: " + Rover.dir);
+                    string direction = DIR[Rover.dir];
+                    int dy = Rover.Y;
+                    int dx = Rover.X;
+                    if (direction == "Up")
+                    {
+                        dy = dy - 1;
+                    }
+                    else if (direction == "Right")
+                    {
+                        dx = dx + 1;
+                    }
+                    else if (direction == "Down")
+                    {
+                        dy = dy + 1;
+                    }
+                    else if (direction == "Left")
+                    {
+                        dx = dx - 1;
+                    }
+                    GameObject cell = GridList[(dy * GridWidth) + dx];
+                    Rover.GameObject.transform.SetParent(cell.gameObject.transform);
+                    Rover.GameObject.transform.localPosition = Vector3.zero;
+                    Rover.X = dx;
+                    Rover.Y = dy;
+                }, i));
+            }
+        }
+
         /*
         if (action == "TurnLeft")
         {
@@ -134,6 +208,11 @@ public class GridManager : MonoBehaviour
 
     }
 
+    public void RoverRotate(int dir)
+    {
+        Rover.GameObject.transform.Rotate(0f, 0f, dir * -90f, Space.World);
+    }
+
     //IEnumerator GenMap()
     void GenMap()
     {
@@ -161,7 +240,12 @@ public class GridManager : MonoBehaviour
 
         System.Random random = new System.Random();
         int randomIndex = random.Next(0, allCord.Count);
+        int randomDir = 0;// random.Next(0, DIR.Length);
+
+        Debug.Log("Rover Direction: " + randomDir);
+
         Rover rover = new Rover();
+        rover.dir = randomDir;
         rover.X = allCord[randomIndex].X;
         rover.Y = allCord[randomIndex].Y;
         //Debug.Log(rover.X);
@@ -173,7 +257,7 @@ public class GridManager : MonoBehaviour
         //Vector3 localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
 
         Vector3 roverScale = transform.localScale;
-        roverScale.Set(0.4f, 0.4f, 1f);
+        roverScale.Set(0.8f, 0.8f, 1f);
 
         rover.GameObject = Instantiate(RoverPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         rover.GameObject.transform.SetParent(cell.gameObject.transform);
@@ -184,6 +268,8 @@ public class GridManager : MonoBehaviour
         //Debug.Log("allCord.count=>" + allCord.Count);
         allCord.RemoveAt(randomIndex);
         //Debug.Log("allCord.count=>" + allCord.Count);
+
+        RoverRotate(randomDir);
 
         List<int> rockList = Enumerable.Range(0, RockQty).ToList();
         rockList.ForEach(i =>
@@ -200,14 +286,14 @@ public class GridManager : MonoBehaviour
             //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
 
             Vector3 scale = transform.localScale;
-            scale.Set(150f, 150f, 150f);
+            //scale.Set(150f, 150f, 150f);
             //scale.Set(0.3f, 0.3f, 1);
 
             rock.GameObject = Instantiate(RockPrefab, Vector3.zero, Quaternion.identity) as GameObject;
             rock.GameObject.transform.SetParent(cell.gameObject.transform);
             rock.GameObject.transform.localPosition = Vector3.zero;
             rock.GameObject.transform.localScale = scale;
-            rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
+            //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
 
             RockList.Add(rock);
             allCord.RemoveAt(randomIndex);
@@ -227,7 +313,7 @@ public class GridManager : MonoBehaviour
             //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
 
             Vector3 scale = transform.localScale;
-            scale.Set(0.3f, 0.3f, 1);
+            scale.Set(0.8f, 0.8f, 1);
 
             star.GameObject = Instantiate(StarPrefab, Vector3.zero, Quaternion.identity) as GameObject;
             star.GameObject.transform.SetParent(cell.gameObject.transform);

@@ -53,6 +53,21 @@ public class InstructionManager : MonoBehaviour
 
     }
 
+    public void ClearAll()
+    {
+        InstructionList.ForEach(inst =>
+        {
+            Destroy(inst.gameObject);
+        });
+        InstructionList.Clear();
+    }
+
+    public void ClearFirst()
+    {
+        Destroy(InstructionList[0].gameObject);
+        InstructionList.RemoveAt(0);
+    }
+
     public void Undo()
     {
         Destroy(InstructionList[InstructionList.Count - 1].gameObject);
