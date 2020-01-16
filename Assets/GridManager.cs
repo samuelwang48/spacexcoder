@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Collections;
 using System;
+using TMPro;
 
 public class Rover
 {
@@ -44,6 +45,10 @@ public class GridManager : MonoBehaviour
     public GameObject ObjUndo;
     public GameObject ObjSend;
 
+    public GameObject ObjTimeLeftText;
+    public GameObject ObjProgressBg;
+    public GameObject ObjProgressFg;
+
 
     public int GridWidth;
     public int GridHeight;
@@ -52,20 +57,33 @@ public class GridManager : MonoBehaviour
     public float ObjPosZ = -1f;
     public int RockQty = 5;
     public int StarQty = 3;
-    public string[] DIR = { "Up", "Right", "Down", "Left" };
+    private string[] DIR = { "Up", "Right", "Down", "Left" };
 
-    public List<GameObject> GridList = new List<GameObject>();
-    public Rover Rover;
-    public List<Rock> RockList = new List<Rock>();
-    public List<Star> StarList = new List<Star>();
-    public List<string> Instruction = new List<string>();
+    private List<GameObject> GridList = new List<GameObject>();
+    private Rover Rover;
+    private List<Rock> RockList = new List<Rock>();
+    private List<Star> StarList = new List<Star>();
+    private List<string> Instruction = new List<string>();
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
 
+    public float TimeLeft = 180f;
+    private float TimeSpent = 0f;
+    private float ProgressBgWidth;
+    private float ProgressBgHeight;
 
     void Start()
     {
+        Time.timeScale = 1f;
+
+        Rect progressBgRect = ObjProgressBg.gameObject.GetComponent<RectTransform>().rect;
+        ProgressBgWidth = progressBgRect.width;
+        ProgressBgHeight = progressBgRect.height;
+
+        //Debug.Log("Progressbar Bg Width: " + ProgressBgWidth);
+
+
         InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
         InstMgr.Ring();
 
@@ -85,6 +103,7 @@ public class GridManager : MonoBehaviour
         btnFoward.onClick.AddListener(delegate { AppendInstruction("Forward"); });
         btnUndo.onClick.AddListener(delegate { UndoInstruction("Undo"); });
         btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
+
     }
 
     public void AppendInstruction(string action)
@@ -107,7 +126,6 @@ public class GridManager : MonoBehaviour
 
     }
 
-
     IEnumerator ExecuteInstruction(Action action, int i)
     {
         yield return new WaitForSeconds(i * .2f);
@@ -123,7 +141,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-        public void SendInstruction(string action)
+    public void SendInstruction(string action)
     {
         //Debug.Log(action);
 
@@ -219,6 +237,29 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
+        TimeLeft -= Time.deltaTime;
+        TimeSpent += Time.deltaTime;
+        float width = ProgressBgWidth * (TimeLeft / (TimeLeft + TimeSpent));
+        float height = ProgressBgHeight;
+
+        if (TimeLeft < 0)
+        {
+            //Do something useful or Load a new game scene depending on your use-case
+            ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, height);
+        }
+        else
+        {
+            int minutes = Mathf.FloorToInt(TimeLeft / 60f);
+            int seconds = Mathf.FloorToInt(TimeLeft - minutes * 60);
+            string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+
+            //Debug.Log("Time Left: " + niceTime);
+
+            ObjTimeLeftText.gameObject.GetComponent<TextMeshProUGUI>().SetText(niceTime);
+
+            ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+
+        }
 
     }
 
@@ -271,7 +312,7 @@ public class GridManager : MonoBehaviour
         //Vector3 localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
 
         Vector3 roverScale = transform.localScale;
-        roverScale.Set(0.8f, 0.8f, 1f);
+        roverScale.Set(1f, 1f, 1f);
 
         rover.GameObject = Instantiate(RoverPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         rover.GameObject.transform.SetParent(cell.gameObject.transform);
