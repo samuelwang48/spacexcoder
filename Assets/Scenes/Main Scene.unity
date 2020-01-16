@@ -427,7 +427,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000064901706, y: -0.000039815903}
+  m_AnchoredPosition: {x: 0.0000142714025, y: -0.00008440018}
   m_SizeDelta: {x: -388, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &253252458
@@ -2436,7 +2436,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000076293945, y: 0.0000076293945}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &946028591
@@ -3475,6 +3475,7 @@ GameObject:
   - component: {fileID: 1773305992}
   - component: {fileID: 1773305991}
   - component: {fileID: 1773305990}
+  - component: {fileID: 1773305993}
   m_Layer: 5
   m_Name: Grid Scroll View
   m_TagString: Untagged
@@ -3489,7 +3490,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773305988}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3503,7 +3504,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 31.583008}
-  m_SizeDelta: {x: 800, y: -432.43}
+  m_SizeDelta: {x: 800, y: -432.43005}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1773305990
 MonoBehaviour:
@@ -3571,6 +3572,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773305988}
   m_CullTransparentMesh: 0
+--- !u!114 &1773305993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773305988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &1786829960
 GameObject:
   m_ObjectHideFlags: 0
