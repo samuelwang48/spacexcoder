@@ -49,9 +49,11 @@ public class GridManager : MonoBehaviour
     public GameObject ObjProgressBg;
     public GameObject ObjProgressFg;
 
+    public GameObject ObjWall;
 
-    public int GridWidth;
-    public int GridHeight;
+
+    public int GridWidth = 8;
+    public int GridHeight = 13;
     public float DistanceX = 1f;
     public float DistanceY = 1f;
     public float ObjPosZ = -1f;
@@ -72,6 +74,8 @@ public class GridManager : MonoBehaviour
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
     private float ProgressBgHeight;
+    private Vector2 GridSize;
+    private Vector2 GridSpacing;
 
     void Start()
     {
@@ -90,6 +94,18 @@ public class GridManager : MonoBehaviour
         GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
         glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
         glg.constraintCount = GridHeight;
+        GridSize = glg.cellSize;
+        GridSpacing = glg.spacing;
+
+        // start hiding wall
+        ObjWall.SetActive(false);
+        float wallWidth = (GridSize.x + GridSpacing.x) * GridWidth;
+        float wallHeight = (GridSize.y + GridSpacing.y) * GridHeight;
+        RectTransform wallRect = ObjWall.GetComponent<RectTransform>();
+        Debug.Log("wallWidth: " + wallWidth + " wallHeight: " + wallHeight);
+        wallRect.sizeDelta = new Vector2(wallWidth, wallHeight);
+        // end hiding wall
+
         Populate();
 
         Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
@@ -195,8 +211,13 @@ public class GridManager : MonoBehaviour
                     Rock foundRock = RockList.Find(rock => rock.X == dx && rock.Y == dy);
                     if (foundRock != null)
                     {
-                        Debug.Log("Found Rock Conflict: " + foundRock);
+                        Debug.Log("Found a Rock conflict: " + foundRock);
                         foundRock.GameObject.GetComponent<Image>().color = ColorRockError;
+                    }
+                    else if (dy < 0 || dy >= GridHeight || dx < 0 || dx >= GridWidth)
+                    {
+                        Debug.Log("Hit the wall");
+                        ObjWall.SetActive(true);
                     }
                     else
                     {
