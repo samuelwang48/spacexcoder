@@ -39,6 +39,8 @@ public class GridManager : MonoBehaviour
     public GameObject StarPrefab;
     public GameObject InstructionView;
 
+    public GameObject GridScrollView;
+
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
     public GameObject ObjForward;
@@ -76,6 +78,7 @@ public class GridManager : MonoBehaviour
     private float ProgressBgHeight;
     private Vector2 GridSize;
     private Vector2 GridSpacing;
+    private RectOffset GridPadding;
 
     void Start()
     {
@@ -87,27 +90,15 @@ public class GridManager : MonoBehaviour
 
         //Debug.Log("Progressbar Bg Width: " + ProgressBgWidth);
 
-
-        InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
-        InstMgr.Ring();
-
-        GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
-        glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-        glg.constraintCount = GridHeight;
-        GridSize = glg.cellSize;
-        GridSpacing = glg.spacing;
-
-        // start hiding wall
-        ObjWall.SetActive(false);
-        float wallWidth = (GridSize.x + GridSpacing.x) * GridWidth;
-        float wallHeight = (GridSize.y + GridSpacing.y) * GridHeight;
-        RectTransform wallRect = ObjWall.GetComponent<RectTransform>();
-        Debug.Log("wallWidth: " + wallWidth + " wallHeight: " + wallHeight);
-        wallRect.sizeDelta = new Vector2(wallWidth, wallHeight);
-        // end hiding wall
+        CenterGrid();
 
         Populate();
 
+        InitButtons();
+    }
+
+    private void InitButtons()
+    {
         Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
         Button btnTurnRight = ObjTurnRight.GetComponent<Button>();
         Button btnFoward = ObjForward.GetComponent<Button>();
@@ -119,6 +110,42 @@ public class GridManager : MonoBehaviour
         btnFoward.onClick.AddListener(delegate { AppendInstruction("Forward"); });
         btnUndo.onClick.AddListener(delegate { UndoInstruction("Undo"); });
         btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
+    }
+
+    private void CenterGrid()
+    {
+        // Hide walls
+        ObjWall.SetActive(false);
+
+        GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
+        Rect gsvRect = GridScrollView.gameObject.GetComponent<RectTransform>().rect;
+        RectTransform wallObject = ObjWall.GetComponent<RectTransform>();
+
+        GridSize = glg.cellSize;
+        GridSpacing = glg.spacing;
+        GridPadding = glg.padding;
+
+        glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
+        glg.constraintCount = GridHeight;
+
+        float wallWidth = (GridSize.x + GridSpacing.x) * GridWidth;
+        float wallHeight = (GridSize.y + GridSpacing.y) * GridHeight;
+
+        int paddingLeft = (int)(gsvRect.width - wallWidth) / 2;
+        int paddingTop = (int)(gsvRect.height - wallHeight) / 2;
+
+        //Debug.Log("Grid Container Width: " + gsvRect.width + " Height: " + gsvRect.height);
+        //Debug.Log("wallWidth: " + wallWidth + " wallHeight: " + wallHeight);
+
+        // Center game map
+        glg.padding.left = paddingLeft;
+        glg.padding.top = paddingTop;
+
+        // Set correct wall size
+        wallObject.sizeDelta = new Vector2(wallWidth, wallHeight);
+
+        // Set correct wall position to match game map
+        wallObject.transform.localPosition = new Vector2((float)paddingLeft, -(float)paddingTop);
 
     }
 
