@@ -40,6 +40,7 @@ public class GridManager : MonoBehaviour
     public GameObject InstructionView;
 
     public GameObject GridScrollView;
+    public GameObject BannerStarContainer;
 
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
@@ -67,18 +68,24 @@ public class GridManager : MonoBehaviour
     private Rover Rover;
     private List<Rock> RockList = new List<Rock>();
     private List<Star> StarList = new List<Star>();
+    private List<GameObject> BannerStarList = new List<GameObject>();
     private List<string> Instruction = new List<string>();
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
 
-    public float TimeLeft = 180f;
+    public UnityEngine.Color ColorBannerStarDark = new UnityEngine.Color(0.27f, 0.27f, 0.27f, 1f);
+    public UnityEngine.Color ColorBannerStarBright = new UnityEngine.Color(0f, 0.69f, 1f, 1f);
+    public UnityEngine.Color ColorBannerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
+
+    private float TimeLeft = 180f;
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
     private float ProgressBgHeight;
     private Vector2 GridSize;
     private Vector2 GridSpacing;
     private RectOffset GridPadding;
+    private int EarnedStarCount = 0;
 
     void Start()
     {
@@ -89,6 +96,21 @@ public class GridManager : MonoBehaviour
         ProgressBgHeight = progressBgRect.height;
 
         //Debug.Log("Progressbar Bg Width: " + ProgressBgWidth);
+
+        Transform bsc = BannerStarContainer.transform;
+        for (int bsi = 0; bsi < bsc.childCount; bsi++)
+        {
+            GameObject bs = bsc.GetChild(bsi).gameObject;
+            if (bsi >= StarQty)
+            {
+                bs.GetComponent<Image>().color = ColorBannerStarHidden;
+            }
+            else
+            {
+                bs.GetComponent<Image>().color = ColorBannerStarDark;
+            }
+        }
+
 
         CenterGrid();
 
@@ -236,6 +258,7 @@ public class GridManager : MonoBehaviour
                     }
 
                     Rock foundRock = RockList.Find(rock => rock.X == dx && rock.Y == dy);
+
                     if (foundRock != null)
                     {
                         Debug.Log("Found a Rock conflict: " + foundRock);
@@ -248,6 +271,18 @@ public class GridManager : MonoBehaviour
                     }
                     else
                     {
+                        Star foundStar = StarList.Find(star => star.X == dx && star.Y == dy);
+
+                        if (foundStar != null)
+                        {
+                            Debug.Log("Congrats! Found a star!");
+                            foundStar.GameObject.SetActive(false);
+                            StarList.RemoveAt(StarList.IndexOf(foundStar));
+
+                            Transform bsc = BannerStarContainer.transform;
+                            bsc.GetChild(EarnedStarCount++).gameObject.GetComponent<Image>().color = ColorBannerStarBright;
+                        }
+
                         GameObject cell = GridList[(dy * GridWidth) + dx];
                         Rover.GameObject.transform.SetParent(cell.gameObject.transform);
                         Rover.GameObject.transform.localPosition = Vector3.zero;
