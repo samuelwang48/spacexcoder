@@ -87,10 +87,39 @@ public class GridManager : MonoBehaviour
     private RectOffset GridPadding;
     private int EarnedStarCount = 0;
 
+    void InitDifficulty()
+    {
+        int difficulty = PlayerPrefs.GetInt("difficulty");
+        Debug.Log("Current difficulty level is: " + difficulty);
+
+        if (difficulty == 0)
+        {
+            GridWidth = 2;
+            GridHeight = 2;
+            RockQty = 0;
+            StarQty = 1;
+        }
+    }
+
     void Start()
     {
         Time.timeScale = 1f;
 
+        InitDifficulty();
+
+        InitBanner();
+
+        CenterGrid();
+
+        PopulateGrid();
+
+        GenMap();
+
+        InitButtons();
+    }
+
+    void InitBanner()
+    {
         Rect progressBgRect = ObjProgressBg.gameObject.GetComponent<RectTransform>().rect;
         ProgressBgWidth = progressBgRect.width;
         ProgressBgHeight = progressBgRect.height;
@@ -110,16 +139,9 @@ public class GridManager : MonoBehaviour
                 bs.GetComponent<Image>().color = ColorBannerStarDark;
             }
         }
-
-
-        CenterGrid();
-
-        Populate();
-
-        InitButtons();
     }
 
-    private void InitButtons()
+    void InitButtons()
     {
         Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
         Button btnTurnRight = ObjTurnRight.GetComponent<Button>();
@@ -134,7 +156,7 @@ public class GridManager : MonoBehaviour
         btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
     }
 
-    private void CenterGrid()
+    void CenterGrid()
     {
         // Hide walls
         ObjWall.SetActive(false);
@@ -171,7 +193,7 @@ public class GridManager : MonoBehaviour
 
     }
 
-    public void AppendInstruction(string action)
+    void AppendInstruction(string action)
     {
         //Debug.Log(action);
         Instruction.Add(action);
@@ -180,7 +202,7 @@ public class GridManager : MonoBehaviour
         InstMgr.PopulateOne(action);
     }
 
-    public void UndoInstruction(string action)
+    void UndoInstruction(string action)
     {
         //Debug.Log(action);
 
@@ -206,7 +228,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-    public void SendInstruction(string action)
+    void SendInstruction(string action)
     {
         //Debug.Log(action);
 
@@ -293,29 +315,6 @@ public class GridManager : MonoBehaviour
                 }, i));
             }
         }
-
-        /*
-        if (action == "TurnLeft")
-        {
-            // Rover.GameObject.transform.Rotate(0, 0, 90, Space.World);
-        }
-        else if (action == "TurnRight")
-        {
-            // Rover.GameObject.transform.Rotate(0, 0, -90, Space.World);
-        }
-        else if (action == "Foward")
-        {
-
-        }
-        else if (action == "Undo")
-        {
-
-        }
-        else if (action == "Send")
-        {
-
-        }
-        */
     }
 
     void Update()
@@ -346,7 +345,7 @@ public class GridManager : MonoBehaviour
 
     }
 
-    public void RoverRotate(int dir)
+    void RoverRotate(int dir)
     {
         Rover.GameObject.transform.Rotate(0f, 0f, dir * -90f, Space.World);
     }
@@ -495,11 +494,8 @@ public class GridManager : MonoBehaviour
         Debug.Log("resultPath: [" + string.Join(", ", path) + "]");
     }
 
-    void Populate()
+    void PopulateGrid()
     {
-        // align to middle
-        //float offsetX = -(GridWidth - 1) * DistanceX / 2f;
-        //float offsetY = -(GridHeight - 1) * DistanceY / 2f;
         int numberToCreate = GridWidth * GridHeight;
 
         GameObject newObj;
@@ -512,11 +508,7 @@ public class GridManager : MonoBehaviour
             //UnityEngine.Color myColor = new UnityEngine.Color();
             //UnityEngine.ColorUtility.TryParseHtmlString("#FF0100", out myColor);
             //newObj.GetComponent<Image>().color = myColor;
-
             //newObj.GetComponent<Image>().color = Random.ColorHSV();
         }
-        //GenMap(offsetX, offsetY, DistanceX, DistanceY, GridContainer);
-        //StartCoroutine(GenMap());
-        GenMap();
     }
 }
