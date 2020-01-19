@@ -41,6 +41,7 @@ public class GridManager : MonoBehaviour
 
     public GameObject GridScrollView;
     public GameObject BannerStarContainer;
+    public GameObject Modal;
 
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
@@ -87,15 +88,17 @@ public class GridManager : MonoBehaviour
     private RectOffset GridPadding;
     private int EarnedStarCount = 0;
 
-    void InitDifficulty()
-    {
-        int difficulty = PlayerPrefs.GetInt("difficulty");
-        Debug.Log("Current difficulty level is: " + difficulty);
+    private bool IsGameFrozen = false;
 
-        if (difficulty == 0)
+    void InitLevel()
+    {
+        int level = PlayerPrefs.GetInt("level");
+        Debug.Log("Current level is: " + level);
+
+        if (level == 0)
         {
-            GridWidth = 2;
-            GridHeight = 2;
+            GridWidth = 3;
+            GridHeight = 3;
             RockQty = 0;
             StarQty = 1;
         }
@@ -105,7 +108,9 @@ public class GridManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        InitDifficulty();
+        //InitLevel();
+
+        InitModal();
 
         InitBanner();
 
@@ -116,6 +121,11 @@ public class GridManager : MonoBehaviour
         GenMap();
 
         InitButtons();
+    }
+
+    void InitModal()
+    {
+        Modal.SetActive(false);
     }
 
     void InitBanner()
@@ -312,13 +322,40 @@ public class GridManager : MonoBehaviour
                         Rover.Y = dy;
                     }
 
+                    if (StarList.Count == 0)
+                    {
+                        GameWin();
+                    }
+
                 }, i));
             }
         }
     }
 
+    void GameWin()
+    {
+        Debug.Log("Game Win!");
+        FreezeGame();
+        Modal.SetActive(true);
+    }
+
+    void FreezeGame()
+    {
+        IsGameFrozen = true;
+    }
+
+    void UnfreezeGame()
+    {
+        IsGameFrozen = false;
+    }
+
     void Update()
     {
+        if (IsGameFrozen == true)
+        {
+            return;
+        }
+
         TimeLeft -= Time.deltaTime;
         TimeSpent += Time.deltaTime;
         float width = ProgressBgWidth * (TimeLeft / (TimeLeft + TimeSpent));
@@ -333,7 +370,7 @@ public class GridManager : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(TimeLeft / 60f);
             int seconds = Mathf.FloorToInt(TimeLeft - minutes * 60);
-            string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+            string niceTime = string.Format("{0:00}:{1:00}", minutes, seconds);
 
             //Debug.Log("Time Left: " + niceTime);
 

@@ -22,15 +22,15 @@ public class StageManager : MonoBehaviour
     {
 
         Button btnHop_0 = Hop_0.GetComponent<Button>();
-        btnHop_0.onClick.AddListener(delegate { LoadGame(0); });
+        btnHop_0.onClick.AddListener(delegate { LoadStage(0); });
 
     }
 
-    void LoadGame(int difficulty)
+    void LoadStage(int stage)
     {
-        Debug.Log("About to start game difficulty: " + difficulty);
-        PlayerPrefs.SetInt("difficulty", difficulty);
-        SceneManager.LoadScene("Main Scene");
+        Debug.Log("About to start game stage: " + stage);
+        PlayerPrefs.SetInt("stage", stage);
+        SceneManager.LoadScene("Stage_0");
     }
 
     // Update is called once per frame
