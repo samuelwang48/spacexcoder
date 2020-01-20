@@ -108,7 +108,7 @@ public class GridManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        //InitLevel();
+        InitLevel();
 
         InitModal();
 
