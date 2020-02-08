@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Drawing;
@@ -55,14 +56,18 @@ public class GridManager : MonoBehaviour
 
     public GameObject ObjWall;
 
+    public GameObject ObjExitScene;
+
 
     public int GridWidth = 8;
     public int GridHeight = 13;
-    public float DistanceX = 1f;
-    public float DistanceY = 1f;
-    public float ObjPosZ = -1f;
     public int RockQty = 5;
     public int StarQty = 3;
+    // public float DistanceX = 1f;
+    // public float DistanceY = 1f;
+    // public float ObjPosZ = -1f;
+
+
     private string[] DIR = { "Up", "Right", "Down", "Left" };
 
     private List<GameObject> GridList = new List<GameObject>();
@@ -90,17 +95,47 @@ public class GridManager : MonoBehaviour
 
     private bool IsGameFrozen = false;
 
+    private int CurrentLevel;
+
     void InitLevel()
     {
-        int level = PlayerPrefs.GetInt("level");
-        Debug.Log("Current level is: " + level);
+        CurrentLevel = PlayerPrefs.GetInt("level");
+        Debug.Log("Current level is: " + CurrentLevel);
 
-        if (level == 0)
+        switch (CurrentLevel)
         {
-            GridWidth = 3;
-            GridHeight = 3;
-            RockQty = 0;
-            StarQty = 1;
+            case 0:
+                GridWidth = 3;
+                GridHeight = 3;
+                RockQty = 0;
+                StarQty = 1;
+                break;
+            case 1:
+                GridWidth = 3;
+                GridHeight = 3;
+                RockQty = 3;
+                StarQty = 2;
+                break;
+            case 2:
+                GridWidth = 5;
+                GridHeight = 5;
+                RockQty = 4;
+                StarQty = 3;
+                break;
+            case 3:
+                GridWidth = 5;
+                GridHeight = 5;
+                RockQty = 5;
+                StarQty = 4;
+                break;
+            case 4:
+                GridWidth = 5;
+                GridHeight = 5;
+                RockQty = 6;
+                StarQty = 5;
+                break;
+            default:
+                break;
         }
     }
 
@@ -158,12 +193,15 @@ public class GridManager : MonoBehaviour
         Button btnFoward = ObjForward.GetComponent<Button>();
         Button btnUndo = ObjUndo.GetComponent<Button>();
         Button btnSend = ObjSend.GetComponent<Button>();
+        Button btnExitScene = ObjExitScene.GetComponent<Button>();
 
         btnTurnLeft.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
         btnTurnRight.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
         btnFoward.onClick.AddListener(delegate { AppendInstruction("Forward"); });
         btnUndo.onClick.AddListener(delegate { UndoInstruction("Undo"); });
         btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
+        btnExitScene.onClick.AddListener(delegate { ExitScene(); });
+
     }
 
     void CenterGrid()
@@ -336,7 +374,15 @@ public class GridManager : MonoBehaviour
     {
         Debug.Log("Game Win!");
         FreezeGame();
+        int nextLevel = CurrentLevel + 1;
+        PlayerPrefs.SetInt("unlocked", nextLevel);
         Modal.SetActive(true);
+    }
+
+    void ExitScene()
+    {
+        int stage = PlayerPrefs.GetInt("stage");
+        SceneManager.LoadScene("Stage_" + stage);
     }
 
     void FreezeGame()
@@ -529,6 +575,10 @@ public class GridManager : MonoBehaviour
         //yield return new WaitForSeconds(i * .2f);
         List<Vector2> path = new Astar(map, start, end, "Diagonal").result;
         Debug.Log("resultPath: [" + string.Join(", ", path) + "]");
+        if ( path.Count == 0 )
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     void PopulateGrid()
