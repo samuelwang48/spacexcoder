@@ -56,11 +56,12 @@ public class GridManager : MonoBehaviour
 
     public GameObject ObjWall;
 
-    public GameObject ObjExitScene;
+    public GameObject ObjFinishContinue;
+    public GameObject ObjForceExit;
 
 
-    public int GridWidth = 8;
-    public int GridHeight = 13;
+    public int GridWidth = 11;
+    public int GridHeight = 17;
     public int RockQty = 5;
     public int StarQty = 3;
     // public float DistanceX = 1f;
@@ -134,6 +135,96 @@ public class GridManager : MonoBehaviour
                 RockQty = 6;
                 StarQty = 5;
                 break;
+            case 5:
+                GridWidth = 6;
+                GridHeight = 6;
+                RockQty = 8;
+                StarQty = 5;
+                break;
+            case 6:
+                GridWidth = 7;
+                GridHeight = 7;
+                RockQty = 11;
+                StarQty = 5;
+                break;
+            case 7:
+                GridWidth = 8;
+                GridHeight = 8;
+                RockQty = 15;
+                StarQty = 5;
+                break;
+            case 8:
+                GridWidth = 9;
+                GridHeight = 9;
+                RockQty = 19;
+                StarQty = 5;
+                break;
+            case 9:
+                GridWidth = 10;
+                GridHeight = 10;
+                RockQty = 24;
+                StarQty = 5;
+                break;
+            case 10:
+                GridWidth = 11;
+                GridHeight = 11;
+                RockQty = 30;
+                StarQty = 5;
+                break;
+            case 11:
+                GridWidth = 11;
+                GridHeight = 12;
+                RockQty = 32;
+                StarQty = 5;
+                break;
+            case 12:
+                GridWidth = 11;
+                GridHeight = 13;
+                RockQty = 35;
+                StarQty = 5;
+                break;
+            case 13:
+                GridWidth = 11;
+                GridHeight = 14;
+                RockQty = 37;
+                StarQty = 5;
+                break;
+            case 14:
+                GridWidth = 11;
+                GridHeight = 15;
+                RockQty = 40;
+                StarQty = 5;
+                break;
+            case 15:
+                GridWidth = 11;
+                GridHeight = 16;
+                RockQty = 43;
+                StarQty = 5;
+                break;
+            case 16:
+                GridWidth = 11;
+                GridHeight = 17;
+                RockQty = 45;
+                StarQty = 5;
+                break;
+            case 17:
+                GridWidth = 11;
+                GridHeight = 17;
+                RockQty = 45;
+                StarQty = 5;
+                break;
+            case 18:
+                GridWidth = 11;
+                GridHeight = 17;
+                RockQty = 50;
+                StarQty = 5;
+                break;
+            case 19:
+                GridWidth = 11;
+                GridHeight = 17;
+                RockQty = 60;
+                StarQty = 5;
+                break;
             default:
                 break;
         }
@@ -193,14 +284,18 @@ public class GridManager : MonoBehaviour
         Button btnFoward = ObjForward.GetComponent<Button>();
         Button btnUndo = ObjUndo.GetComponent<Button>();
         Button btnSend = ObjSend.GetComponent<Button>();
-        Button btnExitScene = ObjExitScene.GetComponent<Button>();
+        Button btnFinishContinue = ObjFinishContinue.GetComponent<Button>();
+        Button btnForceExit = ObjForceExit.GetComponent<Button>();
+
+        
 
         btnTurnLeft.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
         btnTurnRight.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
         btnFoward.onClick.AddListener(delegate { AppendInstruction("Forward"); });
         btnUndo.onClick.AddListener(delegate { UndoInstruction("Undo"); });
         btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
-        btnExitScene.onClick.AddListener(delegate { ExitScene(); });
+        btnFinishContinue.onClick.AddListener(delegate { FinishContinue(); });
+        btnForceExit.onClick.AddListener(delegate { ForceExit(); });
 
     }
 
@@ -377,6 +472,16 @@ public class GridManager : MonoBehaviour
         int nextLevel = CurrentLevel + 1;
         PlayerPrefs.SetInt("unlocked", nextLevel);
         Modal.SetActive(true);
+    }
+
+    void FinishContinue()
+    {
+        ExitScene();
+    }
+
+    void ForceExit()
+    {
+        ExitScene();
     }
 
     void ExitScene()

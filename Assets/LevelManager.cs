@@ -6,9 +6,15 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
+    public GameObject ObjExitStage;
+
     // Start is called before the first frame update
     void Start()
     {
+        Button btnExitStage = ObjExitStage.GetComponent<Button>();
+        btnExitStage.onClick.AddListener(delegate { ExitStage(); });
+
+
         // by default it is zero
         int unlocked = PlayerPrefs.GetInt("unlocked");
         Debug.Log("Unlocked level: " + unlocked);
@@ -36,6 +42,11 @@ public class LevelManager : MonoBehaviour
         Debug.Log("About to start game level: " + level);
         PlayerPrefs.SetInt("level", level);
         SceneManager.LoadScene("Game Scene");
+    }
+
+    void ExitStage()
+    {
+        SceneManager.LoadScene("Main Scene");
     }
 
     // Update is called once per frame
