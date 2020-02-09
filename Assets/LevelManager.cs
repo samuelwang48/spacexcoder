@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    public GameObject[] LvButton;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -15,14 +13,15 @@ public class LevelManager : MonoBehaviour
         int unlocked = PlayerPrefs.GetInt("unlocked");
         Debug.Log("Unlocked level: " + unlocked);
 
-        LvButton = GameObject.FindGameObjectsWithTag("lvbtn");
+        //LvButton = GameObject.FindGameObjectsWithTag("lvbtn");
 
         UnityEngine.Color colorActive = new UnityEngine.Color();
         UnityEngine.ColorUtility.TryParseHtmlString("#fff", out colorActive);
 
-        for (int i = 0; i < LvButton.Length; i++)
+
+        for (int i = 0; i < 20; i++)
         {
-            GameObject lvbtn = LvButton[i];
+            GameObject lvbtn = GameObject.Find("Lv" + i);
             if (i <= unlocked)
             {
                 lvbtn.GetComponent<Image>().color = colorActive;
@@ -36,7 +35,7 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("About to start game level: " + level);
         PlayerPrefs.SetInt("level", level);
-        SceneManager.LoadScene("Main Scene");
+        SceneManager.LoadScene("Game Scene");
     }
 
     // Update is called once per frame
