@@ -85,7 +85,7 @@ public class GridManager : MonoBehaviour
     public UnityEngine.Color ColorBannerStarBright = new UnityEngine.Color(0f, 0.69f, 1f, 1f);
     public UnityEngine.Color ColorBannerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
-    private float TimeLeft = 180f;
+    private float TimeLeft = 90f;
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
     private float ProgressBgHeight;
@@ -95,8 +95,10 @@ public class GridManager : MonoBehaviour
     private int EarnedStarCount = 0;
 
     private bool IsGameFrozen = false;
+    private bool IsInstExecuting = false;
 
     private int CurrentLevel;
+
 
     void InitLevel()
     {
@@ -370,22 +372,61 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    void TestExecutionIndex(int index, int count)
+    {
+
+        Debug.Log("Executing: " + (index + 1) + "/" + count);
+        if (index == count - 1)
+        {
+            IsInstExecuting = false;
+            ActivateSendButton();
+        }
+    }
+
+    void DeactivateSendButton()
+    {
+        UnityEngine.Color colorExecuting = new UnityEngine.Color();
+        UnityEngine.ColorUtility.TryParseHtmlString("#939393", out colorExecuting);
+        Button btnSend = ObjSend.GetComponent<Button>();
+        btnSend.GetComponent<Image>().color = colorExecuting;
+    }
+
+    void ActivateSendButton()
+    {
+        UnityEngine.Color colorExecuting = new UnityEngine.Color();
+        UnityEngine.ColorUtility.TryParseHtmlString("#EC5353", out colorExecuting);
+        Button btnSend = ObjSend.GetComponent<Button>();
+        btnSend.GetComponent<Image>().color = colorExecuting;
+    }
 
     void SendInstruction(string action)
     {
         //Debug.Log(action);
+        if (IsInstExecuting == true)
+        {
+            return;
+        }
+
+        int inst_count = Instruction.Count;
+
+        if (inst_count > 0) {
+            IsInstExecuting = true;
+            DeactivateSendButton();
+        }
 
         int dl = DIR.Length;
-        for (int i = 0; i < Instruction.Count; i++)
+        for (int i = 0; i < inst_count; i++)
         {
             string inst = Instruction[i];
             Debug.Log(inst);
+            int index = i;
             if (inst == "TurnLeft")
             {
                 StartCoroutine(ExecuteInstruction(() =>
                 {
                     Rover.GameObject.transform.Rotate(0, 0, 90, Space.World);
                     Rover.dir = (Rover.dir + dl - 1) % dl;
+                    TestExecutionIndex(index, inst_count);
                 }, i));
                 
             }
@@ -395,6 +436,7 @@ public class GridManager : MonoBehaviour
                 {
                     Rover.GameObject.transform.Rotate(0, 0, -90, Space.World);
                     Rover.dir = (Rover.dir + 1) % dl;
+                    TestExecutionIndex(index, inst_count);
                 }, i));
             }
             else if (inst == "Forward")
@@ -454,6 +496,8 @@ public class GridManager : MonoBehaviour
                         Rover.X = dx;
                         Rover.Y = dy;
                     }
+
+                    TestExecutionIndex(index, inst_count);
 
                     if (StarList.Count == 0)
                     {

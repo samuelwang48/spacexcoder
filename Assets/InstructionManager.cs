@@ -70,8 +70,10 @@ public class InstructionManager : MonoBehaviour
 
     public void Undo()
     {
-        Destroy(InstructionList[InstructionList.Count - 1].gameObject);
-        InstructionList.RemoveAt(InstructionList.Count - 1);
+        if (InstructionList.Count > 0) {
+            Destroy(InstructionList[InstructionList.Count - 1].gameObject);
+            InstructionList.RemoveAt(InstructionList.Count - 1);
+        }
     }
 
     void Populate()
