@@ -514,7 +514,11 @@ public class GridManager : MonoBehaviour
         Debug.Log("Game Win!");
         FreezeGame();
         int nextLevel = CurrentLevel + 1;
-        PlayerPrefs.SetInt("unlocked", nextLevel);
+        int unlocked = PlayerPrefs.GetInt("unlocked");
+        if (nextLevel > unlocked)
+        {
+            PlayerPrefs.SetInt("unlocked", nextLevel);
+        }
         Modal.SetActive(true);
     }
 
