@@ -81,28 +81,30 @@ public class StageManager : MonoBehaviour
 			}
 			if (GUI.Button(new Rect(10, 250, 250, 60), "Submit Score"))
 			{
-				KTGameCenter.SharedCenter().SubmitScore(110, "grp.com.kashiftasneem.thedarkshadow.highestscoresinglerun");
+				KTGameCenter.SharedCenter().SubmitScore(110, "spacexcoder.uat.toptesters");
 			}
 			if (GUI.Button(new Rect(300, 250, 250, 60), "Submit Achievement"))
 			{
-				KTGameCenter.SharedCenter().SubmitAchievement(100, "grp.com.kashiftasneem.thedarkshadow.kill1zombie", true);
+				KTGameCenter.SharedCenter().SubmitAchievement(10, "spacexcoder.uat.unlock10", true);
 			}
 			if (GUI.Button(new Rect(10, 350, 300, 60), "Reset Achievement"))
 			{
 				KTGameCenter.SharedCenter().ResetAchievements();
 			}
+			if (GUI.Button(new Rect(330, 350, 250, 60), "Fetch my Score"))
+			{
+				KTGameCenter.SharedCenter().FetchMyScore("spacexcoder.uat.toptesters");
+			}
+			/*
 			if (GUI.Button(new Rect(330, 350, 250, 60), "Submit Float Score"))
 			{
-				KTGameCenter.SharedCenter().SubmitFloatScore(110.123f, 3, "com.kashiftasneem.flyingbird.testfloat");
+				KTGameCenter.SharedCenter().SubmitFloatScore(110.123f, 3, "spacexcoder.uat.toptesters.float");
 			}
 			if (GUI.Button(new Rect(10, 450, 250, 60), "Submit Time"))
 			{
-				KTGameCenter.SharedCenter().SubmitFloatScore(2459.3f, 2, "com.kashiftasneem.flyingbird.testtime");
+				KTGameCenter.SharedCenter().SubmitFloatScore(2459.3f, 2, "spacexcoder.uat.toptesters.time");
 			}
-			if (GUI.Button(new Rect(10, 550, 250, 60), "Fetch my Score"))
-			{
-				KTGameCenter.SharedCenter().FetchMyScore("grp.com.kashiftasneem.thedarkshadow.highestscoresinglerun");
-			}
+            */
 		}
 	}
 
