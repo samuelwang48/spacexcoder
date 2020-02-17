@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections;
 using System;
 using TMPro;
+using SpaceXCoder;
 
 public class Rover
 {
@@ -558,11 +559,14 @@ public class GridManager : MonoBehaviour
     {
         Debug.Log("Game Win!");
         FreezeGame();
+
+        SpaceXCoder.Save save = GameSave.Load();
+
         int nextLevel = CurrentLevel + 1;
-        int unlocked = PlayerPrefs.GetInt("unlocked");
+        int unlocked = save.unlocked;
         if (nextLevel > unlocked)
         {
-            PlayerPrefs.SetInt("unlocked", nextLevel);
+            save.unlocked = nextLevel;
         }
         WinModal.SetActive(true);
 
@@ -572,6 +576,9 @@ public class GridManager : MonoBehaviour
         {
             StartCoroutine(CalcStar(i));
         }
+
+        GameSave.Write(save);
+        Debug.Log("Game Saved");
     }
 
     IEnumerator CalcStar(int i)
@@ -579,7 +586,7 @@ public class GridManager : MonoBehaviour
         yield return new WaitForSeconds(i*.02f);
 
         int total = (int)Math.Round(TimeLeft);
-        int earned = total - i - 1;
+        int earned = i;
         ObjTimeLeftCountdown.gameObject.GetComponent<TextMeshProUGUI>().SetText(earned + "s");
 
         if (i % 30 == 0)

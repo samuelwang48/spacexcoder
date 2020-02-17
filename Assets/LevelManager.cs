@@ -1,12 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using SpaceXCoder;
 
 public class LevelManager : MonoBehaviour
 {
     public GameObject ObjExitStage;
+
+    public UnityEngine.Color ColorWinnerStarDark = new UnityEngine.Color(.24f, .26f, .38f, 1f);
+    public UnityEngine.Color ColorWinnerStarBright = new UnityEngine.Color(0f, 0.728f, 1f, 1f);
+    public UnityEngine.Color ColorWinnerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
     // Start is called before the first frame update
     void Start()
@@ -14,9 +17,9 @@ public class LevelManager : MonoBehaviour
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate { ExitStage(); });
 
-
+        SpaceXCoder.Save save = GameSave.Load();
         // by default it is zero
-        int unlocked = PlayerPrefs.GetInt("unlocked");
+        int unlocked = save.unlocked;
         Debug.Log("Unlocked level: " + unlocked);
 
         //LvButton = GameObject.FindGameObjectsWithTag("lvbtn");
@@ -33,6 +36,13 @@ public class LevelManager : MonoBehaviour
                 lvbtn.GetComponent<Image>().color = colorActive;
                 int level = i;
                 lvbtn.GetComponent<Button>().onClick.AddListener(delegate { LoadLevel(level); });
+            }
+
+            Transform bsc = lvbtn.transform.GetChild(1).transform;
+            for (int bsi = 0; bsi < bsc.childCount; bsi++)
+            {
+                GameObject bs = bsc.GetChild(bsi).gameObject;
+                bs.GetComponent<Image>().color = ColorWinnerStarDark;
             }
         }
     }
