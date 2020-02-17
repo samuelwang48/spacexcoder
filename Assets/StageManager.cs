@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,17 +14,24 @@ public class StageManager : MonoBehaviour
     public GameObject Hop_5;
     public GameObject Hop_6;
     public GameObject Hop_7;
+	public GameObject BtnLeaderboard;
+	public GameObject BtnArchievements;
 
 
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
         KTGameCenter.SharedCenter().Authenticate();
 
-        Button btnHop_0 = Hop_0.GetComponent<Button>();
-        btnHop_0.onClick.AddListener(delegate { LoadStage(0); });
+		Button btnHop_0 = Hop_0.GetComponent<Button>();
+		btnHop_0.onClick.AddListener(delegate { LoadStage(0); });
 
-    }
+		Button btnLeaderboard = BtnLeaderboard.GetComponent<Button>();
+		btnLeaderboard.onClick.AddListener(delegate { Social.ShowLeaderboardUI(); });
+
+		Button btnArchievements = BtnArchievements.GetComponent<Button>();
+		btnArchievements.onClick.AddListener(delegate { Social.ShowAchievementsUI(); });
+	}
 
     void LoadStage(int stage)
     {
@@ -44,6 +50,7 @@ public class StageManager : MonoBehaviour
 	{
 		StartCoroutine(RegisterForGameCenter());
 	}
+
 	void OnDisable()
 	{
 		KTGameCenter.SharedCenter().GCUserAuthenticated -= GCAuthentication;

@@ -24,7 +24,7 @@ public class Rock
     public GameObject GameObject;
 
 }
-public class Star
+public class Resource
 {
     public int X;
     public int Y;
@@ -37,12 +37,13 @@ public class GridManager : MonoBehaviour
     public GameObject prefab;
     public GameObject RoverPrefab;
     public GameObject RockPrefab;
-    public GameObject StarPrefab;
+    public GameObject ResourcePrefab;
     public GameObject InstructionView;
 
     public GameObject GridScrollView;
-    public GameObject BannerStarContainer;
-    public GameObject Modal;
+    public GameObject BannerResourceContainer;
+    public GameObject WinModal;
+    public GameObject LoseModal;
 
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
@@ -58,12 +59,18 @@ public class GridManager : MonoBehaviour
 
     public GameObject ObjFinishContinue;
     public GameObject ObjForceExit;
+    public GameObject ObjPlayAgain;
+    public GameObject ObjGameOverExit;
 
+    public GameObject ObjTimeLeftCountdown;
+    public GameObject ObjWinnerStarContainer;
+
+    private const float ZEROF = 0f;
 
     public int GridWidth = 11;
     public int GridHeight = 17;
     public int RockQty = 5;
-    public int StarQty = 3;
+    public int ResourceQty = 3;
     // public float DistanceX = 1f;
     // public float DistanceY = 1f;
     // public float ObjPosZ = -1f;
@@ -74,16 +81,20 @@ public class GridManager : MonoBehaviour
     private List<GameObject> GridList = new List<GameObject>();
     private Rover Rover;
     private List<Rock> RockList = new List<Rock>();
-    private List<Star> StarList = new List<Star>();
-    private List<GameObject> BannerStarList = new List<GameObject>();
+    private List<Resource> ResList = new List<Resource>();
+    private List<GameObject> BannerResourceList = new List<GameObject>();
     private List<string> Instruction = new List<string>();
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
 
-    public UnityEngine.Color ColorBannerStarDark = new UnityEngine.Color(0.27f, 0.27f, 0.27f, 1f);
-    public UnityEngine.Color ColorBannerStarBright = new UnityEngine.Color(0f, 0.69f, 1f, 1f);
-    public UnityEngine.Color ColorBannerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
+    public UnityEngine.Color ColorBannerResourceDark = new UnityEngine.Color(0.27f, 0.27f, 0.27f, 1f);
+    public UnityEngine.Color ColorBannerResourceBright = new UnityEngine.Color(1f, 1f, 1f, 1f);
+    public UnityEngine.Color ColorBannerResourceHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
+
+    public UnityEngine.Color ColorWinnerStarDark = new UnityEngine.Color(0f, 0f, 0f, 0.5f);
+    public UnityEngine.Color ColorWinnerStarBright = new UnityEngine.Color(0f, 0.728f, 1f, 1f);
+    public UnityEngine.Color ColorWinnerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
     private float TimeLeft = 90f;
     private float TimeSpent = 0f;
@@ -92,7 +103,7 @@ public class GridManager : MonoBehaviour
     private Vector2 GridSize;
     private Vector2 GridSpacing;
     private RectOffset GridPadding;
-    private int EarnedStarCount = 0;
+    private int EarnedResourceCount = 0;
 
     private bool IsGameFrozen = false;
     private bool IsInstExecuting = false;
@@ -111,121 +122,121 @@ public class GridManager : MonoBehaviour
                 GridWidth = 3;
                 GridHeight = 3;
                 RockQty = 0;
-                StarQty = 1;
+                ResourceQty = 1;
                 break;
             case 1:
                 GridWidth = 3;
                 GridHeight = 3;
                 RockQty = 3;
-                StarQty = 2;
+                ResourceQty = 2;
                 break;
             case 2:
                 GridWidth = 5;
                 GridHeight = 5;
                 RockQty = 4;
-                StarQty = 3;
+                ResourceQty = 3;
                 break;
             case 3:
                 GridWidth = 5;
                 GridHeight = 5;
                 RockQty = 5;
-                StarQty = 4;
+                ResourceQty = 4;
                 break;
             case 4:
                 GridWidth = 5;
                 GridHeight = 5;
                 RockQty = 6;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 5:
                 GridWidth = 6;
                 GridHeight = 6;
                 RockQty = 8;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 6:
                 GridWidth = 7;
                 GridHeight = 7;
                 RockQty = 11;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 7:
                 GridWidth = 8;
                 GridHeight = 8;
                 RockQty = 15;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 8:
                 GridWidth = 9;
                 GridHeight = 9;
                 RockQty = 19;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 9:
                 GridWidth = 10;
                 GridHeight = 10;
                 RockQty = 24;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 10:
                 GridWidth = 11;
                 GridHeight = 11;
                 RockQty = 30;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 11:
                 GridWidth = 11;
                 GridHeight = 12;
                 RockQty = 32;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 12:
                 GridWidth = 11;
                 GridHeight = 13;
                 RockQty = 35;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 13:
                 GridWidth = 11;
                 GridHeight = 14;
                 RockQty = 37;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 14:
                 GridWidth = 11;
                 GridHeight = 15;
                 RockQty = 40;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 15:
                 GridWidth = 11;
                 GridHeight = 16;
                 RockQty = 43;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 16:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 45;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 17:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 45;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 18:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 50;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             case 19:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 60;
-                StarQty = 5;
+                ResourceQty = 5;
                 break;
             default:
                 break;
@@ -238,7 +249,8 @@ public class GridManager : MonoBehaviour
 
         InitLevel();
 
-        InitModal();
+        InitWinModal();
+        InitLoseModal();
 
         InitBanner();
 
@@ -249,11 +261,33 @@ public class GridManager : MonoBehaviour
         GenMap();
 
         InitButtons();
+
+        InitEarnedStar();
     }
 
-    void InitModal()
+    void PlayAgain()
     {
-        Modal.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void InitWinModal()
+    {
+        WinModal.SetActive(false);
+    }
+
+    void InitLoseModal()
+    {
+        LoseModal.SetActive(false);
+    }
+
+    void InitEarnedStar()
+    {
+        Transform bsc = ObjWinnerStarContainer.transform;
+        for (int bsi = 0; bsi < bsc.childCount; bsi++)
+        {
+            GameObject bs = bsc.GetChild(bsi).gameObject;
+            bs.GetComponent<Image>().color = ColorWinnerStarDark;
+        }
     }
 
     void InitBanner()
@@ -264,17 +298,17 @@ public class GridManager : MonoBehaviour
 
         //Debug.Log("Progressbar Bg Width: " + ProgressBgWidth);
 
-        Transform bsc = BannerStarContainer.transform;
+        Transform bsc = BannerResourceContainer.transform;
         for (int bsi = 0; bsi < bsc.childCount; bsi++)
         {
             GameObject bs = bsc.GetChild(bsi).gameObject;
-            if (bsi >= StarQty)
+            if (bsi >= ResourceQty)
             {
-                bs.GetComponent<Image>().color = ColorBannerStarHidden;
+                bs.GetComponent<Image>().color = ColorBannerResourceHidden;
             }
             else
             {
-                bs.GetComponent<Image>().color = ColorBannerStarDark;
+                bs.GetComponent<Image>().color = ColorBannerResourceDark;
             }
         }
     }
@@ -288,8 +322,10 @@ public class GridManager : MonoBehaviour
         Button btnSend = ObjSend.GetComponent<Button>();
         Button btnFinishContinue = ObjFinishContinue.GetComponent<Button>();
         Button btnForceExit = ObjForceExit.GetComponent<Button>();
+        Button btnPlayAgain = ObjPlayAgain.GetComponent<Button>();
+        Button btnGameOverExit = ObjGameOverExit.GetComponent<Button>();
 
-        
+
 
         btnTurnLeft.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
         btnTurnRight.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
@@ -299,6 +335,8 @@ public class GridManager : MonoBehaviour
         btnFinishContinue.onClick.AddListener(delegate { FinishContinue(); });
         btnForceExit.onClick.AddListener(delegate { ForceExit(); });
 
+        btnPlayAgain.onClick.AddListener(delegate { PlayAgain(); });
+        btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
     }
 
     void CenterGrid()
@@ -478,16 +516,16 @@ public class GridManager : MonoBehaviour
                     }
                     else
                     {
-                        Star foundStar = StarList.Find(star => star.X == dx && star.Y == dy);
+                        Resource foundResource = ResList.Find(res => res.X == dx && res.Y == dy);
 
-                        if (foundStar != null)
+                        if (foundResource != null)
                         {
-                            Debug.Log("Congrats! Found a star!");
-                            foundStar.GameObject.SetActive(false);
-                            StarList.RemoveAt(StarList.IndexOf(foundStar));
+                            Debug.Log("Congrats! Found a resource!");
+                            foundResource.GameObject.SetActive(false);
+                            ResList.RemoveAt(ResList.IndexOf(foundResource));
 
-                            Transform bsc = BannerStarContainer.transform;
-                            bsc.GetChild(EarnedStarCount++).gameObject.GetComponent<Image>().color = ColorBannerStarBright;
+                            Transform bsc = BannerResourceContainer.transform;
+                            bsc.GetChild(EarnedResourceCount++).gameObject.GetComponent<Image>().color = ColorBannerResourceBright;
                         }
 
                         GameObject cell = GridList[(dy * GridWidth) + dx];
@@ -499,7 +537,7 @@ public class GridManager : MonoBehaviour
 
                     TestExecutionIndex(index, inst_count);
 
-                    if (StarList.Count == 0)
+                    if (ResList.Count == 0)
                     {
                         GameWin();
                     }
@@ -507,6 +545,13 @@ public class GridManager : MonoBehaviour
                 }, i));
             }
         }
+    }
+
+    void GameOver()
+    {
+        Debug.Log("Game Over!");
+        FreezeGame();
+        LoseModal.SetActive(true);
     }
 
     void GameWin()
@@ -519,7 +564,32 @@ public class GridManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("unlocked", nextLevel);
         }
-        Modal.SetActive(true);
+        WinModal.SetActive(true);
+
+        Debug.Log("Win Time Left: " + TimeLeft);
+        Debug.Log("Win Time Left Rounded: " + Math.Round(TimeLeft));
+        for (int i = 0; i < Math.Round(TimeLeft); i++)
+        {
+            StartCoroutine(CalcStar(i));
+        }
+    }
+
+    IEnumerator CalcStar(int i)
+    {
+        yield return new WaitForSeconds(i*.02f);
+
+        int total = (int)Math.Round(TimeLeft);
+        int earned = total - i - 1;
+        ObjTimeLeftCountdown.gameObject.GetComponent<TextMeshProUGUI>().SetText(earned + "s");
+
+        if (i % 30 == 0)
+        {
+            int indexOfStar = i / 30;
+            Transform bsc = ObjWinnerStarContainer.transform;
+            GameObject bs = bsc.GetChild(indexOfStar).gameObject;
+            bs.GetComponent<Image>().color = ColorWinnerStarBright;
+            Debug.Log("new Star! " + indexOfStar);
+        }
     }
 
     void FinishContinue()
@@ -562,8 +632,10 @@ public class GridManager : MonoBehaviour
 
         if (TimeLeft < 0)
         {
-            //Do something useful or Load a new game scene depending on your use-case
-            ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, height);
+            //Game Over
+            GameOver();
+            ObjTimeLeftText.gameObject.GetComponent<TextMeshProUGUI>().SetText("00:00");
+            ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(ZEROF, height);
         }
         else
         {
@@ -574,9 +646,7 @@ public class GridManager : MonoBehaviour
             //Debug.Log("Time Left: " + niceTime);
 
             ObjTimeLeftText.gameObject.GetComponent<TextMeshProUGUI>().SetText(niceTime);
-
             ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
-
         }
 
     }
@@ -673,28 +743,28 @@ public class GridManager : MonoBehaviour
             allCord.RemoveAt(randomIndex);
         });
 
-        List<int> starList = Enumerable.Range(0, StarQty).ToList();
-        starList.ForEach(i =>
+        List<int> resList = Enumerable.Range(0, ResourceQty).ToList();
+        resList.ForEach(i =>
         {
             //Debug.Log(i);
             randomIndex = random.Next(0, allCord.Count);
-            Star star = new Star();
-            star.X = allCord[randomIndex].X;
-            star.Y = allCord[randomIndex].Y;
+            Resource res = new Resource();
+            res.X = allCord[randomIndex].X;
+            res.Y = allCord[randomIndex].Y;
 
-            cell = GridList[(star.Y * GridWidth) + star.X];
+            cell = GridList[(res.Y * GridWidth) + res.X];
             //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
             //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
 
             Vector3 scale = transform.localScale;
             scale.Set(0.8f, 0.8f, 1);
 
-            star.GameObject = Instantiate(StarPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            star.GameObject.transform.SetParent(cell.gameObject.transform);
-            star.GameObject.transform.localPosition = Vector3.zero;
-            star.GameObject.transform.localScale = scale;
+            res.GameObject = Instantiate(ResourcePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            res.GameObject.transform.SetParent(cell.gameObject.transform);
+            res.GameObject.transform.localPosition = Vector3.zero;
+            res.GameObject.transform.localScale = scale;
 
-            StarList.Add(star);
+            ResList.Add(res);
             allCord.RemoveAt(randomIndex);
         });
 
@@ -706,15 +776,15 @@ public class GridManager : MonoBehaviour
         //*/
 
         Debug.Log("rover: " + rover.X + "," + rover.Y);
-        Debug.Log("star: " + StarList[0].X + "," + StarList[0].Y);
+        Debug.Log("resource: " + ResList[0].X + "," + ResList[0].Y);
 
 
         int[] startPos = { rover.X, rover.Y};
 
-        for (int i = 0; i < StarList.Count; i++)
+        for (int i = 0; i < ResList.Count; i++)
         {
-            Star endStar = StarList[i];
-            int[] endPos = { endStar.X, endStar.Y };
+            Resource endRes = ResList[i];
+            int[] endPos = { endRes.X, endRes.Y };
             //StartCoroutine(AStarFind(grid, startPos, endPos, i));
             AStarFind(grid, startPos, endPos, i);
         }
