@@ -837,7 +837,9 @@ MonoBehaviour:
   Hop_6: {fileID: 1722805914}
   Hop_7: {fileID: 1242023190}
   BtnLeaderboard: {fileID: 756115674}
-  BtnArchievements: {fileID: 1188551344}
+  BtnAchievements: {fileID: 1188551344}
+  LeaderboardID: spacexcoder.uat.toptesters
+  Achievement_0: spacexcoder.uat.unlock10
 --- !u!1 &662846539 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3244997551103251768, guid: 54effa9e182b94ff68963bc5ee0a9df8,
@@ -1025,7 +1027,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -241.4, y: -164.5}
+  m_AnchoredPosition: {x: -241.40002, y: -164.5}
   m_SizeDelta: {x: 438.5, y: 82.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &756115676
@@ -1446,7 +1448,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Archievements
+  m_text: Achievements
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1515,7 +1517,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 889450907}
-    characterCount: 13
+    characterCount: 12
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -1649,7 +1651,7 @@ GameObject:
   - component: {fileID: 1188551347}
   - component: {fileID: 1188551346}
   m_Layer: 5
-  m_Name: BtnArchievements
+  m_Name: BtnAchievements
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1672,7 +1674,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -241.4, y: -271.7}
+  m_AnchoredPosition: {x: -241.40002, y: -271.7}
   m_SizeDelta: {x: 438.5, y: 82.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1188551346

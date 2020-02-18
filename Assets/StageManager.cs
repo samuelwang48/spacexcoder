@@ -3,11 +3,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
-[System.Serializable]
-public class Save
-{
-    public int unlocked = 0;
-}
 
 public class StageManager : MonoBehaviour
 {
@@ -21,11 +16,10 @@ public class StageManager : MonoBehaviour
     public GameObject Hop_6;
     public GameObject Hop_7;
 	public GameObject BtnLeaderboard;
-	public GameObject BtnArchievements;
+	public GameObject BtnAchievements;
 
-
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         Social.localUser.Authenticate(success => {
             if (success)
@@ -46,15 +40,15 @@ public class StageManager : MonoBehaviour
 		Button btnLeaderboard = BtnLeaderboard.GetComponent<Button>();
 		btnLeaderboard.onClick.AddListener(delegate { Social.ShowLeaderboardUI(); });
 
-		Button btnArchievements = BtnArchievements.GetComponent<Button>();
-		btnArchievements.onClick.AddListener(delegate { Social.ShowAchievementsUI(); });
+		Button btnAchievements = BtnAchievements.GetComponent<Button>();
+		btnAchievements.onClick.AddListener(delegate { Social.ShowAchievementsUI(); });
 	}
 
     void LoadStage(int stage)
     {
         Debug.Log("About to start game stage: " + stage);
         PlayerPrefs.SetInt("stage", stage);
-        SceneManager.LoadScene("Stage_0");
+        SceneManager.LoadScene("Stage_" + stage);
     }
 
     // Update is called once per frame

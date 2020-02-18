@@ -11,6 +11,8 @@ public class LevelManager : MonoBehaviour
     public UnityEngine.Color ColorWinnerStarBright = new UnityEngine.Color(0f, 0.728f, 1f, 1f);
     public UnityEngine.Color ColorWinnerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
+    private const int LEVELS_PER_STAGE = 20;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,16 +23,25 @@ public class LevelManager : MonoBehaviour
         // by default it is zero
         int unlocked = save.unlocked;
         Debug.Log("Unlocked level: " + unlocked);
+        Debug.Log("lvRecords: " + save.lvRecords);
+
+        for (int i = 0; i < save.lvRecords.Length; i++)
+        {
+            LvRecord lvRecord = save.lvRecords[i];
+            Debug.Log("Lv: " + i + ", " + lvRecord.score + ", " + lvRecord.timeLeft);
+        }
 
         //LvButton = GameObject.FindGameObjectsWithTag("lvbtn");
 
         UnityEngine.Color colorActive = new UnityEngine.Color();
         UnityEngine.ColorUtility.TryParseHtmlString("#fff", out colorActive);
 
-
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < LEVELS_PER_STAGE; i++)
         {
             GameObject lvbtn = GameObject.Find("Lv" + i);
+            LvRecord lvRecord = save.lvRecords[i];
+            int score = lvRecord.score;
+
             if (i <= unlocked)
             {
                 lvbtn.GetComponent<Image>().color = colorActive;
@@ -42,8 +53,16 @@ public class LevelManager : MonoBehaviour
             for (int bsi = 0; bsi < bsc.childCount; bsi++)
             {
                 GameObject bs = bsc.GetChild(bsi).gameObject;
-                bs.GetComponent<Image>().color = ColorWinnerStarDark;
+                if (bsi < score)
+                {
+                    bs.GetComponent<Image>().color = ColorWinnerStarBright;
+                }
+                else
+                {
+                    bs.GetComponent<Image>().color = ColorWinnerStarDark;
+                }
             }
+
         }
     }
 

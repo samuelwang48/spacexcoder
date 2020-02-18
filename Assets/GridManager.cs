@@ -67,6 +67,10 @@ public class GridManager : MonoBehaviour
     public GameObject ObjWinnerStarContainer;
 
     private const float ZEROF = 0f;
+    private const int SCORE_PER_SEC = 30;
+
+    public string LeaderboardID = "spacexcoder.uat.toptesters";
+    public string Achievement_0 = "spacexcoder.uat.unlock10";
 
     public int GridWidth = 11;
     public int GridHeight = 17;
@@ -559,20 +563,41 @@ public class GridManager : MonoBehaviour
     {
         Debug.Log("Game Win!");
         FreezeGame();
+        WinModal.SetActive(true);
 
         SpaceXCoder.Save save = GameSave.Load();
 
         int nextLevel = CurrentLevel + 1;
         int unlocked = save.unlocked;
+        int currentLvTimeLeft = save.lvRecords[CurrentLevel].timeLeft;
+        int timeLeft = (int)Math.Floor(TimeLeft);
+
         if (nextLevel > unlocked)
         {
             save.unlocked = nextLevel;
         }
-        WinModal.SetActive(true);
+
+        if (timeLeft > currentLvTimeLeft)
+        {
+            LvRecord lvRecord = new LvRecord();
+            int score = timeLeft / SCORE_PER_SEC + 1;
+            lvRecord.score = score;
+            lvRecord.timeLeft = timeLeft;
+            //Debug.Log("lvRecord: " + lvRecord.score + ", " + lvRecord.timeLeft);
+            save.lvRecords[CurrentLevel] = lvRecord;
+        }
+
+        int totalScore = save.lvRecords.ToList().Select(r => r.score).Sum();
+        Debug.Log("totalScore: " + totalScore);
+        if (totalScore > 0)
+        {
+            ReportScore(totalScore);
+        }
 
         Debug.Log("Win Time Left: " + TimeLeft);
-        Debug.Log("Win Time Left Rounded: " + Math.Round(TimeLeft));
-        for (int i = 0; i < Math.Round(TimeLeft); i++)
+        Debug.Log("Win Time Left Floored: " + timeLeft);
+
+        for (int i = 0; i < timeLeft; i++)
         {
             StartCoroutine(CalcStar(i));
         }
@@ -586,17 +611,33 @@ public class GridManager : MonoBehaviour
         yield return new WaitForSeconds(i*.02f);
 
         int total = (int)Math.Round(TimeLeft);
-        int earned = i;
+        int earned = i + 1;
         ObjTimeLeftCountdown.gameObject.GetComponent<TextMeshProUGUI>().SetText(earned + "s");
 
-        if (i % 30 == 0)
+        if (i % SCORE_PER_SEC == 0)
         {
-            int indexOfStar = i / 30;
+            int indexOfStar = i / SCORE_PER_SEC;
             Transform bsc = ObjWinnerStarContainer.transform;
             GameObject bs = bsc.GetChild(indexOfStar).gameObject;
             bs.GetComponent<Image>().color = ColorWinnerStarBright;
             Debug.Log("new Star! " + indexOfStar);
         }
+    }
+
+    void ReportScore(int score)
+    {
+        Debug.Log("Reporting score " + score + " on leaderboard " + LeaderboardID);
+        Social.ReportScore(score, LeaderboardID, success => {
+            Debug.Log(success ? "Reported score successfully" : "Failed to report score");
+        });
+    }
+
+    void ReportAchievement_0()
+    {
+        Debug.Log("Reporting progress on achievement " + Achievement_0);
+        Social.ReportProgress(Achievement_0, 100.0, success => {
+            Debug.Log(success ? "Reported score successfully" : "Failed to report score");
+        });
     }
 
     void FinishContinue()
