@@ -101,6 +101,15 @@ public class GridManager : MonoBehaviour
     public UnityEngine.Color ColorWinnerStarBright = new UnityEngine.Color(0f, 0.728f, 1f, 1f);
     public UnityEngine.Color ColorWinnerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
+    public UnityEngine.Color ColorCtrlBtnDark = new UnityEngine.Color(0.92f, 0.33f, 0.33f, 0.3f);
+    public UnityEngine.Color ColorCtrlBtnBright = new UnityEngine.Color(0.92f, 0.33f, 0.33f, 1f);
+    public UnityEngine.Color ColorCtrlBtnHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
+
+    public UnityEngine.Color ColorCtrlBtnContentDark = new UnityEngine.Color(1f, 1f, 1f, 0.2f);
+    public UnityEngine.Color ColorCtrlBtnContentBright = new UnityEngine.Color(1f, 1f, 1f, 1f);
+    public UnityEngine.Color ColorCtrlBtnContentHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
+
+
     private float TimeLeft = 90f;
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
@@ -330,7 +339,7 @@ public class GridManager : MonoBehaviour
         Button btnPlayAgain = ObjPlayAgain.GetComponent<Button>();
         Button btnGameOverExit = ObjGameOverExit.GetComponent<Button>();
 
-
+        UpdateCtrlBtnStatus(true);
 
         btnTurnLeft.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
         btnTurnRight.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
@@ -388,17 +397,23 @@ public class GridManager : MonoBehaviour
 
         InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
         InstMgr.PopulateOne(action);
+
+        UpdateCtrlBtnStatus(true);
     }
 
     void UndoInstruction(string action)
     {
         //Debug.Log(action);
 
-        Instruction.RemoveAt(Instruction.Count - 1);
+        if (Instruction.Count > 0)
+        {
+            Instruction.RemoveAt(Instruction.Count - 1);
 
-        InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
-        InstMgr.Undo();
+            InstructionManager InstMgr = InstructionView.GetComponent<InstructionManager>();
+            InstMgr.Undo();
 
+            UpdateCtrlBtnStatus(true);
+        }
     }
 
     IEnumerator ExecuteInstruction(Action action, int i)
@@ -412,6 +427,7 @@ public class GridManager : MonoBehaviour
         if (i == Instruction.Count - 1)
         {
             Instruction.Clear();
+            UpdateCtrlBtnStatus(true);
         }
     }
 
@@ -422,24 +438,72 @@ public class GridManager : MonoBehaviour
         if (index == count - 1)
         {
             IsInstExecuting = false;
-            ActivateSendButton();
+            ActivateAllCtrlBtn();
         }
     }
 
-    void DeactivateSendButton()
+    void UpdateCtrlBtnStatus(bool activated)
     {
-        UnityEngine.Color colorExecuting = new UnityEngine.Color();
-        UnityEngine.ColorUtility.TryParseHtmlString("#939393", out colorExecuting);
+        Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
+        Button btnTurnRight = ObjTurnRight.GetComponent<Button>();
+        Button btnFoward = ObjForward.GetComponent<Button>();
+        Button btnUndo = ObjUndo.GetComponent<Button>();
         Button btnSend = ObjSend.GetComponent<Button>();
-        btnSend.GetComponent<Image>().color = colorExecuting;
+
+        if (activated == true)
+        {
+            btnFoward.GetComponent<Image>().color = ColorCtrlBtnBright;
+            btnTurnLeft.GetComponent<Image>().color = ColorCtrlBtnBright;
+            btnTurnRight.GetComponent<Image>().color = ColorCtrlBtnBright;
+
+            btnFoward.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentBright;
+            btnTurnLeft.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentBright;
+            btnTurnRight.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentBright;
+
+            if (Instruction.Count == 0)
+            {
+                btnUndo.GetComponent<Image>().color = ColorCtrlBtnDark;
+                btnSend.GetComponent<Image>().color = ColorCtrlBtnDark;
+                btnUndo.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+                btnSend.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+            }
+            else
+            {
+                if (Instruction.Count > 0)
+                {
+                    btnUndo.GetComponent<Image>().color = ColorCtrlBtnBright;
+                    btnSend.GetComponent<Image>().color = ColorCtrlBtnBright;
+                    btnUndo.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentBright;
+                    btnSend.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentBright;
+                }
+            }
+        }
+        else
+        {
+            btnFoward.GetComponent<Image>().color = ColorCtrlBtnDark;
+            btnTurnLeft.GetComponent<Image>().color = ColorCtrlBtnDark;
+            btnTurnRight.GetComponent<Image>().color = ColorCtrlBtnDark;
+            btnUndo.GetComponent<Image>().color = ColorCtrlBtnDark;
+            btnSend.GetComponent<Image>().color = ColorCtrlBtnDark;
+
+            btnFoward.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+            btnTurnLeft.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+            btnTurnRight.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+            btnUndo.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+            btnSend.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
+        }
+
+
     }
 
-    void ActivateSendButton()
+    void DeactivateAllCtrlBtn()
     {
-        UnityEngine.Color colorExecuting = new UnityEngine.Color();
-        UnityEngine.ColorUtility.TryParseHtmlString("#EC5353", out colorExecuting);
-        Button btnSend = ObjSend.GetComponent<Button>();
-        btnSend.GetComponent<Image>().color = colorExecuting;
+        UpdateCtrlBtnStatus(false);
+    }
+
+    void ActivateAllCtrlBtn()
+    {
+        UpdateCtrlBtnStatus(false);
     }
 
     void SendInstruction(string action)
@@ -454,7 +518,7 @@ public class GridManager : MonoBehaviour
 
         if (inst_count > 0) {
             IsInstExecuting = true;
-            DeactivateSendButton();
+            DeactivateAllCtrlBtn();
         }
 
         int dl = DIR.Length;
