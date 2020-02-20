@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Coffee.UIExtensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,8 +19,14 @@ public class StageManager : MonoBehaviour
 	public GameObject BtnLeaderboard;
     public GameObject BtnAchievements;
     public GameObject BtnInventory;
-    public GameObject InventoryUI;
     public GameObject BluryMask;
+
+    // Inventory Grid
+    public GameObject InventoryUI;
+    public GameObject CellPrefab;
+    public int GridWidth = 8;
+    public int GridHeight = 7;
+    private List<GameObject> GridList = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +58,8 @@ public class StageManager : MonoBehaviour
 
         Button btnInventory = BtnInventory.GetComponent<Button>();
         btnInventory.onClick.AddListener(delegate { ShowInventoryUI(); });
+
+        PopulateGrid();
     }
 
     void ShowInventoryUI()
@@ -74,4 +83,20 @@ public class StageManager : MonoBehaviour
         
     }
 
+    void PopulateGrid()
+    {
+        int numberToCreate = GridWidth * GridHeight;
+        Transform containerTransform = InventoryUI.transform.Find("GridContainer");
+        GameObject newObj;
+
+        GridLayoutGroup glg = containerTransform.gameObject.GetComponent<GridLayoutGroup>();
+        glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
+        glg.constraintCount = GridHeight;
+
+        for (int i = 0; i < numberToCreate; i++)
+        {
+            newObj = (GameObject)Instantiate(CellPrefab, containerTransform);
+            GridList.Add(newObj);
+        }
+    }
 }
