@@ -67,6 +67,7 @@ public class GridManager : MonoBehaviour
 
     private const float ZEROF = 0f;
     private const int SCORE_PER_SEC = 30;
+    private const int MAX_STAR_NUMBER = 3;
 
     public string LeaderboardID = "spacexcoder.uat.toptesters";
     public string Achievement_0 = "spacexcoder.uat.unlock10";
@@ -644,9 +645,13 @@ public class GridManager : MonoBehaviour
         {
             LvRecord lvRecord = new LvRecord();
             int score = timeLeft / SCORE_PER_SEC + 1;
+            if (score > MAX_STAR_NUMBER)
+            {
+                score = MAX_STAR_NUMBER;
+            }
             lvRecord.score = score;
             lvRecord.timeLeft = timeLeft;
-            //Debug.Log("lvRecord: " + lvRecord.score + ", " + lvRecord.timeLeft);
+            Debug.Log("++++++++lvRecord: " + lvRecord.score + ", " + lvRecord.timeLeft);
             save.lvRecords[CurrentLevel] = lvRecord;
         }
 
@@ -660,7 +665,7 @@ public class GridManager : MonoBehaviour
         Debug.Log("Win Time Left: " + TimeLeft);
         Debug.Log("Win Time Left Floored: " + timeLeft);
 
-        for (int i = 0; i < timeLeft; i++)
+        for (int i = 0; i <= timeLeft; i++)
         {
             StartCoroutine(CalcStar(i));
         }
@@ -672,18 +677,15 @@ public class GridManager : MonoBehaviour
     IEnumerator CalcStar(int i)
     {
         yield return new WaitForSeconds(i*.02f);
-
-        int total = (int)Math.Round(TimeLeft);
-        int earned = i + 1;
+        int earned = i;
         ObjTimeLeftCountdown.gameObject.GetComponent<TextMeshProUGUI>().SetText(earned + "s");
 
-        if (i % SCORE_PER_SEC == 0)
+        int indexOfStar = i / SCORE_PER_SEC;
+        if (i % SCORE_PER_SEC == 0 && indexOfStar < MAX_STAR_NUMBER)
         {
-            int indexOfStar = i / SCORE_PER_SEC;
             Transform bsc = ObjWinnerStarContainer.transform;
             GameObject bs = bsc.GetChild(indexOfStar).gameObject;
             bs.GetComponent<Image>().color = ColorWinnerStarBright;
-            Debug.Log("new Star! " + indexOfStar);
         }
     }
 
