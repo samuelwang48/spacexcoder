@@ -1,7 +1,7 @@
+using Coffee.UIExtensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
 
 
 public class StageManager : MonoBehaviour
@@ -16,11 +16,17 @@ public class StageManager : MonoBehaviour
     public GameObject Hop_6;
     public GameObject Hop_7;
 	public GameObject BtnLeaderboard;
-	public GameObject BtnAchievements;
+    public GameObject BtnAchievements;
+    public GameObject BtnInventory;
+    public GameObject InventoryUI;
+    public GameObject BluryMask;
 
     // Start is called before the first frame update
     void Start()
     {
+        BluryMask.SetActive(false);
+        InventoryUI.SetActive(false);
+
         Social.localUser.Authenticate(success => {
             if (success)
             {
@@ -42,7 +48,18 @@ public class StageManager : MonoBehaviour
 
 		Button btnAchievements = BtnAchievements.GetComponent<Button>();
 		btnAchievements.onClick.AddListener(delegate { Social.ShowAchievementsUI(); });
-	}
+
+        Button btnInventory = BtnInventory.GetComponent<Button>();
+        btnInventory.onClick.AddListener(delegate { ShowInventoryUI(); });
+    }
+
+    void ShowInventoryUI()
+    {
+        Debug.Log("Inventory Show");
+        BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
+        BluryMask.SetActive(true);
+        InventoryUI.SetActive(true);
+    }
 
     void LoadStage(int stage)
     {

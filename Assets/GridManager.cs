@@ -2,7 +2,6 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Collections;
 using System;
@@ -775,7 +774,7 @@ public class GridManager : MonoBehaviour
 
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
-        List<Point> allCord = new List<Point>();
+        List<System.Drawing.Point> allCord = new List<System.Drawing.Point>();
         int[][] grid = new int[GridHeight][];
 
         //Debug.Log("[" + string.Join(", ", allX) + "]");
@@ -786,7 +785,7 @@ public class GridManager : MonoBehaviour
             grid[y] = new int[GridWidth];
             allX.ForEach(x =>
             {
-                allCord.Add(new Point(x, y));
+                allCord.Add(new System.Drawing.Point(x, y));
                 grid[y][x] = 0;
             });
         });
