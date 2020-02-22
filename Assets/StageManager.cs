@@ -19,7 +19,10 @@ public class StageManager : MonoBehaviour
 	public GameObject BtnLeaderboard;
     public GameObject BtnAchievements;
     public GameObject BtnInventory;
+    public GameObject BtnReward;
     public GameObject BluryMask;
+
+    public GameObject RewardUI;
 
     // Inventory Grid
     public GameObject InventoryUI;
@@ -33,6 +36,7 @@ public class StageManager : MonoBehaviour
     {
         BluryMask.SetActive(false);
         InventoryUI.SetActive(false);
+        RewardUI.SetActive(false);
 
         Social.localUser.Authenticate(success => {
             if (success)
@@ -59,6 +63,9 @@ public class StageManager : MonoBehaviour
         Button btnInventory = BtnInventory.GetComponent<Button>();
         btnInventory.onClick.AddListener(delegate { ShowInventoryUI(); });
 
+        Button btnReward = BtnReward.GetComponent<Button>();
+        btnReward.onClick.AddListener(delegate { ShowRewardUI(); });
+
         PopulateGrid();
     }
 
@@ -68,6 +75,14 @@ public class StageManager : MonoBehaviour
         BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
         BluryMask.SetActive(true);
         InventoryUI.SetActive(true);
+    }
+
+    void ShowRewardUI()
+    {
+        Debug.Log("Inventory Show");
+        BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
+        BluryMask.SetActive(true);
+        RewardUI.SetActive(true);
     }
 
     void LoadStage(int stage)
