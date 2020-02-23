@@ -63,8 +63,15 @@ public class StageManager : MonoBehaviour
         Button btnInventory = BtnInventory.GetComponent<Button>();
         btnInventory.onClick.AddListener(delegate { ShowInventoryUI(); });
 
+        Button btnInventoryClose = InventoryUI.transform.Find("BtnClose").GetComponent<Button>();
+        btnInventoryClose.onClick.AddListener(delegate { HideInventoryUI(); });
+
         Button btnReward = BtnReward.GetComponent<Button>();
         btnReward.onClick.AddListener(delegate { ShowRewardUI(); });
+
+        Button btnRewardClose = RewardUI.transform.Find("BtnClose").GetComponent<Button>();
+        btnRewardClose.onClick.AddListener(delegate { HideRewardUI(); });
+
 
         PopulateGrid();
     }
@@ -77,12 +84,26 @@ public class StageManager : MonoBehaviour
         InventoryUI.SetActive(true);
     }
 
+    void HideInventoryUI()
+    {
+        Debug.Log("Inventory Hide");
+        BluryMask.SetActive(false);
+        InventoryUI.SetActive(false);
+    }
+
     void ShowRewardUI()
     {
         Debug.Log("Inventory Show");
         BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
         BluryMask.SetActive(true);
         RewardUI.SetActive(true);
+    }
+
+    void HideRewardUI()
+    {
+        Debug.Log("Inventory Hide");
+        BluryMask.SetActive(false);
+        RewardUI.SetActive(false);
     }
 
     void LoadStage(int stage)
