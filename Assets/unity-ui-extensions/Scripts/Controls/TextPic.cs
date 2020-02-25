@@ -1,3 +1,6 @@
+#pragma warning disable 0618
+#pragma warning disable 0649
+
 /// Credit drobina, w34edrtfg, playemgames 
 /// Sourced from - http://forum.unity3d.com/threads/sprite-icons-with-text-e-g-emoticons.265927/
 

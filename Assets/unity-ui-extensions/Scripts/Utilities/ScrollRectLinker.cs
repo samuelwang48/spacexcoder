@@ -1,3 +1,6 @@
+#pragma warning disable 0618
+#pragma warning disable 0649
+
 /// Credit Martin Sharkbomb 
 /// Sourced from - http://www.sharkbombs.com/2015/08/26/unity-ui-scrollrect-tools/
 

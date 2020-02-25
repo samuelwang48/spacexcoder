@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable 0618
+#pragma warning disable 0649
+
+using System.Collections.Generic;
 /// Credit Brogan King (@BroganKing)
 /// Original Sourced from - https://bitbucket.org/UnityUIExtensions/unity-ui-extensions/issues/158/pagination-script
 

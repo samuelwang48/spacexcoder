@@ -1,4 +1,7 @@
-﻿///Credit judah4
+﻿#pragma warning disable 0618
+#pragma warning disable 0649
+
+///Credit judah4
 ///Sourced from - http://forum.unity3d.com/threads/color-picker.267043/
 
 using System;

@@ -127,7 +127,7 @@ public class GridManager : MonoBehaviour
 
     void InitLevel()
     {
-        CurrentLevel = PlayerPrefs.GetInt("level");
+        CurrentLevel = 9;// PlayerPrefs.GetInt("level");
         Debug.Log("Current level is: " + CurrentLevel);
 
         switch (CurrentLevel)

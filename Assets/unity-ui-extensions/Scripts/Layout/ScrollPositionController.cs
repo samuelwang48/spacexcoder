@@ -1,4 +1,7 @@
-﻿/// Credit setchi (https://github.com/setchi)
+#pragma warning disable 0618
+#pragma warning disable 0649
+
+/// Credit setchi (https://github.com/setchi)
 /// Sourced from - https://github.com/setchi/FancyScrollView
 
 using System;

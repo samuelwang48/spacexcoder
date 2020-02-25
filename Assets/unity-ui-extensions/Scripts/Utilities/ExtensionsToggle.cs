@@ -1,4 +1,7 @@
-﻿using System;
+﻿#pragma warning disable 0618
+#pragma warning disable 0649
+
+using System;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;

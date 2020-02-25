@@ -1,4 +1,7 @@
-﻿///Credit perchik
+﻿#pragma warning disable 0618
+#pragma warning disable 0649
+
+///Credit perchik
 ///Sourced from - http://forum.unity3d.com/threads/receive-onclick-event-and-pass-it-on-to-lower-ui-elements.293642/
 
 using System;

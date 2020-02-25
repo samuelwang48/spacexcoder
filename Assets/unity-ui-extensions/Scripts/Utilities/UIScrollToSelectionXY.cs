@@ -1,3 +1,6 @@
+#pragma warning disable 0618
+#pragma warning disable 0649
+
 /// Credit zero3growlithe
 /// sourced from: http://forum.unity3d.com/threads/scripts-useful-4-6-scripts-collection.264161/page-2#post-2011648
 /// Update by xesenix - based on UIScrollToSelection centers on selected element in scrollrect which can move in XY 
