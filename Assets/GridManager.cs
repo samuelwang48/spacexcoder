@@ -65,6 +65,8 @@ public class GridManager : MonoBehaviour
     public GameObject ObjTimeLeftCountdown;
     public GameObject ObjWinnerStarContainer;
 
+    public GameObject ObjSightMask;
+
     private const float ZEROF = 0f;
     private const int SCORE_PER_SEC = 30;
     private const int MAX_STAR_NUMBER = 3;
@@ -127,7 +129,7 @@ public class GridManager : MonoBehaviour
 
     void InitLevel()
     {
-        CurrentLevel = 9;// PlayerPrefs.GetInt("level");
+        CurrentLevel = PlayerPrefs.GetInt("level");
         Debug.Log("Current level is: " + CurrentLevel);
 
         switch (CurrentLevel)
@@ -274,6 +276,8 @@ public class GridManager : MonoBehaviour
 
         GenMap();
 
+        StartCoroutine(PositionSightMask());
+
         InitButtons();
 
         InitEarnedStar();
@@ -387,7 +391,6 @@ public class GridManager : MonoBehaviour
 
         // Set correct wall position to match game map
         wallObject.transform.localPosition = new Vector2((float)paddingLeft, -(float)paddingTop);
-
     }
 
     void AppendInstruction(string action)
@@ -602,6 +605,8 @@ public class GridManager : MonoBehaviour
                         Rover.GameObject.transform.localPosition = Vector3.zero;
                         Rover.X = dx;
                         Rover.Y = dy;
+
+                        StartCoroutine(PositionSightMask());
                     }
 
                     TestExecutionIndex(index, inst_count);
@@ -767,6 +772,20 @@ public class GridManager : MonoBehaviour
     void RoverRotate(int dir)
     {
         Rover.GameObject.transform.Rotate(0f, 0f, dir * -90f, Space.World);
+    }
+
+    IEnumerator PositionSightMask()
+    {
+        yield return new WaitForEndOfFrame();
+
+        Vector3 cellPosition = Rover.GameObject.transform.parent.gameObject.transform.localPosition;
+
+        Debug.Log("Rover global position x");
+        Debug.Log(cellPosition.x);
+        Debug.Log(cellPosition.y);
+        
+        Vector3 position = new Vector3(cellPosition.x, cellPosition.y, 0);
+        ObjSightMask.transform.localPosition = position;
     }
 
     //IEnumerator GenMap()
