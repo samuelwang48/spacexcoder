@@ -714,13 +714,16 @@ MonoBehaviour:
   ObjGameOverExit: {fileID: 849549830}
   ObjTimeLeftCountdown: {fileID: 1141540860}
   ObjWinnerStarContainer: {fileID: 27317775}
-  ObjSightMask: {fileID: 366442158}
+  ObjFog: {fileID: 366442158}
   LeaderboardID: spacexcoder.uat.toptesters
   Achievement_0: spacexcoder.uat.unlock10
   GridWidth: 11
   GridHeight: 18
   RockQty: 1
   ResourceQty: 3
+  MinFogScale: 1
+  MaxFogScale: 10
+  FogGrowSpeed: 0.1
   ColorRockNormal: {r: 0.84313726, g: 0.81960785, b: 1, a: 1}
   ColorRockError: {r: 1, g: 0.003921569, b: 0, a: 1}
   ColorBannerResourceDark: {r: 0.27, g: 0.27, b: 0.27, a: 1}
@@ -5107,7 +5110,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.000061035, y: -125.02}
+  m_AnchoredPosition: {x: 0.000061035, y: -125.02002}
   m_SizeDelta: {x: 1125, y: 250.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1380571820

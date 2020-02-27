@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -10,6 +11,16 @@ namespace SpaceXCoder {
     {
         public int unlocked = 0;
         public LvRecord[] lvRecords = new LvRecord[20];
+        public MyItems myItems = new MyItems();
+
+        public void ReceiveItem(string itemType, int itemAmount)
+        {
+            if (itemType == "FogLight")
+            {
+                myItems.FogLight += itemAmount;
+                Debug.Log("Item received => Fog Light: " + myItems.FogLight);
+            }
+        }
     }
 
     [System.Serializable]
@@ -17,6 +28,12 @@ namespace SpaceXCoder {
     {
         public int score = 0;
         public int timeLeft = 0;
+    }
+
+    [System.Serializable]
+    public class MyItems
+    {
+        public int FogLight;
     }
 
     public class GameSave

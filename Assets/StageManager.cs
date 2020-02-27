@@ -3,6 +3,7 @@ using Coffee.UIExtensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using SpaceXCoder;
 
 
 public class StageManager : MonoBehaviour
@@ -34,6 +35,10 @@ public class StageManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SpaceXCoder.Save save = GameSave.Load();
+        save.ReceiveItem("FogLight", 1);
+        GameSave.Write(save);
+
         BluryMask.SetActive(false);
         InventoryUI.SetActive(false);
         RewardUI.SetActive(false);

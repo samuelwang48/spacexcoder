@@ -65,7 +65,7 @@ public class GridManager : MonoBehaviour
     public GameObject ObjTimeLeftCountdown;
     public GameObject ObjWinnerStarContainer;
 
-    public GameObject ObjSightMask;
+    public GameObject ObjFog;
 
     private const float ZEROF = 0f;
     private const int SCORE_PER_SEC = 30;
@@ -81,7 +81,10 @@ public class GridManager : MonoBehaviour
     // public float DistanceX = 1f;
     // public float DistanceY = 1f;
     // public float ObjPosZ = -1f;
-
+    public float MinFogScale = 1f;
+    public float MaxFogScale = 10f;
+    public float FogGrowSpeed = 0.1f;
+    private bool IsFogReady = false;
 
     private string[] DIR = { "Up", "Right", "Down", "Left" };
 
@@ -276,7 +279,7 @@ public class GridManager : MonoBehaviour
 
         GenMap();
 
-        StartCoroutine(PositionSightMask());
+        StartCoroutine(PositionFog());
 
         InitButtons();
 
@@ -606,7 +609,7 @@ public class GridManager : MonoBehaviour
                         Rover.X = dx;
                         Rover.Y = dy;
 
-                        StartCoroutine(PositionSightMask());
+                        StartCoroutine(PositionFog());
                     }
 
                     TestExecutionIndex(index, inst_count);
@@ -765,6 +768,15 @@ public class GridManager : MonoBehaviour
 
             ObjTimeLeftText.gameObject.GetComponent<TextMeshProUGUI>().SetText(niceTime);
             ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+
+            if (IsFogReady == true)
+            {
+                float fogScale = MaxFogScale * (1 - FogGrowSpeed * TimeSpent);
+                if (fogScale > MinFogScale)
+                {
+                    ScaleFog(fogScale);
+                }
+            }
         }
 
     }
@@ -774,19 +786,29 @@ public class GridManager : MonoBehaviour
         Rover.GameObject.transform.Rotate(0f, 0f, dir * -90f, Space.World);
     }
 
-    IEnumerator PositionSightMask()
+    IEnumerator PositionFog()
     {
         yield return new WaitForEndOfFrame();
 
         Vector3 cellPosition = Rover.GameObject.transform.parent.gameObject.transform.localPosition;
 
-        Debug.Log("Rover global position x");
-        Debug.Log(cellPosition.x);
-        Debug.Log(cellPosition.y);
-        
+        //Debug.Log("Rover global position x");
+        //Debug.Log(cellPosition.x);
+        //Debug.Log(cellPosition.y);
+
         Vector3 position = new Vector3(cellPosition.x, cellPosition.y, 0);
-        ObjSightMask.transform.localPosition = position;
+        ObjFog.transform.localPosition = position;
+        IsFogReady = true;
     }
+
+    void ScaleFog(float fogScale)
+    {
+        Vector3 scale = transform.localScale;
+        scale.Set(fogScale, fogScale, 1);
+
+        ObjFog.transform.localScale = scale;
+    }
+
 
     //IEnumerator GenMap()
     void GenMap()
