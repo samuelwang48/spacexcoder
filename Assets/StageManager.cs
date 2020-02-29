@@ -39,6 +39,8 @@ public class StageManager : MonoBehaviour
         save.ReceiveItem("FogLight", 1);
         GameSave.Write(save);
 
+        save.ListItems();
+
         BluryMask.SetActive(false);
         InventoryUI.SetActive(false);
         RewardUI.SetActive(false);

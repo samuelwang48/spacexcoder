@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -21,6 +22,18 @@ namespace SpaceXCoder {
                 Debug.Log("Item received => Fog Light: " + myItems.FogLight);
             }
         }
+
+        public void ListItems()
+        {
+            Debug.Log("List Items");
+
+            FieldInfo[] fi = myItems.GetType().GetFields();
+
+            for (int i = 0; i < fi.Length; i++)
+            {
+                Debug.Log(fi[i].Name + ":" + fi[i].GetValue(myItems));
+            }
+        }
     }
 
     [System.Serializable]
@@ -34,6 +47,7 @@ namespace SpaceXCoder {
     public class MyItems
     {
         public int FogLight;
+        public int StopClock;
     }
 
     public class GameSave
