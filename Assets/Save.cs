@@ -7,6 +7,15 @@ using UnityEngine;
 
 namespace SpaceXCoder {
 
+    public class CONST
+    {
+        public static Dictionary<string, Sprite> ITEM_SPRITE = new Dictionary<string, Sprite>()
+        {
+            { "FogLight", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b") },
+            { "StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") }
+        };
+    }
+
     [System.Serializable]
     public class Save
     {

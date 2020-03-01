@@ -39,38 +39,8 @@ public class StageManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         PopulateGrid();
-
-        // begin inventory
-        SpaceXCoder.Save save = GameSave.Load();
-
-        // Receive 1 item for free
-        save.ReceiveItem("FogLight", 2);
-        save.ReceiveItem("StopClock", 1);
-        GameSave.Write(save);
-
-        Dictionary<string, Sprite> itemSprite = new Dictionary<string, Sprite>();
-        itemSprite.Add("FogLight", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b"));
-        itemSprite.Add("StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b"));
-
-
-        // Render inventory items
-        Dictionary<string, int> dict = save.ListItemDict();
-        for (int index = 0; index < dict.Count; index++)
-        {
-            var kv = dict.ElementAt(index);
-            Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
-            Transform InventoryCell = InventoryGridList[index].transform;
-
-            if (kv.Value > 0)
-            {
-                GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
-                newObj.transform.SetParent(InventoryCell);
-                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
-                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
-            }
-        }
-        // End inventory
 
         BluryMask.SetActive(false);
         InventoryUI.SetActive(false);
@@ -111,11 +81,66 @@ public class StageManager : MonoBehaviour
         btnRewardClose.onClick.AddListener(delegate { HideBonusUI(); });
 
 
+        BonusUI.transform.GetComponentsInChildren<Transform>().Where(t => t.name == "Weekday").ToList().ForEach(transform =>
+        {
+            Button btn = transform.GetComponent<Button>();
+            string weekday = transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text;
+            if (weekday == "Monday" || weekday == "Tuesday")
+            {
+                btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+            }
+        });
+    }
+
+    void ReceiveDailyBonus(Transform transform, string weekday)
+    {
+        GameObject received = transform.Find("Received").gameObject;
+        if (received.activeSelf == false)
+        {
+            SpaceXCoder.Save save = GameSave.Load();
+
+            if (weekday == "Monday")
+            {
+                save.ReceiveItem("FogLight", 1);
+            }
+            else if (weekday == "Tuesday")
+            {
+                save.ReceiveItem("StopClock", 1);
+            }
+
+            GameSave.Write(save);
+
+            received.SetActive(true);
+        }
     }
 
     void ShowInventoryUI()
     {
         Debug.Log("Inventory Show");
+
+        Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+
+        // begin inventory
+        SpaceXCoder.Save saved = GameSave.Load();
+
+        // Render inventory items
+        Dictionary<string, int> dict = saved.ListItemDict();
+        for (int index = 0; index < dict.Count; index++)
+        {
+            var kv = dict.ElementAt(index);
+            Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
+            Transform InventoryCell = InventoryGridList[index].transform;
+
+            if (kv.Value > 0)
+            {
+                GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
+                newObj.transform.SetParent(InventoryCell);
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
+                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+            }
+        }
+        // End inventory
+
         BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
         BluryMask.SetActive(true);
         InventoryUI.SetActive(true);
