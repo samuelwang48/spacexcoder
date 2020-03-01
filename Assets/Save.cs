@@ -12,27 +12,29 @@ namespace SpaceXCoder {
     {
         public int unlocked = 0;
         public LvRecord[] lvRecords = new LvRecord[20];
-        public MyItems myItems = new MyItems();
+        public Dictionary<string, int> myItemDict = new Dictionary<string, int>()
+        {
+            { "FogLight", 0 },
+            { "StopClock", 0 }
+        };
 
         public void ReceiveItem(string itemType, int itemAmount)
         {
             if (itemType == "FogLight")
             {
-                myItems.FogLight += itemAmount;
-                Debug.Log("Item received => Fog Light: " + myItems.FogLight);
+                myItemDict["FogLight"] += itemAmount;
+                Debug.Log("Item received => Fog Light: " + myItemDict["FogLight"]);
+            }
+            else if (itemType == "StopClock")
+            {
+                myItemDict["StopClock"] += itemAmount;
+                Debug.Log("Item received => Stop Clock: " + myItemDict["StopClock"]);
             }
         }
 
-        public void ListItems()
+        public Dictionary<string, int> ListItemDict()
         {
-            Debug.Log("List Items");
-
-            FieldInfo[] fi = myItems.GetType().GetFields();
-
-            for (int i = 0; i < fi.Length; i++)
-            {
-                Debug.Log(fi[i].Name + ":" + fi[i].GetValue(myItems));
-            }
+            return myItemDict;
         }
     }
 
@@ -41,13 +43,6 @@ namespace SpaceXCoder {
     {
         public int score = 0;
         public int timeLeft = 0;
-    }
-
-    [System.Serializable]
-    public class MyItems
-    {
-        public int FogLight;
-        public int StopClock;
     }
 
     public class GameSave

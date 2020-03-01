@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using SpaceXCoder;
-
+using System.Linq;
+using TMPro;
 
 public class StageManager : MonoBehaviour
 {
@@ -23,27 +24,57 @@ public class StageManager : MonoBehaviour
     public GameObject BtnReward;
     public GameObject BluryMask;
 
-    public GameObject RewardUI;
+    public GameObject BonusUI;
+
+    public GameObject PrefabItemTpl;
+
 
     // Inventory Grid
     public GameObject InventoryUI;
     public GameObject CellPrefab;
     public int GridWidth = 8;
     public int GridHeight = 7;
-    private List<GameObject> GridList = new List<GameObject>();
+    private List<GameObject> InventoryGridList = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
+        PopulateGrid();
+
+        // begin inventory
         SpaceXCoder.Save save = GameSave.Load();
-        save.ReceiveItem("FogLight", 1);
+
+        // Receive 1 item for free
+        save.ReceiveItem("FogLight", 2);
+        save.ReceiveItem("StopClock", 1);
         GameSave.Write(save);
 
-        save.ListItems();
+        Dictionary<string, Sprite> itemSprite = new Dictionary<string, Sprite>();
+        itemSprite.Add("FogLight", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b"));
+        itemSprite.Add("StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b"));
+
+
+        // Render inventory items
+        Dictionary<string, int> dict = save.ListItemDict();
+        for (int index = 0; index < dict.Count; index++)
+        {
+            var kv = dict.ElementAt(index);
+            Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
+            Transform InventoryCell = InventoryGridList[index].transform;
+
+            if (kv.Value > 0)
+            {
+                GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
+                newObj.transform.SetParent(InventoryCell);
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
+                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+            }
+        }
+        // End inventory
 
         BluryMask.SetActive(false);
         InventoryUI.SetActive(false);
-        RewardUI.SetActive(false);
+        BonusUI.SetActive(false);
 
         Social.localUser.Authenticate(success => {
             if (success)
@@ -74,13 +105,12 @@ public class StageManager : MonoBehaviour
         btnInventoryClose.onClick.AddListener(delegate { HideInventoryUI(); });
 
         Button btnReward = BtnReward.GetComponent<Button>();
-        btnReward.onClick.AddListener(delegate { ShowRewardUI(); });
+        btnReward.onClick.AddListener(delegate { ShowBonusUI(); });
 
-        Button btnRewardClose = RewardUI.transform.Find("BtnClose").GetComponent<Button>();
-        btnRewardClose.onClick.AddListener(delegate { HideRewardUI(); });
+        Button btnRewardClose = BonusUI.transform.Find("BtnClose").GetComponent<Button>();
+        btnRewardClose.onClick.AddListener(delegate { HideBonusUI(); });
 
 
-        PopulateGrid();
     }
 
     void ShowInventoryUI()
@@ -98,19 +128,19 @@ public class StageManager : MonoBehaviour
         InventoryUI.SetActive(false);
     }
 
-    void ShowRewardUI()
+    void ShowBonusUI()
     {
         Debug.Log("Inventory Show");
         BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
         BluryMask.SetActive(true);
-        RewardUI.SetActive(true);
+        BonusUI.SetActive(true);
     }
 
-    void HideRewardUI()
+    void HideBonusUI()
     {
         Debug.Log("Inventory Hide");
         BluryMask.SetActive(false);
-        RewardUI.SetActive(false);
+        BonusUI.SetActive(false);
     }
 
     void LoadStage(int stage)
@@ -139,7 +169,7 @@ public class StageManager : MonoBehaviour
         for (int i = 0; i < numberToCreate; i++)
         {
             newObj = (GameObject)Instantiate(CellPrefab, containerTransform);
-            GridList.Add(newObj);
+            InventoryGridList.Add(newObj);
         }
     }
 }
