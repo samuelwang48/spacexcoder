@@ -85,7 +85,7 @@ public class StageManager : MonoBehaviour
         {
             Button btn = transform.GetComponent<Button>();
             string weekday = transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text;
-            if (weekday == "Monday" || weekday == "Tuesday")
+            if (weekday == "Monday" || weekday == "Tuesday" || weekday == "Wednesday")
             {
                 btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
             }
@@ -107,6 +107,10 @@ public class StageManager : MonoBehaviour
             {
                 save.ReceiveItem("StopClock", 1);
             }
+            else if (weekday == "Wednesday")
+            {
+                save.ReceiveItem("BombShortRange", 1);
+            }
 
             GameSave.Write(save);
 
@@ -125,11 +129,13 @@ public class StageManager : MonoBehaviour
 
         // Render inventory items
         Dictionary<string, int> dict = saved.ListItemDict();
+
+        int cellIndex = 0;
         for (int index = 0; index < dict.Count; index++)
         {
             var kv = dict.ElementAt(index);
             Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
-            Transform InventoryCell = InventoryGridList[index].transform;
+            Transform InventoryCell = InventoryGridList[cellIndex].transform;
 
             if (kv.Value > 0)
             {
@@ -137,6 +143,8 @@ public class StageManager : MonoBehaviour
                 newObj.transform.SetParent(InventoryCell);
                 newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+
+                cellIndex++;
             }
         }
         // End inventory

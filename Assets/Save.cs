@@ -12,7 +12,8 @@ namespace SpaceXCoder {
         public static Dictionary<string, Sprite> ITEM_SPRITE = new Dictionary<string, Sprite>()
         {
             { "FogLight", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b") },
-            { "StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") }
+            { "StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") },
+            { "BombShortRange", Resources.Load<Sprite>("EngineeringCraftIcons/bg/en_craft_98") }
         };
     }
 
@@ -21,23 +22,15 @@ namespace SpaceXCoder {
     {
         public int unlocked = 0;
         public LvRecord[] lvRecords = new LvRecord[20];
-        public Dictionary<string, int> myItemDict = new Dictionary<string, int>()
-        {
-            { "FogLight", 0 },
-            { "StopClock", 0 }
-        };
+        public MyItem myItemDict = new MyItem();
 
         public void ReceiveItem(string itemType, int itemAmount)
         {
-            if (itemType == "FogLight")
+            Debug.Log("Receive item: " + itemType + ", " + myItemDict.ContainsKey(itemType));
+            if (myItemDict.ContainsKey(itemType) == true)
             {
-                myItemDict["FogLight"] += itemAmount;
-                Debug.Log("Item received => Fog Light: " + myItemDict["FogLight"]);
-            }
-            else if (itemType == "StopClock")
-            {
-                myItemDict["StopClock"] += itemAmount;
-                Debug.Log("Item received => Stop Clock: " + myItemDict["StopClock"]);
+                myItemDict[itemType] += itemAmount;
+                Debug.Log("Item received => Fog Light: " + myItemDict[itemType]);
             }
         }
 
@@ -52,6 +45,14 @@ namespace SpaceXCoder {
     {
         public int score = 0;
         public int timeLeft = 0;
+    }
+
+    [System.Serializable]
+    public class MyItem : Dictionary<string, int>
+    {
+        public int FogLight = 0;
+        public int StopClock = 0;
+        public int BombShortRange = 0;
     }
 
     public class GameSave
@@ -71,6 +72,7 @@ namespace SpaceXCoder {
             string json = JsonUtility.ToJson(save);
             Debug.Log("Loading...");
             Debug.Log(json);
+            Debug.Log(save.myItemDict);
 
             return save;
         }
