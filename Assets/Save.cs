@@ -22,20 +22,36 @@ namespace SpaceXCoder {
     {
         public int unlocked = 0;
         public LvRecord[] lvRecords = new LvRecord[20];
-        public MyItem myItemDict = new MyItem();
+        public MyItems myItems = new MyItems();
 
         public void ReceiveItem(string itemType, int itemAmount)
         {
-            Debug.Log("Receive item: " + itemType + ", " + myItemDict.ContainsKey(itemType));
-            if (myItemDict.ContainsKey(itemType) == true)
+            FieldInfo field = myItems.GetType().GetField(itemType);
+
+            Debug.Log("Receive item: " + itemType + ", " + itemAmount);
+            if (field != null)
             {
-                myItemDict[itemType] += itemAmount;
-                Debug.Log("Item received => Fog Light: " + myItemDict[itemType]);
+                int value = (int)field.GetValue(myItems);
+                field.SetValue(myItems, value + 1);
+                
+                Debug.Log("Item received => Fog Light: " + value);
             }
         }
 
         public Dictionary<string, int> ListItemDict()
         {
+            Dictionary<string, int> myItemDict = new Dictionary<string, int>();
+
+            FieldInfo[] fi = myItems.GetType().GetFields();
+
+            for (int i = 0; i < fi.Length; i++)
+            {
+                string key = fi[i].Name;
+                int val = (int)fi[i].GetValue(myItems);
+                myItemDict[key] = val;
+                Debug.Log(fi[i].Name + ":" + fi[i].GetValue(myItems));
+            }
+
             return myItemDict;
         }
     }
@@ -48,7 +64,7 @@ namespace SpaceXCoder {
     }
 
     [System.Serializable]
-    public class MyItem : Dictionary<string, int>
+    public class MyItems
     {
         public int FogLight = 0;
         public int StopClock = 0;
@@ -72,7 +88,7 @@ namespace SpaceXCoder {
             string json = JsonUtility.ToJson(save);
             Debug.Log("Loading...");
             Debug.Log(json);
-            Debug.Log(save.myItemDict);
+            Debug.Log(save.myItems);
 
             return save;
         }
