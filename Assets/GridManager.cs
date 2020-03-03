@@ -38,18 +38,22 @@ public class GridManager : MonoBehaviour
     public GameObject RoverPrefab;
     public GameObject RockPrefab;
     public GameObject ResourcePrefab;
+    public GameObject InventoryCellPrefab;
     public GameObject InstructionView;
 
     public GameObject GridScrollView;
     public GameObject BannerResourceContainer;
     public GameObject WinModal;
     public GameObject LoseModal;
+    public GameObject GameInventoryOverlay;
+    public GameObject PrefabItemTpl;
 
     public GameObject ObjTurnLeft;
     public GameObject ObjTurnRight;
     public GameObject ObjForward;
     public GameObject ObjUndo;
     public GameObject ObjSend;
+    public GameObject ObjGameInventory;
 
     public GameObject ObjTimeLeftText;
     public GameObject ObjProgressBg;
@@ -94,6 +98,7 @@ public class GridManager : MonoBehaviour
     private List<Resource> ResList = new List<Resource>();
     private List<GameObject> BannerResourceList = new List<GameObject>();
     private List<string> Instruction = new List<string>();
+    private List<GameObject> InventoryGridList = new List<GameObject>();
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
@@ -270,6 +275,7 @@ public class GridManager : MonoBehaviour
 
         InitWinModal();
         InitLoseModal();
+        InitGameInventoryOverlay();
 
         InitBanner();
 
@@ -299,6 +305,61 @@ public class GridManager : MonoBehaviour
     void InitLoseModal()
     {
         LoseModal.SetActive(false);
+    }
+
+    void InitGameInventoryOverlay()
+    {
+        GameInventoryOverlay.SetActive(false);
+
+        int gridWidth = 3;
+        int gridHeight = 3;
+        int numberToCreate = gridWidth * gridHeight;
+        Transform containerTransform = GameInventoryOverlay.transform.Find("ItemGrid");
+        GameObject newCell;
+
+        /*
+        GridLayoutGroup glg = containerTransform.gameObject.GetComponent<GridLayoutGroup>();
+        glg.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        glg.constraintCount = gridWidth;
+        */
+
+        for (int i = 0; i < numberToCreate; i++)
+        {
+            newCell = (GameObject)Instantiate(InventoryCellPrefab, containerTransform);
+            InventoryGridList.Add(newCell);
+        }
+
+        Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+
+        // begin inventory
+        SpaceXCoder.Save saved = GameSave.Load();
+
+        // Render inventory items
+        Dictionary<string, int> dict = saved.ListItemDict();
+
+        int cellIndex = 0;
+        for (int index = 0; index < dict.Count; index++)
+        {
+            var kv = dict.ElementAt(index);
+            Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
+            Transform InventoryCell = InventoryGridList[cellIndex].transform;
+
+            if (kv.Value > 0)
+            {
+                GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
+                newObj.transform.SetParent(InventoryCell);
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
+                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+
+                cellIndex++;
+            }
+        }
+        // End inventory
+    }
+
+    void ToggleGameInventoryOverlay()
+    {
+        GameInventoryOverlay.SetActive(!GameInventoryOverlay.activeSelf);
     }
 
     void InitEarnedStar()
@@ -345,6 +406,7 @@ public class GridManager : MonoBehaviour
         Button btnForceExit = ObjForceExit.GetComponent<Button>();
         Button btnPlayAgain = ObjPlayAgain.GetComponent<Button>();
         Button btnGameOverExit = ObjGameOverExit.GetComponent<Button>();
+        Button btnGameInventory = ObjGameInventory.GetComponent<Button>();
 
         UpdateCtrlBtnStatus(true);
 
@@ -358,6 +420,8 @@ public class GridManager : MonoBehaviour
 
         btnPlayAgain.onClick.AddListener(delegate { PlayAgain(); });
         btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
+
+        btnGameInventory.onClick.AddListener(delegate { ToggleGameInventoryOverlay(); });
     }
 
     void CenterGrid()
