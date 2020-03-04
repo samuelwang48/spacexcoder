@@ -558,6 +558,10 @@ MonoBehaviour:
   ObjTimeLeftText: {fileID: 1737785409}
   ObjProgressBg: {fileID: 1242353705}
   ObjProgressFg: {fileID: 548118126}
+  ColorProgressBg100: {r: 0, g: 1, b: 0.52991295, a: 1}
+  ColorProgressBg70: {r: 1, g: 0.8101982, b: 0, a: 1}
+  ColorProgressBg50: {r: 1, g: 0.5240722, b: 0, a: 1}
+  ColorProgressBg40: {r: 1, g: 0, b: 0, a: 1}
   ObjWall: {fileID: 1724343815}
   ObjFinishContinue: {fileID: 1958569116}
   ObjForceExit: {fileID: 312711817}

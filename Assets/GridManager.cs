@@ -58,6 +58,11 @@ public class GridManager : MonoBehaviour
     public GameObject ObjTimeLeftText;
     public GameObject ObjProgressBg;
     public GameObject ObjProgressFg;
+    public UnityEngine.Color ColorProgressBg100 = new UnityEngine.Color(1f, 0f, 0f, 1f);
+    public UnityEngine.Color ColorProgressBg70 = new UnityEngine.Color(1f, 0f, 0f, 1f);
+    public UnityEngine.Color ColorProgressBg50 = new UnityEngine.Color(1f, 0f, 0f, 1f);
+    public UnityEngine.Color ColorProgressBg40 = new UnityEngine.Color(1f, 0f, 0f, 1f);
+
 
     public GameObject ObjWall;
 
@@ -812,7 +817,8 @@ public class GridManager : MonoBehaviour
 
         TimeLeft -= Time.deltaTime;
         TimeSpent += Time.deltaTime;
-        float width = ProgressBgWidth * (TimeLeft / (TimeLeft + TimeSpent));
+        float percentLeft = TimeLeft / (TimeLeft + TimeSpent);
+        float width = ProgressBgWidth * percentLeft;
         float height = ProgressBgHeight;
 
         if (TimeLeft < 0)
@@ -832,6 +838,24 @@ public class GridManager : MonoBehaviour
 
             ObjTimeLeftText.gameObject.GetComponent<TextMeshProUGUI>().SetText(niceTime);
             ObjProgressFg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+
+            
+            if (percentLeft > 0.7f && percentLeft <= 1.0f) {
+                ObjProgressBg.gameObject.GetComponent<Image>().color = ColorProgressBg100;
+            }
+            else if (percentLeft > 0.5f && percentLeft <= 0.7f)
+            {
+                ObjProgressBg.gameObject.GetComponent<Image>().color = ColorProgressBg70;
+            }
+            else if (percentLeft > 0.4f && percentLeft <= 0.5f)
+            {
+                ObjProgressBg.gameObject.GetComponent<Image>().color = ColorProgressBg50;
+            }
+            else if (percentLeft <= 0.4f)
+            {
+                ObjProgressBg.gameObject.GetComponent<Image>().color = ColorProgressBg40;
+            }
+
 
             if (IsFogReady == true)
             {
