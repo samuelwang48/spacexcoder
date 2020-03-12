@@ -54,6 +54,7 @@ public class GridManager : MonoBehaviour
     public GameObject ObjUndo;
     public GameObject ObjSend;
     public GameObject ObjGameInventory;
+    public GameObject ObjGameItemOverlay;
 
     public GameObject ObjTimeLeftText;
     public GameObject ObjProgressBg;
@@ -138,6 +139,8 @@ public class GridManager : MonoBehaviour
     private bool IsInstExecuting = false;
 
     private int CurrentLevel;
+
+    private int QtyToBeUsed = 1;
 
 
     void InitLevel()
@@ -281,6 +284,7 @@ public class GridManager : MonoBehaviour
         InitWinModal();
         InitLoseModal();
         InitGameInventoryOverlay();
+        InitItemOverlay();
 
         InitBanner();
 
@@ -427,6 +431,40 @@ public class GridManager : MonoBehaviour
         btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
 
         btnGameInventory.onClick.AddListener(delegate { ToggleGameInventoryOverlay(); });
+    }
+
+    void InitItemOverlay()
+    {
+        Transform t = ObjGameItemOverlay.transform;
+        Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
+        Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
+
+        btnMoreItem.onClick.AddListener(delegate { IncreaseGameItemQtyToBeUsed(); });
+        btnLessItem.onClick.AddListener(delegate { DecreaseGameItemQtyToBeUsed(); });
+    }
+
+    void IncreaseGameItemQtyToBeUsed()
+    {
+        Transform t = ObjGameItemOverlay.transform;
+        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
+
+        QtyToBeUsed++;
+        Debug.Log("QTY " + QtyToBeUsed);
+        qtyText.SetText(QtyToBeUsed.ToString());
+    }
+
+    void DecreaseGameItemQtyToBeUsed()
+    {
+        Transform t = ObjGameItemOverlay.transform;
+        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
+        
+        QtyToBeUsed--;
+        if (QtyToBeUsed < 1)
+        {
+            QtyToBeUsed = 1;
+        }
+        Debug.Log("QTY " + QtyToBeUsed);
+        qtyText.SetText(QtyToBeUsed.ToString());
     }
 
     void CenterGrid()
