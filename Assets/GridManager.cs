@@ -359,11 +359,17 @@ public class GridManager : MonoBehaviour
                 newObj.transform.SetParent(InventoryCell);
                 newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
-
+                Button itemBtn = newObj.GetComponent<Button>();
+                itemBtn.onClick.AddListener(delegate { GameItemClicked(kv); });
                 cellIndex++;
             }
         }
         // End inventory
+    }
+
+    void GameItemClicked(KeyValuePair<string, int> kv)
+    {
+        Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
     }
 
     void ToggleGameInventoryOverlay()
