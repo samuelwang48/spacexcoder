@@ -363,14 +363,19 @@ public class GridManager : MonoBehaviour
                 newObj.transform.Find("Image").GetComponent<Image>().sprite = itemInfo[kv.Key]["Sprite"];
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
                 Button itemBtn = newObj.GetComponent<Button>();
-                itemBtn.onClick.AddListener(delegate { GameItemClicked(kv); });
+                itemBtn.onClick.AddListener(delegate { GameItemClicked(newObj, kv); });
                 cellIndex++;
+
+                if (index == 0)
+                {
+                    GameItemClicked(newObj, kv);
+                }
             }
         }
         // End inventory
     }
 
-    void GameItemClicked(KeyValuePair<string, int> kv)
+    void GameItemClicked(GameObject gameItem, KeyValuePair<string, int> kv)
     {
         Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
         CurrentGameItem = kv;
@@ -380,7 +385,7 @@ public class GridManager : MonoBehaviour
         Dictionary<string, Dictionary<string, dynamic>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, dynamic> itemInfo = itemInfoDict[CurrentGameItem.Key];
 
-        ObjGameItemOverlay.SetActive(true);
+        //ObjGameItemOverlay.SetActive(true);
 
         Transform t = ObjGameItemOverlay.transform;
 
@@ -445,7 +450,9 @@ public class GridManager : MonoBehaviour
 
     void ToggleGameInventoryOverlay()
     {
-        GameInventoryOverlay.SetActive(!GameInventoryOverlay.activeSelf);
+        bool isActive = !GameInventoryOverlay.activeSelf;
+        GameInventoryOverlay.SetActive(isActive);
+        ObjGameItemOverlay.SetActive(isActive);
     }
 
     void InitEarnedStar()
