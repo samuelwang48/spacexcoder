@@ -15,6 +15,40 @@ namespace SpaceXCoder {
             { "StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") },
             { "BombShortRange", Resources.Load<Sprite>("EngineeringCraftIcons/bg/en_craft_98") }
         };
+
+        public static Dictionary<string, string> ITEM_NAME = new Dictionary<string, string>()
+        {
+            { "FogLight", "Fog Light" },
+            { "StopClock", "Stop Clock" },
+            { "BombShortRange", "Short Range Bomb" }
+        };
+
+        public static Dictionary<string, Dictionary<string, dynamic>> ITEM_INFO = new Dictionary<string, Dictionary<string, dynamic>>() {
+            {
+                "FogLight",
+                new Dictionary<string, dynamic>() {
+                    { "Sprite", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b") },
+                    { "Name", "Fog Light" },
+                    { "Stackable", false }
+                }
+            },
+            {
+                "StopClock",
+                new Dictionary<string, dynamic>() {
+                    { "Sprite", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") },
+                    { "Name", "Stop Clock" },
+                    { "Stackable", true }
+                }
+            },
+            {
+                "BombShortRange",
+                new Dictionary<string, dynamic>() {
+                    { "Sprite", Resources.Load<Sprite>("EngineeringCraftIcons/bg/en_craft_98") },
+                    { "Name", "Short Range Bomb" },
+                    { "Stackable", false }
+                }
+            }
+        };
     }
 
     [System.Serializable]

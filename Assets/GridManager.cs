@@ -142,6 +142,8 @@ public class GridManager : MonoBehaviour
 
     private int QtyToBeUsed = 1;
 
+    private KeyValuePair<string, int> CurrentGameItem;
+
 
     void InitLevel()
     {
@@ -338,7 +340,8 @@ public class GridManager : MonoBehaviour
             InventoryGridList.Add(newCell);
         }
 
-        Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+        //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+        Dictionary<string, Dictionary<string, dynamic>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
 
         // begin inventory
         SpaceXCoder.Save saved = GameSave.Load();
@@ -357,7 +360,7 @@ public class GridManager : MonoBehaviour
             {
                 GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
                 newObj.transform.SetParent(InventoryCell);
-                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemInfo[kv.Key]["Sprite"];
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
                 Button itemBtn = newObj.GetComponent<Button>();
                 itemBtn.onClick.AddListener(delegate { GameItemClicked(kv); });
@@ -370,6 +373,74 @@ public class GridManager : MonoBehaviour
     void GameItemClicked(KeyValuePair<string, int> kv)
     {
         Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
+        CurrentGameItem = kv;
+
+        //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+        //Dictionary<string, string> itemName = SpaceXCoder.CONST.ITEM_NAME;
+        Dictionary<string, Dictionary<string, dynamic>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
+        Dictionary<string, dynamic> itemInfo = itemInfoDict[CurrentGameItem.Key];
+
+        ObjGameItemOverlay.SetActive(true);
+
+        Transform t = ObjGameItemOverlay.transform;
+
+        t.Find("ItemTpl/Image").GetComponent<Image>().sprite = itemInfo["Sprite"];
+        t.Find("ItemTpl/Qty").GetComponent<TextMeshProUGUI>().SetText(CurrentGameItem.Value.ToString());
+        t.Find("ItemName").GetComponent<TextMeshProUGUI>().SetText(itemInfo["Name"]);
+
+        t.Find("Qty/BtnMoreItem").GetComponent<Button>().interactable = itemInfo["Stackable"];
+        t.Find("Qty/BtnLessItem").GetComponent<Button>().interactable = itemInfo["Stackable"];
+
+        TextMeshProUGUI itemQty = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
+        if (CurrentGameItem.Value <= 0)
+        {
+            QtyToBeUsed = 0;
+        }
+        else
+        {
+            QtyToBeUsed = 1;
+        }
+        itemQty.SetText(QtyToBeUsed.ToString());
+    }
+
+    void InitItemOverlay()
+    {
+        ObjGameItemOverlay.SetActive(false);
+
+        Transform t = ObjGameItemOverlay.transform;
+        Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
+        Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
+
+        btnMoreItem.onClick.AddListener(delegate { IncreaseGameItemQtyToBeUsed(); });
+        btnLessItem.onClick.AddListener(delegate { DecreaseGameItemQtyToBeUsed(); });
+    }
+
+    void IncreaseGameItemQtyToBeUsed()
+    {
+        Transform t = ObjGameItemOverlay.transform;
+        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
+
+        QtyToBeUsed++;
+        if (QtyToBeUsed > CurrentGameItem.Value)
+        {
+            QtyToBeUsed = CurrentGameItem.Value;
+        }
+        Debug.Log("QTY " + QtyToBeUsed);
+        qtyText.SetText(QtyToBeUsed.ToString());
+    }
+
+    void DecreaseGameItemQtyToBeUsed()
+    {
+        Transform t = ObjGameItemOverlay.transform;
+        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
+
+        QtyToBeUsed--;
+        if (QtyToBeUsed < 1)
+        {
+            QtyToBeUsed = 1;
+        }
+        Debug.Log("QTY " + QtyToBeUsed);
+        qtyText.SetText(QtyToBeUsed.ToString());
     }
 
     void ToggleGameInventoryOverlay()
@@ -437,40 +508,6 @@ public class GridManager : MonoBehaviour
         btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
 
         btnGameInventory.onClick.AddListener(delegate { ToggleGameInventoryOverlay(); });
-    }
-
-    void InitItemOverlay()
-    {
-        Transform t = ObjGameItemOverlay.transform;
-        Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
-        Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
-
-        btnMoreItem.onClick.AddListener(delegate { IncreaseGameItemQtyToBeUsed(); });
-        btnLessItem.onClick.AddListener(delegate { DecreaseGameItemQtyToBeUsed(); });
-    }
-
-    void IncreaseGameItemQtyToBeUsed()
-    {
-        Transform t = ObjGameItemOverlay.transform;
-        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
-
-        QtyToBeUsed++;
-        Debug.Log("QTY " + QtyToBeUsed);
-        qtyText.SetText(QtyToBeUsed.ToString());
-    }
-
-    void DecreaseGameItemQtyToBeUsed()
-    {
-        Transform t = ObjGameItemOverlay.transform;
-        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
-        
-        QtyToBeUsed--;
-        if (QtyToBeUsed < 1)
-        {
-            QtyToBeUsed = 1;
-        }
-        Debug.Log("QTY " + QtyToBeUsed);
-        qtyText.SetText(QtyToBeUsed.ToString());
     }
 
     void CenterGrid()
