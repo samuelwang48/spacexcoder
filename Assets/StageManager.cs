@@ -122,7 +122,7 @@ public class StageManager : MonoBehaviour
     {
         Debug.Log("Inventory Show");
 
-        Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+        Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
 
         // begin inventory
         SpaceXCoder.Save saved = GameSave.Load();
@@ -141,7 +141,7 @@ public class StageManager : MonoBehaviour
             {
                 GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
                 newObj.transform.SetParent(InventoryCell);
-                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemSprite[kv.Key];
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfoDict[kv.Key]["Sprite"]);
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
 
                 cellIndex++;

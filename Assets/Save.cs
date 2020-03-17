@@ -9,43 +9,29 @@ namespace SpaceXCoder {
 
     public class CONST
     {
-        public static Dictionary<string, Sprite> ITEM_SPRITE = new Dictionary<string, Sprite>()
-        {
-            { "FogLight", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b") },
-            { "StopClock", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") },
-            { "BombShortRange", Resources.Load<Sprite>("EngineeringCraftIcons/bg/en_craft_98") }
-        };
-
-        public static Dictionary<string, string> ITEM_NAME = new Dictionary<string, string>()
-        {
-            { "FogLight", "Fog Light" },
-            { "StopClock", "Stop Clock" },
-            { "BombShortRange", "Short Range Bomb" }
-        };
-
-        public static Dictionary<string, Dictionary<string, dynamic>> ITEM_INFO = new Dictionary<string, Dictionary<string, dynamic>>() {
+        public static Dictionary<string, Dictionary<string, string>> ITEM_INFO = new Dictionary<string, Dictionary<string, string>>() {
             {
                 "FogLight",
-                new Dictionary<string, dynamic>() {
-                    { "Sprite", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_06_b") },
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/addons/engeniring_06_b" },
                     { "Name", "Fog Light" },
-                    { "Stackable", false }
+                    { "Stackable", "false" }
                 }
             },
             {
                 "StopClock",
-                new Dictionary<string, dynamic>() {
-                    { "Sprite", Resources.Load<Sprite>("EngineeringCraftIcons/bg/addons/engeniring_33_b") },
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/addons/engeniring_33_b" },
                     { "Name", "Stop Clock" },
-                    { "Stackable", true }
+                    { "Stackable", "true" }
                 }
             },
             {
                 "BombShortRange",
-                new Dictionary<string, dynamic>() {
-                    { "Sprite", Resources.Load<Sprite>("EngineeringCraftIcons/bg/en_craft_98") },
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_98" },
                     { "Name", "Short Range Bomb" },
-                    { "Stackable", false }
+                    { "Stackable", "false" }
                 }
             }
         };

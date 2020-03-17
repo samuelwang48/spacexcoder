@@ -328,8 +328,7 @@ public class GridManager : MonoBehaviour
         int cellIndex = 0;
         bool isDefaultClicked = false;
 
-        //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
-        Dictionary<string, Dictionary<string, dynamic>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
+        Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, int> dict = GameSave.Load().ListItemDict();
         Transform containerTransform = GameInventoryOverlay.transform.Find("ItemGrid");
         GameObject newCell;
@@ -358,7 +357,7 @@ public class GridManager : MonoBehaviour
             {
                 GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
                 newObj.transform.SetParent(InventoryCell);
-                newObj.transform.Find("Image").GetComponent<Image>().sprite = itemInfo[kv.Key]["Sprite"];
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
                 Button itemBtn = newObj.GetComponent<Button>();
                 int i = index;
@@ -376,13 +375,11 @@ public class GridManager : MonoBehaviour
 
     void GameItemClicked(GameObject gameItem, int index)
     {
-        //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
-        //Dictionary<string, string> itemName = SpaceXCoder.CONST.ITEM_NAME;
-        Dictionary<string, Dictionary<string, dynamic>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
+        Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, int> dict = GameSave.Load().ListItemDict();
 
         KeyValuePair<string, int> kv = dict.ElementAt(index);
-        Dictionary<string, dynamic> itemInfo = itemInfoDict[kv.Key];
+        Dictionary<string, string> itemInfo = itemInfoDict[kv.Key];
 
         Transform t = ObjGameItemOverlay.transform;
         Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
@@ -396,7 +393,7 @@ public class GridManager : MonoBehaviour
         Debug.Log("Game Item index: " + index);
         Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
 
-        t.Find("ItemTpl/Image").GetComponent<Image>().sprite = itemInfo["Sprite"];
+        t.Find("ItemTpl/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo["Sprite"]);
         t.Find("ItemTpl/Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
         t.Find("ItemName").GetComponent<TextMeshProUGUI>().SetText(itemInfo["Name"]);
 
@@ -408,8 +405,8 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            btnMoreItem.interactable = itemInfo["Stackable"];
-            btnLessItem.interactable = itemInfo["Stackable"];
+            btnMoreItem.interactable = itemInfo["Stackable"] == "false" ? false : true;
+            btnLessItem.interactable = itemInfo["Stackable"] == "false" ? false : true;
             btnUse.interactable = true;
             QtyToBeUsed = 1;
         }
