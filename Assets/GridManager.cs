@@ -142,7 +142,8 @@ public class GridManager : MonoBehaviour
 
     private int QtyToBeUsed = 1;
 
-    private KeyValuePair<string, int> CurrentGameItem;
+    private int CurrentGameItemIndex;
+    private GameObject CurrentGameItemObj;
 
 
     void InitLevel()
@@ -286,7 +287,7 @@ public class GridManager : MonoBehaviour
         InitWinModal();
         InitLoseModal();
         InitGameInventoryOverlay();
-        InitItemOverlay();
+        InitGameItemOverlay();
 
         InitBanner();
 
@@ -320,11 +321,16 @@ public class GridManager : MonoBehaviour
 
     void InitGameInventoryOverlay()
     {
-        GameInventoryOverlay.SetActive(false);
 
-        int gridWidth = 3;
-        int gridHeight = 3;
+        int gridWidth = 2;
+        int gridHeight = 5;
         int numberToCreate = gridWidth * gridHeight;
+        int cellIndex = 0;
+        bool isDefaultClicked = false;
+
+        //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
+        Dictionary<string, Dictionary<string, dynamic>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
+        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
         Transform containerTransform = GameInventoryOverlay.transform.Find("ItemGrid");
         GameObject newCell;
 
@@ -334,22 +340,14 @@ public class GridManager : MonoBehaviour
         glg.constraintCount = gridWidth;
         */
 
+        GameInventoryOverlay.SetActive(false);
+
         for (int i = 0; i < numberToCreate; i++)
         {
             newCell = (GameObject)Instantiate(InventoryCellPrefab, containerTransform);
             InventoryGridList.Add(newCell);
         }
 
-        //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
-        Dictionary<string, Dictionary<string, dynamic>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
-
-        // begin inventory
-        SpaceXCoder.Save saved = GameSave.Load();
-
-        // Render inventory items
-        Dictionary<string, int> dict = saved.ListItemDict();
-
-        int cellIndex = 0;
         for (int index = 0; index < dict.Count; index++)
         {
             var kv = dict.ElementAt(index);
@@ -363,72 +361,113 @@ public class GridManager : MonoBehaviour
                 newObj.transform.Find("Image").GetComponent<Image>().sprite = itemInfo[kv.Key]["Sprite"];
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
                 Button itemBtn = newObj.GetComponent<Button>();
-                itemBtn.onClick.AddListener(delegate { GameItemClicked(newObj, kv); });
+                int i = index;
+                itemBtn.onClick.AddListener(delegate { GameItemClicked(newObj, i); });
                 cellIndex++;
 
-                if (index == 0)
+                if (isDefaultClicked == false)
                 {
-                    GameItemClicked(newObj, kv);
+                    GameItemClicked(newObj, index);
+                    isDefaultClicked = true;
                 }
             }
         }
-        // End inventory
     }
 
-    void GameItemClicked(GameObject gameItem, KeyValuePair<string, int> kv)
+    void GameItemClicked(GameObject gameItem, int index)
     {
-        Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
-        CurrentGameItem = kv;
-
         //Dictionary<string, Sprite> itemSprite = SpaceXCoder.CONST.ITEM_SPRITE;
         //Dictionary<string, string> itemName = SpaceXCoder.CONST.ITEM_NAME;
         Dictionary<string, Dictionary<string, dynamic>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
-        Dictionary<string, dynamic> itemInfo = itemInfoDict[CurrentGameItem.Key];
+        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
 
-        //ObjGameItemOverlay.SetActive(true);
+        KeyValuePair<string, int> kv = dict.ElementAt(index);
+        Dictionary<string, dynamic> itemInfo = itemInfoDict[kv.Key];
 
         Transform t = ObjGameItemOverlay.transform;
+        Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
+        Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
+        Button btnUse = t.Find("Use").GetComponent<Button>();
+        TextMeshProUGUI itemQty = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
+
+        CurrentGameItemObj = gameItem;
+        CurrentGameItemIndex = index;
+
+        Debug.Log("Game Item index: " + index);
+        Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
 
         t.Find("ItemTpl/Image").GetComponent<Image>().sprite = itemInfo["Sprite"];
-        t.Find("ItemTpl/Qty").GetComponent<TextMeshProUGUI>().SetText(CurrentGameItem.Value.ToString());
+        t.Find("ItemTpl/Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
         t.Find("ItemName").GetComponent<TextMeshProUGUI>().SetText(itemInfo["Name"]);
 
-        t.Find("Qty/BtnMoreItem").GetComponent<Button>().interactable = itemInfo["Stackable"];
-        t.Find("Qty/BtnLessItem").GetComponent<Button>().interactable = itemInfo["Stackable"];
-
-        TextMeshProUGUI itemQty = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
-        if (CurrentGameItem.Value <= 0)
-        {
+        if (kv.Value <= 0) {
+            btnMoreItem.interactable = false;
+            btnLessItem.interactable = false;
+            btnUse.interactable = false;
             QtyToBeUsed = 0;
         }
         else
         {
+            btnMoreItem.interactable = itemInfo["Stackable"];
+            btnLessItem.interactable = itemInfo["Stackable"];
+            btnUse.interactable = true;
             QtyToBeUsed = 1;
         }
+
         itemQty.SetText(QtyToBeUsed.ToString());
     }
 
-    void InitItemOverlay()
+    void InitGameItemOverlay()
     {
         ObjGameItemOverlay.SetActive(false);
 
         Transform t = ObjGameItemOverlay.transform;
         Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
         Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
+        Button btnUse = t.Find("Use").GetComponent<Button>();
 
         btnMoreItem.onClick.AddListener(delegate { IncreaseGameItemQtyToBeUsed(); });
         btnLessItem.onClick.AddListener(delegate { DecreaseGameItemQtyToBeUsed(); });
+        btnUse.onClick.AddListener(delegate { UseGameItem(); });
+    }
+
+    void UseGameItem()
+    {
+        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
+        KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
+
+        Debug.Log("Use game item: " + kv.Key);
+        Debug.Log("Use game item to be used: " + QtyToBeUsed);
+        Debug.Log("Use game item stock: " + kv.Value);
+
+        if (kv.Value > 0)
+        {
+            int itemQtyLeft = kv.Value - QtyToBeUsed;
+
+            Debug.Log("Use game item left: " + itemQtyLeft);
+
+            SpaceXCoder.Save save = GameSave.Load();
+            save.ConsumeItem(kv.Key, QtyToBeUsed);
+            GameSave.Write(save);
+
+            CurrentGameItemObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
+
+            GameItemClicked(CurrentGameItemObj, CurrentGameItemIndex);
+        }
+
     }
 
     void IncreaseGameItemQtyToBeUsed()
     {
+        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
+        KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
         Transform t = ObjGameItemOverlay.transform;
         TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
 
         QtyToBeUsed++;
-        if (QtyToBeUsed > CurrentGameItem.Value)
+        if (QtyToBeUsed > kv.Value)
         {
-            QtyToBeUsed = CurrentGameItem.Value;
+            QtyToBeUsed = kv.Value;
         }
         Debug.Log("QTY " + QtyToBeUsed);
         qtyText.SetText(QtyToBeUsed.ToString());
@@ -470,10 +509,10 @@ public class GridManager : MonoBehaviour
         Rect progressBgRect = ObjProgressBg.gameObject.GetComponent<RectTransform>().rect;
         ProgressBgWidth = progressBgRect.width;
         ProgressBgHeight = progressBgRect.height;
+        Transform bsc = BannerResourceContainer.transform;
 
         //Debug.Log("Progressbar Bg Width: " + ProgressBgWidth);
 
-        Transform bsc = BannerResourceContainer.transform;
         for (int bsi = 0; bsi < bsc.childCount; bsi++)
         {
             GameObject bs = bsc.GetChild(bsi).gameObject;
@@ -655,8 +694,6 @@ public class GridManager : MonoBehaviour
             btnUndo.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
             btnSend.transform.GetChild(0).GetComponent<Image>().color = ColorCtrlBtnContentDark;
         }
-
-
     }
 
     void DeactivateAllCtrlBtn()

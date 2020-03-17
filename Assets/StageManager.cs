@@ -101,15 +101,15 @@ public class StageManager : MonoBehaviour
 
             if (weekday == "Monday")
             {
-                save.ReceiveItem("FogLight", 1);
+                save.ReceiveItem("FogLight", 10);
             }
             else if (weekday == "Tuesday")
             {
-                save.ReceiveItem("StopClock", 1);
+                save.ReceiveItem("StopClock", 10);
             }
             else if (weekday == "Wednesday")
             {
-                save.ReceiveItem("BombShortRange", 1);
+                save.ReceiveItem("BombShortRange", 10);
             }
 
             GameSave.Write(save);

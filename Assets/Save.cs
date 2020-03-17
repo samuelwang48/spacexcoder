@@ -66,9 +66,23 @@ namespace SpaceXCoder {
             if (field != null)
             {
                 int value = (int)field.GetValue(myItems);
-                field.SetValue(myItems, value + 1);
+                field.SetValue(myItems, value + itemAmount);
                 
-                Debug.Log("Item received => Fog Light: " + value);
+                Debug.Log("Item received => Fog Light: " + field.GetValue(myItems));
+            }
+        }
+
+        public void ConsumeItem(string itemType, int itemAmount)
+        {
+            FieldInfo field = myItems.GetType().GetField(itemType);
+
+            Debug.Log("Consume item: " + itemType + ", " + itemAmount);
+            if (field != null)
+            {
+                int value = (int)field.GetValue(myItems);
+                field.SetValue(myItems, value - itemAmount);
+
+                Debug.Log("Item left => Fog Light: " + field.GetValue(myItems));
             }
         }
 
