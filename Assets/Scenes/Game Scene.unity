@@ -1225,8 +1225,7 @@ MonoBehaviour:
   RockQty: 1
   ResourceQty: 3
   MinFogScale: 1
-  MaxFogScale: 10
-  FogGrowSpeed: 0.1
+  FogGrowSpeed: 0.005
   ColorRockNormal: {r: 0.84313726, g: 0.81960785, b: 1, a: 1}
   ColorRockError: {r: 1, g: 0.003921569, b: 0, a: 1}
   ColorBannerResourceDark: {r: 0.27, g: 0.27, b: 0.27, a: 1}

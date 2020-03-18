@@ -92,7 +92,7 @@ public class GridManager : MonoBehaviour
     // public float DistanceY = 1f;
     // public float ObjPosZ = -1f;
     public float MinFogScale = 1f;
-    public float MaxFogScale = 10f;
+    private float BaseFogScale = 10f;
     public float FogGrowSpeed = 0.1f;
     private bool IsFogReady = false;
 
@@ -450,6 +450,14 @@ public class GridManager : MonoBehaviour
             CurrentGameItemObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
 
             GameItemClicked(CurrentGameItemObj, CurrentGameItemIndex);
+
+            if (kv.Key == "FogLight")
+            {
+                Debug.Log("Fog Light being used");
+
+                ScaleFog(BaseFogScale * 2f);
+
+            }
         }
 
     }
@@ -981,14 +989,13 @@ public class GridManager : MonoBehaviour
 
             if (IsFogReady == true)
             {
-                float fogScale = MaxFogScale * (1 - FogGrowSpeed * TimeSpent);
+                float fogScale = BaseFogScale * (1 - FogGrowSpeed);
                 if (fogScale > MinFogScale)
                 {
                     ScaleFog(fogScale);
                 }
             }
         }
-
     }
 
     void RoverRotate(int dir)
@@ -1017,6 +1024,7 @@ public class GridManager : MonoBehaviour
         scale.Set(fogScale, fogScale, 1);
 
         ObjFog.transform.localScale = scale;
+        BaseFogScale = fogScale;
     }
 
 
