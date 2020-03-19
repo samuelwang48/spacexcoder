@@ -127,7 +127,7 @@ public class GridManager : MonoBehaviour
     public UnityEngine.Color ColorCtrlBtnContentHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
 
-    private float TimeLeft = 90f;
+    private float TimeLeft = 90f; //~0.0003f fog speed
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
     private float ProgressBgHeight;
@@ -159,120 +159,140 @@ public class GridManager : MonoBehaviour
                 GridHeight = 3;
                 RockQty = 0;
                 ResourceQty = 1;
+                FogGrowSpeed = 0.0003f;
                 break;
             case 1:
                 GridWidth = 3;
                 GridHeight = 3;
                 RockQty = 3;
                 ResourceQty = 2;
+                FogGrowSpeed = 0.0003f;
                 break;
             case 2:
                 GridWidth = 5;
                 GridHeight = 5;
                 RockQty = 4;
                 ResourceQty = 3;
+                FogGrowSpeed = 0.0003f;
                 break;
             case 3:
                 GridWidth = 5;
                 GridHeight = 5;
                 RockQty = 5;
                 ResourceQty = 4;
+                FogGrowSpeed = 0.0003f;
                 break;
             case 4:
                 GridWidth = 5;
                 GridHeight = 5;
                 RockQty = 6;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0003f; //90s
                 break;
             case 5:
                 GridWidth = 6;
                 GridHeight = 6;
                 RockQty = 8;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0006f;
                 break;
             case 6:
                 GridWidth = 7;
                 GridHeight = 7;
                 RockQty = 11;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0007f;
                 break;
             case 7:
                 GridWidth = 8;
                 GridHeight = 8;
                 RockQty = 15;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0008f;
                 break;
             case 8:
                 GridWidth = 9;
                 GridHeight = 9;
                 RockQty = 19;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0009f;
                 break;
             case 9:
                 GridWidth = 10;
                 GridHeight = 10;
                 RockQty = 24;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0010f;
                 break;
             case 10:
                 GridWidth = 11;
                 GridHeight = 11;
                 RockQty = 30;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0011f;
                 break;
             case 11:
                 GridWidth = 11;
                 GridHeight = 12;
                 RockQty = 32;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0012f;
                 break;
             case 12:
                 GridWidth = 11;
                 GridHeight = 13;
                 RockQty = 35;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0013f;
                 break;
             case 13:
                 GridWidth = 11;
                 GridHeight = 14;
                 RockQty = 37;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0016f;
                 break;
             case 14:
                 GridWidth = 11;
                 GridHeight = 15;
                 RockQty = 40;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0019f;
                 break;
             case 15:
                 GridWidth = 11;
                 GridHeight = 16;
                 RockQty = 43;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0022f;
                 break;
             case 16:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 45;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0025f;
                 break;
             case 17:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 45;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0028f;
                 break;
             case 18:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 50;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.003f;
                 break;
             case 19:
                 GridWidth = 11;
                 GridHeight = 17;
                 RockQty = 60;
                 ResourceQty = 5;
+                FogGrowSpeed = 0.0035f;
                 break;
             default:
                 break;
