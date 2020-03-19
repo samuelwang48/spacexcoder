@@ -108,6 +108,7 @@ public class GridManager : MonoBehaviour
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
+    public UnityEngine.Color ColorRockRemoved = new UnityEngine.Color(1f, 0f, 0f, 0.1f);
 
     public UnityEngine.Color ColorBannerResourceDark = new UnityEngine.Color(0.27f, 0.27f, 0.27f, 1f);
     public UnityEngine.Color ColorBannerResourceBright = new UnityEngine.Color(1f, 1f, 1f, 1f);
@@ -353,23 +354,23 @@ public class GridManager : MonoBehaviour
             Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
             Transform InventoryCell = InventoryGridList[cellIndex].transform;
 
-            if (kv.Value > 0)
-            {
-                GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
-                newObj.transform.SetParent(InventoryCell);
-                newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
-                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
-                Button itemBtn = newObj.GetComponent<Button>();
-                int i = index;
-                itemBtn.onClick.AddListener(delegate { GameItemClicked(newObj, i); });
-                cellIndex++;
+            //if (kv.Value > 0)
+            //{
+            GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
+            newObj.transform.SetParent(InventoryCell);
+            newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
+            newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+            Button itemBtn = newObj.GetComponent<Button>();
+            int i = index;
+            itemBtn.onClick.AddListener(delegate { GameItemClicked(newObj, i); });
+            cellIndex++;
 
-                if (isDefaultClicked == false)
-                {
-                    GameItemClicked(newObj, index);
-                    isDefaultClicked = true;
-                }
+            if (isDefaultClicked == false)
+            {
+                GameItemClicked(newObj, index);
+                isDefaultClicked = true;
             }
+            //}
         }
     }
 
@@ -454,9 +455,38 @@ public class GridManager : MonoBehaviour
             if (kv.Key == "FogLight")
             {
                 Debug.Log("Fog Light being used");
-
                 ScaleFog(BaseFogScale * 2f);
+            }
+            else if (kv.Key == "StopClock")
+            {
+                Debug.Log("Stop Clock being used");
+                TimeLeft += 3f;
+            }
+            else if (kv.Key == "BombShortRange")
+            {
+                Debug.Log("BombShortRange being used");
+                Debug.Log("Rover.X: " + Rover.X + ", Rover.Y: " + Rover.Y);
+                // Eight possible rocks starting from the TopLeft to Rover
 
+                Rock tl = RockList.Find(rock => rock.X == Rover.X - 1 && rock.Y == Rover.Y - 1);
+                Rock t = RockList.Find(rock => rock.X == Rover.X && rock.Y == Rover.Y - 1);
+                Rock tr = RockList.Find(rock => rock.X == Rover.X + 1 && rock.Y == Rover.Y - 1);
+                Rock r = RockList.Find(rock => rock.X == Rover.X + 1 && rock.Y == Rover.Y);
+                Rock br = RockList.Find(rock => rock.X == Rover.X + 1 && rock.Y == Rover.Y + 1);
+                Rock b = RockList.Find(rock => rock.X == Rover.X && rock.Y == Rover.Y + 1);
+                Rock bl = RockList.Find(rock => rock.X == Rover.X - 1 && rock.Y == Rover.Y + 1);
+                Rock l = RockList.Find(rock => rock.X == Rover.X - 1 && rock.Y == Rover.Y);
+
+                List<Rock> rockList = new List<Rock>(){tl, t, tr, r, br, b, bl, l};
+
+                rockList.ForEach(rock =>
+                {
+                    if (rock != null)
+                    {
+                        rock.GameObject.GetComponent<Image>().color = ColorRockRemoved;
+                        RockList.Remove(rock);
+                    }
+                });
             }
         }
 
