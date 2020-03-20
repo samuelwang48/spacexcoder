@@ -149,6 +149,7 @@ public class GridManager : MonoBehaviour
 
     void InitLevel()
     {
+        GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
         CurrentLevel = PlayerPrefs.GetInt("level");
         Debug.Log("Current level is: " + CurrentLevel);
 
@@ -288,14 +289,19 @@ public class GridManager : MonoBehaviour
                 FogGrowSpeed = 0.003f;
                 break;
             case 19:
-                GridWidth = 11;
+                GridWidth = 12;
                 GridHeight = 17;
-                RockQty = 60;
+                RockQty = 65;
                 ResourceQty = 5;
                 FogGrowSpeed = 0.0035f;
                 break;
             default:
                 break;
+        }
+
+        if (GridHeight >= 17)
+        {
+            glg.cellSize = new Vector2(87f, 87f);
         }
     }
 
@@ -360,7 +366,7 @@ public class GridManager : MonoBehaviour
         glg.constraintCount = gridWidth;
         */
 
-        GameInventoryOverlay.SetActive(false);
+        // GameInventoryOverlay.SetActive(false);
 
         for (int i = 0; i < numberToCreate; i++)
         {
@@ -382,7 +388,10 @@ public class GridManager : MonoBehaviour
             newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
             Button itemBtn = newObj.GetComponent<Button>();
             int i = index;
-            itemBtn.onClick.AddListener(delegate { GameItemClicked(newObj, i); });
+            itemBtn.onClick.AddListener(delegate {
+                GameItemClicked(newObj, i);
+                UseGameItem();
+            });
             cellIndex++;
 
             if (isDefaultClicked == false)
@@ -542,12 +551,14 @@ public class GridManager : MonoBehaviour
         qtyText.SetText(QtyToBeUsed.ToString());
     }
 
+    /*
     void ToggleGameInventoryOverlay()
     {
         bool isActive = !GameInventoryOverlay.activeSelf;
         GameInventoryOverlay.SetActive(isActive);
         ObjGameItemOverlay.SetActive(isActive);
     }
+    */
 
     void InitEarnedStar()
     {
@@ -593,7 +604,7 @@ public class GridManager : MonoBehaviour
         Button btnForceExit = ObjForceExit.GetComponent<Button>();
         Button btnPlayAgain = ObjPlayAgain.GetComponent<Button>();
         Button btnGameOverExit = ObjGameOverExit.GetComponent<Button>();
-        Button btnGameInventory = ObjGameInventory.GetComponent<Button>();
+        //Button btnGameInventory = ObjGameInventory.GetComponent<Button>();
 
         UpdateCtrlBtnStatus(true);
 
@@ -608,7 +619,7 @@ public class GridManager : MonoBehaviour
         btnPlayAgain.onClick.AddListener(delegate { PlayAgain(); });
         btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
 
-        btnGameInventory.onClick.AddListener(delegate { ToggleGameInventoryOverlay(); });
+        //btnGameInventory.onClick.AddListener(delegate { ToggleGameInventoryOverlay(); });
     }
 
     void CenterGrid()
