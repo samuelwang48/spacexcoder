@@ -108,7 +108,7 @@ public class GridManager : MonoBehaviour
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);
-    public UnityEngine.Color ColorRockRemoved = new UnityEngine.Color(1f, 0f, 0f, 0.1f);
+    public UnityEngine.Color ColorRockRemoved = new UnityEngine.Color(1f, 1f, 1f, 0.2f);
 
     public UnityEngine.Color ColorBannerResourceDark = new UnityEngine.Color(0.27f, 0.27f, 0.27f, 1f);
     public UnityEngine.Color ColorBannerResourceBright = new UnityEngine.Color(1f, 1f, 1f, 1f);
@@ -146,6 +146,7 @@ public class GridManager : MonoBehaviour
     private int CurrentGameItemIndex;
     private GameObject CurrentGameItemObj;
 
+    public GameObject EffectShortRangeBomb;
 
     void InitLevel()
     {
@@ -514,6 +515,9 @@ public class GridManager : MonoBehaviour
                     {
                         rock.GameObject.GetComponent<Image>().color = ColorRockRemoved;
                         RockList.Remove(rock);
+
+                        GameObject effect = (GameObject)Instantiate(EffectShortRangeBomb, rock.GameObject.transform);
+                        effect.transform.SetParent(rock.GameObject.transform.parent.transform);
                     }
                 });
             }

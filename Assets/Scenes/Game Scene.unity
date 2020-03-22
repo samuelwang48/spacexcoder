@@ -1228,7 +1228,7 @@ MonoBehaviour:
   FogGrowSpeed: 0.000001
   ColorRockNormal: {r: 0.84313726, g: 0.81960785, b: 1, a: 1}
   ColorRockError: {r: 1, g: 0.003921569, b: 0, a: 1}
-  ColorRockRemoved: {r: 1, g: 0, b: 0, a: 0.1}
+  ColorRockRemoved: {r: 1, g: 1, b: 1, a: 0.2}
   ColorBannerResourceDark: {r: 0.27, g: 0.27, b: 0.27, a: 1}
   ColorBannerResourceBright: {r: 1, g: 1, b: 1, a: 1}
   ColorBannerResourceHidden: {r: 1, g: 1, b: 1, a: 0}
@@ -1241,6 +1241,8 @@ MonoBehaviour:
   ColorCtrlBtnContentDark: {r: 1, g: 1, b: 1, a: 0.29803923}
   ColorCtrlBtnContentBright: {r: 1, g: 1, b: 1, a: 1}
   ColorCtrlBtnContentHidden: {r: 1, g: 1, b: 1, a: 0}
+  EffectShortRangeBomb: {fileID: 4860935787425509968, guid: 2c45c479b29bf478fab7cf536ffb3c81,
+    type: 3}
 --- !u!114 &253252460
 MonoBehaviour:
   m_ObjectHideFlags: 0
