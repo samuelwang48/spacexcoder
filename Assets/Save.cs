@@ -6,6 +6,22 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace SpaceXCoder {
+    [System.Serializable]
+    public class LvRecord
+    {
+        public int score = 0;
+        public int timeLeft = 0;
+    }
+
+    [System.Serializable]
+    public class MyItems
+    {
+        public int FogLight = 0;
+        public int StopClock = 0;
+        public int BombShortRange = 0;
+        public int RocketBomb = 0;
+        public int ExtraStar = 0;
+    }
 
     public class CONST
     {
@@ -33,6 +49,23 @@ namespace SpaceXCoder {
                     { "Name", "Short Range Bomb" },
                     { "Stackable", "false" }
                 }
+            },
+            {
+                "RocketBomb",
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_95" },
+                    { "Name", "Rocket Bomb" },
+                    { "Stackable", "false" }
+                }
+            },
+            {
+                "ExtraStar",
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/addons/engeniring_09_b" },
+                    { "Name", "Extra Star" },
+                    { "Stackable", "false" },
+                    { "SingleUse", "true" },
+                }
             }
         };
     }
@@ -54,7 +87,7 @@ namespace SpaceXCoder {
                 int value = (int)field.GetValue(myItems);
                 field.SetValue(myItems, value + itemAmount);
                 
-                Debug.Log("Item received => Fog Light: " + field.GetValue(myItems));
+                Debug.Log("Item received => " + itemType + ": " + field.GetValue(myItems));
             }
         }
 
@@ -68,7 +101,7 @@ namespace SpaceXCoder {
                 int value = (int)field.GetValue(myItems);
                 field.SetValue(myItems, value - itemAmount);
 
-                Debug.Log("Item left => Fog Light: " + field.GetValue(myItems));
+                Debug.Log("Item left => " + itemType + ": " + field.GetValue(myItems));
             }
         }
 
@@ -88,21 +121,6 @@ namespace SpaceXCoder {
 
             return myItemDict;
         }
-    }
-
-    [System.Serializable]
-    public class LvRecord
-    {
-        public int score = 0;
-        public int timeLeft = 0;
-    }
-
-    [System.Serializable]
-    public class MyItems
-    {
-        public int FogLight = 0;
-        public int StopClock = 0;
-        public int BombShortRange = 0;
     }
 
     public class GameSave

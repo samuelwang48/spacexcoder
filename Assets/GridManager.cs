@@ -7,6 +7,7 @@ using System.Collections;
 using System;
 using TMPro;
 using SpaceXCoder;
+using Coffee.UIExtensions;
 
 public class Rover
 {
@@ -152,6 +153,7 @@ public class GridManager : MonoBehaviour
     {
         GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
         CurrentLevel = PlayerPrefs.GetInt("level");
+        //CurrentLevel = 19;
         Debug.Log("Current level is: " + CurrentLevel);
 
         switch (CurrentLevel)
@@ -507,7 +509,7 @@ public class GridManager : MonoBehaviour
                 Rock bl = RockList.Find(rock => rock.X == Rover.X - 1 && rock.Y == Rover.Y + 1);
                 Rock l = RockList.Find(rock => rock.X == Rover.X - 1 && rock.Y == Rover.Y);
 
-                List<Rock> rockList = new List<Rock>(){tl, t, tr, r, br, b, bl, l};
+                List<Rock> rockList = new List<Rock>() { tl, t, tr, r, br, b, bl, l };
 
                 rockList.ForEach(rock =>
                 {
@@ -521,8 +523,48 @@ public class GridManager : MonoBehaviour
                     }
                 });
             }
-        }
+            else if (kv.Key == "RocketBomb")
+            {
+                Debug.Log("RocketBomb being used");
+                Debug.Log("Rover.X: " + Rover.X + ", Rover.Y: " + Rover.Y + ", Rover.dir: " + Rover.dir);
 
+                List<Rock> rockList = null;
+
+                
+                if (Rover.dir == 0)
+                {
+                    rockList = RockList.Where(rock => rock.X == Rover.X && rock.Y < Rover.Y).ToList();
+                }
+                else if (Rover.dir == 2)
+                {
+                    rockList = RockList.Where(rock => rock.X == Rover.X && rock.Y > Rover.Y).ToList();
+                }
+                else if (Rover.dir == 1)
+                {
+                    rockList = RockList.Where(rock => rock.Y == Rover.Y && rock.X > Rover.X).ToList();
+                }
+                else if (Rover.dir == 3)
+                {
+                    rockList = RockList.Where(rock => rock.Y == Rover.Y && rock.X < Rover.X).ToList();
+                }
+
+                rockList.ForEach(rock =>
+                {
+                    if (rock != null)
+                    {
+                        rock.GameObject.GetComponent<Image>().color = ColorRockRemoved;
+                        RockList.Remove(rock);
+
+                        GameObject effect = (GameObject)Instantiate(EffectShortRangeBomb, rock.GameObject.transform);
+                        effect.transform.SetParent(rock.GameObject.transform.parent.transform);
+                    }
+                });
+            }
+            else if (kv.Key == "ExtraStar")
+            {
+                CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+            }
+        }
     }
 
     void IncreaseGameItemQtyToBeUsed()
