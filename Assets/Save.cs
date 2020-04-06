@@ -21,6 +21,8 @@ namespace SpaceXCoder {
         public int BombShortRange = 0;
         public int RocketBomb = 0;
         public int ExtraStar = 0;
+        public int Teleport = 0;
+        public int PowerOverwhelming = 0;
     }
 
     public class CONST
@@ -65,6 +67,22 @@ namespace SpaceXCoder {
                     { "Name", "Extra Star" },
                     { "Stackable", "false" },
                     { "SingleUse", "true" },
+                }
+            },
+            {
+                "Teleport",
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_51" },
+                    { "Name", "Teleport" },
+                    { "Stackable", "false" }
+                }
+            },
+            {
+                "PowerOverwhelming",
+                new Dictionary<string, string>() {
+                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_25" },
+                    { "Name", "Power Overwhelming" },
+                    { "Stackable", "false" }
                 }
             }
         };

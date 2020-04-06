@@ -1241,7 +1241,7 @@ MonoBehaviour:
   ColorCtrlBtnContentDark: {r: 1, g: 1, b: 1, a: 0.29803923}
   ColorCtrlBtnContentBright: {r: 1, g: 1, b: 1, a: 1}
   ColorCtrlBtnContentHidden: {r: 1, g: 1, b: 1, a: 0}
-  EffectShortRangeBomb: {fileID: 4860935787425509968, guid: 2c45c479b29bf478fab7cf536ffb3c81,
+  EffectShortRangeBomb: {fileID: 916293151652203255, guid: b26d0bbdd59e74b8ab6e18eba1af7746,
     type: 3}
 --- !u!114 &253252460
 MonoBehaviour:
