@@ -148,6 +148,7 @@ public class GridManager : MonoBehaviour
     private GameObject CurrentGameItemObj;
 
     public GameObject EffectShortRangeBomb;
+    public GameObject EffectTeleport;
 
     void InitLevel()
     {
@@ -563,6 +564,76 @@ public class GridManager : MonoBehaviour
             else if (kv.Key == "ExtraStar")
             {
                 CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+            }
+            else if (kv.Key == "Teleport")
+            {
+                Debug.Log("Teleport being used");
+
+                //EffectTeleport
+
+                Resource farthest = null;
+                Resource nearest = null;
+
+                ResList.ForEach(res => {
+                    if (farthest == null) farthest = res;
+                    if (nearest == null) nearest = res;
+
+                    double adjacent = Math.Abs(Rover.X - res.X);
+                    double opposite = Math.Abs(Rover.Y - res.Y);
+                    double hypotenuse = Math.Sqrt(Math.Pow(adjacent, 2) + Math.Pow(opposite, 2));
+
+                    double far_adj = Math.Abs(Rover.X - farthest.X);
+                    double far_opp = Math.Abs(Rover.Y - farthest.Y);
+                    double far_hyp = Math.Sqrt(Math.Pow(far_adj, 2) + Math.Pow(far_opp, 2));
+
+                    double near_adj = Math.Abs(Rover.X - nearest.X);
+                    double near_opp = Math.Abs(Rover.Y - nearest.Y);
+                    double near_hyp = Math.Sqrt(Math.Pow(near_adj, 2) + Math.Pow(near_opp, 2));
+
+                    Debug.Log("Distance of resource: " + hypotenuse);
+
+                    if (hypotenuse > far_hyp)
+                    {
+                        farthest = res;
+                    }
+                    if (hypotenuse < near_hyp)
+                    {
+                        nearest = res;
+                    }
+                });
+
+                Debug.Log("Farthest Resource: X: " + farthest.X + ", Y: " + farthest.Y);
+                Debug.Log("Nearest Resource: X: " + nearest.X + ", Y: " + nearest.Y);
+
+                Debug.Log("Resource Left: " + ResList.Count);
+
+                ResList.ForEach(res =>
+                {
+                    Debug.Log("res: X: " + res.X + ", Y: " + res.Y);
+                });
+
+                Resource target = ResList.Find(res => res.X == nearest.X && res.Y == nearest.Y);
+
+                if (target != null)
+                {
+                    Debug.Log("Resource Target Found");
+                    Debug.Log("Target Resource: X: " + target.X + ", Y: " + target.Y);
+
+                    GameObject effect = (GameObject)Instantiate(EffectTeleport, target.GameObject.transform);
+                    effect.transform.SetParent(target.GameObject.transform.parent.transform);
+                    Rover.GameObject.transform.SetParent(target.GameObject.transform.parent.transform);
+                    Rover.GameObject.transform.localPosition = Vector3.zero;
+
+                    target.GameObject.SetActive(false);
+
+                    ResList.Remove(target);
+
+                    if (ResList.Count == 0)
+                    {
+                        CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+                        GameWin();
+                    }
+                }
             }
         }
     }

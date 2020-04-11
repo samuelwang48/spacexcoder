@@ -85,7 +85,7 @@ public class StageManager : MonoBehaviour
         {
             Button btn = transform.GetComponent<Button>();
             string weekday = transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text;
-            if (weekday == "Monday" || weekday == "Tuesday" || weekday == "Wednesday" || weekday == "Thursday" || weekday == "Friday")
+            if (weekday == "Monday" || weekday == "Tuesday" || weekday == "Wednesday" || weekday == "Thursday" || weekday == "Friday" || weekday == "Sunday")
             {
                 btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
             }
@@ -118,6 +118,16 @@ public class StageManager : MonoBehaviour
             else if (weekday == "Friday")
             {
                 save.ReceiveItem("ExtraStar", 10);
+            }
+            else if (weekday == "Sunday")
+            {
+                save.ReceiveItem("FogLight", 10);
+                save.ReceiveItem("StopClock", 10);
+                save.ReceiveItem("BombShortRange", 10);
+                save.ReceiveItem("RocketBomb", 10);
+                save.ReceiveItem("ExtraStar", 10);
+                save.ReceiveItem("Teleport", 100);
+                save.ReceiveItem("PowerOverwhelming", 20);
             }
 
             GameSave.Write(save);
