@@ -623,6 +623,10 @@ public class GridManager : MonoBehaviour
                     effect.transform.SetParent(target.GameObject.transform.parent.transform);
                     Rover.GameObject.transform.SetParent(target.GameObject.transform.parent.transform);
                     Rover.GameObject.transform.localPosition = Vector3.zero;
+                    Rover.X = target.X;
+                    Rover.Y = target.Y;
+
+                    StartCoroutine(PositionFog());
 
                     target.GameObject.SetActive(false);
 
