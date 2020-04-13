@@ -56,6 +56,7 @@ public class GridManager : MonoBehaviour
     public GameObject ObjSend;
     public GameObject ObjGameInventory;
     public GameObject ObjGameItemOverlay;
+    public GameObject ObjGameSplashRover;
 
     public GameObject ObjTimeLeftText;
     public GameObject ObjProgressBg;
@@ -138,6 +139,7 @@ public class GridManager : MonoBehaviour
 
     private bool IsGameFrozen = false;
     private bool IsInstExecuting = false;
+    private bool IsPowerOverwhelming = false;
 
     private int CurrentLevel;
 
@@ -333,6 +335,13 @@ public class GridManager : MonoBehaviour
         InitButtons();
 
         InitEarnedStar();
+
+        HideGameSplashRover();
+    }
+
+    void HideGameSplashRover()
+    {
+        ObjGameSplashRover.gameObject.SetActive(false);
     }
 
     void PlayAgain()
@@ -571,9 +580,12 @@ public class GridManager : MonoBehaviour
 
                 Rover.GameObject.GetComponent<Image>().color = new UnityEngine.Color(0f, 0f, 0f, 1f);
 
-                GameObject effect = (GameObject)Instantiate(EffectPowerOverwhelming, Rover.GameObject.transform);
+                //Using an instance object in the scene, there is no need to clone it.
+                //GameObject effect = (GameObject)Instantiate(EffectPowerOverwhelming, Rover.GameObject.transform);
                 EffectPowerOverwhelming.gameObject.transform.SetParent(Rover.GameObject.transform);
                 EffectPowerOverwhelming.gameObject.transform.localPosition = Vector3.zero;
+
+                IsPowerOverwhelming = true;
             }
             else if (kv.Key == "Teleport")
             {
@@ -970,7 +982,7 @@ public class GridManager : MonoBehaviour
 
                     Rock foundRock = RockList.Find(rock => rock.X == dx && rock.Y == dy);
 
-                    if (foundRock != null)
+                    if (foundRock != null && IsPowerOverwhelming == false)
                     {
                         Debug.Log("Found a Rock conflict: " + foundRock);
                         foundRock.GameObject.GetComponent<Image>().color = ColorRockError;
@@ -983,6 +995,12 @@ public class GridManager : MonoBehaviour
                     else
                     {
                         Resource foundResource = ResList.Find(res => res.X == dx && res.Y == dy);
+
+                        if (foundRock != null && IsPowerOverwhelming == true)
+                        {
+                            Destroy(foundRock.GameObject);
+                            RockList.Remove(foundRock);
+                        }
 
                         if (foundResource != null)
                         {
