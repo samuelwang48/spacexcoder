@@ -65,7 +65,6 @@ public class GridManager : MonoBehaviour
     public UnityEngine.Color ColorProgressBg50 = new UnityEngine.Color(1f, 0f, 0f, 1f);
     public UnityEngine.Color ColorProgressBg40 = new UnityEngine.Color(1f, 0f, 0f, 1f);
 
-
     public GameObject ObjWall;
 
     public GameObject ObjFinishContinue;
@@ -149,6 +148,7 @@ public class GridManager : MonoBehaviour
 
     public GameObject EffectShortRangeBomb;
     public GameObject EffectTeleport;
+    public GameObject EffectPowerOverwhelming;
 
     void InitLevel()
     {
@@ -564,6 +564,16 @@ public class GridManager : MonoBehaviour
             else if (kv.Key == "ExtraStar")
             {
                 CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+            }
+            else if (kv.Key == "PowerOverwhelming")
+            {
+                Debug.Log("PowerOverwhelming being used");
+
+                Rover.GameObject.GetComponent<Image>().color = new UnityEngine.Color(0f, 0f, 0f, 1f);
+
+                GameObject effect = (GameObject)Instantiate(EffectPowerOverwhelming, Rover.GameObject.transform);
+                EffectPowerOverwhelming.gameObject.transform.SetParent(Rover.GameObject.transform);
+                EffectPowerOverwhelming.gameObject.transform.localPosition = Vector3.zero;
             }
             else if (kv.Key == "Teleport")
             {
