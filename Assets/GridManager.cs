@@ -399,6 +399,8 @@ public class GridManager : MonoBehaviour
             newObj.transform.SetParent(InventoryCell);
             newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
             newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+            newObj.transform.Find("Life").gameObject.SetActive(false);
+            newObj.transform.Find("Image/CD").gameObject.SetActive(false);
             Button itemBtn = newObj.GetComponent<Button>();
             int i = index;
             itemBtn.onClick.AddListener(delegate {
@@ -471,8 +473,39 @@ public class GridManager : MonoBehaviour
         btnUse.onClick.AddListener(delegate { UseGameItem(); });
     }
 
+    IEnumerator CooldownAnimation(GameObject cd, float time)
+    {
+        float i = 0;
+        float rate = 1 / time;
+
+        while (i <= 1)
+        {
+            int progress = (int)(100f - 100f * i);
+            if (i > 0.9f) progress = 0;
+            cd.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = progress;
+            i += Time.deltaTime * rate;
+            yield return 0;
+        }
+    }
+
+    IEnumerator LifeAnimation(GameObject life, float time)
+    {
+        float i = 0;
+        float rate = 1 / time;
+
+        while (i <= 1)
+        {
+            int progress = (int)(100f - 100f * i);
+            if (i > 0.9f) progress = 0;
+            life.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = progress;
+            i += Time.deltaTime * rate;
+            yield return 0;
+        }
+    }
+
     void UseGameItem()
     {
+        Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, int> dict = GameSave.Load().ListItemDict();
         KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
 
@@ -484,6 +517,32 @@ public class GridManager : MonoBehaviour
         {
             int itemQtyLeft = kv.Value - QtyToBeUsed;
 
+            if (itemInfoDict[kv.Key].ContainsKey("CD") == true)
+            {
+                string cooldown_str = itemInfoDict[kv.Key]["CD"];
+                float cooldown_time = float.Parse(cooldown_str);
+                if (cooldown_time > 0)
+                {
+                    GameObject cd = CurrentGameItemObj.transform.Find("Image/CD").gameObject;
+                    cd.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
+                    cd.SetActive(true);
+                    StartCoroutine(CooldownAnimation(cd, cooldown_time));
+                }
+            }
+
+            if (itemInfoDict[kv.Key].ContainsKey("Life") == true)
+            {
+                string life_str = itemInfoDict[kv.Key]["Life"];
+                float life_time = float.Parse(life_str);
+                if (life_time > 0)
+                {
+                    GameObject life = CurrentGameItemObj.transform.Find("Life").gameObject;
+                    life.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
+                    life.SetActive(true);
+                    StartCoroutine(LifeAnimation(life, life_time));
+                }
+            }
+
             Debug.Log("Use game item left: " + itemQtyLeft);
 
             SpaceXCoder.Save save = GameSave.Load();
@@ -491,6 +550,8 @@ public class GridManager : MonoBehaviour
             GameSave.Write(save);
 
             CurrentGameItemObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
+            
+            
 
             GameItemClicked(CurrentGameItemObj, CurrentGameItemIndex);
 
