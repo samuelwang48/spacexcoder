@@ -147,10 +147,12 @@ public class GridManager : MonoBehaviour
 
     private int CurrentGameItemIndex;
     private GameObject CurrentGameItemObj;
+    private bool ExtraStarUsed = false;
 
     public GameObject EffectShortRangeBomb;
     public GameObject EffectTeleport;
     public GameObject EffectPowerOverwhelming;
+
 
     void InitLevel()
     {
@@ -435,6 +437,16 @@ public class GridManager : MonoBehaviour
         CurrentGameItemObj = gameItem;
         CurrentGameItemIndex = index;
 
+        // Item is only allowed to be used once each round
+        if (CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled == true)
+        {
+            btnMoreItem.interactable = false;
+            btnLessItem.interactable = false;
+            btnUse.interactable = false;
+            QtyToBeUsed = 0;
+            return;
+        }
+
         Debug.Log("Game Item index: " + index);
         Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
 
@@ -634,6 +646,7 @@ public class GridManager : MonoBehaviour
             else if (kv.Key == "ExtraStar")
             {
                 CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+                ExtraStarUsed = true;
             }
             else if (kv.Key == "PowerOverwhelming")
             {
@@ -1111,7 +1124,8 @@ public class GridManager : MonoBehaviour
 
         int nextLevel = CurrentLevel + 1;
         int unlocked = save.unlocked;
-        int currentLvTimeLeft = save.lvRecords[CurrentLevel].timeLeft;
+        //int currentLvTimeLeft = save.lvRecords[CurrentLevel].timeLeft;
+        int currentLvScore = save.lvRecords[CurrentLevel].score;
         int timeLeft = (int)Math.Floor(TimeLeft);
 
         if (nextLevel > unlocked)
@@ -1119,14 +1133,27 @@ public class GridManager : MonoBehaviour
             save.unlocked = nextLevel;
         }
 
-        if (timeLeft > currentLvTimeLeft)
+        LvRecord lvRecord = new LvRecord();
+        int score = timeLeft / SCORE_PER_SEC + 1;
+        if (score > MAX_STAR_NUMBER)
         {
-            LvRecord lvRecord = new LvRecord();
-            int score = timeLeft / SCORE_PER_SEC + 1;
-            if (score > MAX_STAR_NUMBER)
-            {
-                score = MAX_STAR_NUMBER;
-            }
+            score = MAX_STAR_NUMBER;
+        }
+        Debug.Log("Calling extra star " + ExtraStarUsed + " " + (score < MAX_STAR_NUMBER));
+
+        for (int i = 0; i <= timeLeft; i++)
+        {
+            StartCoroutine(CalcStar(i));
+        }
+        if (ExtraStarUsed == true && score < MAX_STAR_NUMBER)
+        {
+            score = score + 1;
+            CalcExtraStar(score);
+        }
+
+        //if (timeLeft > currentLvTimeLeft)
+        if (score > currentLvScore)
+        {
             lvRecord.score = score;
             lvRecord.timeLeft = timeLeft;
             Debug.Log("++++++++lvRecord: " + lvRecord.score + ", " + lvRecord.timeLeft);
@@ -1143,13 +1170,16 @@ public class GridManager : MonoBehaviour
         Debug.Log("Win Time Left: " + TimeLeft);
         Debug.Log("Win Time Left Floored: " + timeLeft);
 
-        for (int i = 0; i <= timeLeft; i++)
-        {
-            StartCoroutine(CalcStar(i));
-        }
 
         GameSave.Write(save);
         Debug.Log("Game Saved");
+    }
+
+    void CalcExtraStar(int i)
+    {
+        Transform bsc = ObjWinnerStarContainer.transform;
+        GameObject bs = bsc.GetChild(i - 1).gameObject;
+        bs.GetComponent<Image>().color = ColorWinnerStarBright;
     }
 
     IEnumerator CalcStar(int i)
