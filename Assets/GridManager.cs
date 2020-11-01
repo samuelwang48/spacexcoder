@@ -368,7 +368,6 @@ public class GridManager : MonoBehaviour
         int gridHeight = 5;
         int numberToCreate = gridWidth * gridHeight;
         int cellIndex = 0;
-        bool isDefaultClicked = false;
 
         Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, int> dict = GameSave.Load().ListItemDict();
@@ -403,25 +402,32 @@ public class GridManager : MonoBehaviour
             newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
             newObj.transform.Find("Life").gameObject.SetActive(false);
             newObj.transform.Find("Image/CD").gameObject.SetActive(false);
+            newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
+
             Button itemBtn = newObj.GetComponent<Button>();
             int i = index;
             itemBtn.onClick.AddListener(delegate {
-                GameItemClicked(newObj, i);
-                UseGameItem();
+                int cd = newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent;
+
+                if (cd > 0)
+                {
+                    Debug.Log("cd time => " + cd + " wait till it becomes zero");
+                    return;
+                }
+                else
+                {
+                    GameItemClicked(newObj, i);
+                    UseGameItem();
+                }
             });
             cellIndex++;
-
-            if (isDefaultClicked == false)
-            {
-                GameItemClicked(newObj, index);
-                isDefaultClicked = true;
-            }
             //}
         }
     }
 
     void GameItemClicked(GameObject gameItem, int index)
     {
+
         Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, int> dict = GameSave.Load().ListItemDict();
 
@@ -498,6 +504,12 @@ public class GridManager : MonoBehaviour
             i += Time.deltaTime * rate;
             yield return 0;
         }
+
+        if (i > 1)
+        {
+            Debug.Log("CD Time is over");
+            yield return 0;
+        }
     }
 
     IEnumerator LifeAnimation(GameObject life, float time)
@@ -562,10 +574,6 @@ public class GridManager : MonoBehaviour
             GameSave.Write(save);
 
             CurrentGameItemObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
-            
-            
-
-            GameItemClicked(CurrentGameItemObj, CurrentGameItemIndex);
 
             if (kv.Key == "FogLight")
             {

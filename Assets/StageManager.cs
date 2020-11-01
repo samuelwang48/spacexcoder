@@ -161,6 +161,8 @@ public class StageManager : MonoBehaviour
                 newObj.transform.SetParent(InventoryCell);
                 newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfoDict[kv.Key]["Sprite"]);
                 newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+                newObj.transform.Find("Life").gameObject.SetActive(false);
+                newObj.transform.Find("Image/CD").gameObject.SetActive(false);
 
                 cellIndex++;
             }
