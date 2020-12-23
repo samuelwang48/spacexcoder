@@ -127,6 +127,9 @@ public class GridManager : MonoBehaviour
     public UnityEngine.Color ColorCtrlBtnContentBright = new UnityEngine.Color(1f, 1f, 1f, 1f);
     public UnityEngine.Color ColorCtrlBtnContentHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
 
+    private UnityEngine.Color ColorWhite = new UnityEngine.Color(1f, 1f, 1f, 1f);
+    private UnityEngine.Color ColorBlack = new UnityEngine.Color(0f, 0f, 0f, 1f);
+
 
     private float TimeLeft = 90f; //~0.0003f fog speed
     private float TimeSpent = 0f;
@@ -339,6 +342,17 @@ public class GridManager : MonoBehaviour
         InitEarnedStar();
 
         HideGameSplashRover();
+
+        InitGameItemObjects();
+    }
+
+    void InitGameItemObjects()
+    {
+        //Using an instance object in the scene, there is no need to clone it.
+        //GameObject effect = (GameObject)Instantiate(EffectPowerOverwhelming, Rover.GameObject.transform);
+        EffectPowerOverwhelming.gameObject.transform.SetParent(Rover.GameObject.transform);
+        EffectPowerOverwhelming.gameObject.transform.localPosition = Vector3.zero;
+        EffectPowerOverwhelming.gameObject.SetActive(false);
     }
 
     void HideGameSplashRover()
@@ -512,7 +526,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    IEnumerator LifeAnimation(GameObject life, float time)
+    IEnumerator LifeAnimation(GameObject life, float time, string key)
     {
         float i = 0;
         float rate = 1 / time;
@@ -523,6 +537,18 @@ public class GridManager : MonoBehaviour
             if (i > 0.9f) progress = 0;
             life.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = progress;
             i += Time.deltaTime * rate;
+            yield return 0;
+        }
+
+        if (i > 1)
+        {
+            Debug.Log("Item effectiveness life is over");
+            Debug.Log("key => " + key);
+            if (key == "PowerOverwhelming") {
+                Rover.GameObject.GetComponent<Image>().color = ColorWhite;
+                EffectPowerOverwhelming.gameObject.SetActive(false);
+                IsPowerOverwhelming = false;
+            }
             yield return 0;
         }
     }
@@ -563,7 +589,7 @@ public class GridManager : MonoBehaviour
                     GameObject life = CurrentGameItemObj.transform.Find("Life").gameObject;
                     life.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
                     life.SetActive(true);
-                    StartCoroutine(LifeAnimation(life, life_time));
+                    StartCoroutine(LifeAnimation(life, life_time, kv.Key));
                 }
             }
 
@@ -660,13 +686,8 @@ public class GridManager : MonoBehaviour
             {
                 Debug.Log("PowerOverwhelming being used");
 
-                Rover.GameObject.GetComponent<Image>().color = new UnityEngine.Color(0f, 0f, 0f, 1f);
-
-                //Using an instance object in the scene, there is no need to clone it.
-                //GameObject effect = (GameObject)Instantiate(EffectPowerOverwhelming, Rover.GameObject.transform);
-                EffectPowerOverwhelming.gameObject.transform.SetParent(Rover.GameObject.transform);
-                EffectPowerOverwhelming.gameObject.transform.localPosition = Vector3.zero;
-
+                Rover.GameObject.GetComponent<Image>().color = ColorBlack;
+                EffectPowerOverwhelming.gameObject.SetActive(true);
                 IsPowerOverwhelming = true;
             }
             else if (kv.Key == "Teleport")
