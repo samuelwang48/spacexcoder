@@ -36,7 +36,64 @@ public class StageManager : MonoBehaviour
     public int GridWidth = 8;
     public int GridHeight = 7;
     private List<GameObject> InventoryGridList = new List<GameObject>();
-
+    public static Dictionary<string, Dictionary<string, object>> DailyBonus = new Dictionary<string, Dictionary<string, object>>() {
+        {
+            "Monday",
+            new Dictionary<string, object>() {
+                { "itemType", "FogLight" },
+                { "itemAmount", 10 },
+                { "weekIndex", 1 }
+            }
+        },
+        {
+            "Tuesday",
+            new Dictionary<string, object>() {
+                { "itemType", "StopClock" },
+                { "itemAmount", 10 },
+                { "weekIndex", 2 }
+            }
+        },
+        {
+            "Wednesday",
+            new Dictionary<string, object>() {
+                { "itemType", "BombShortRange" },
+                { "itemAmount", 10 },
+                { "weekIndex", 3 }
+            }
+        },
+        {
+            "Thursday",
+            new Dictionary<string, object>() {
+                { "itemType", "RocketBomb" },
+                { "itemAmount", 10 },
+                { "weekIndex", 4 }
+            }
+        },
+        {
+            "Friday",
+            new Dictionary<string, object>() {
+                { "itemType", "Teleport" },
+                { "itemAmount", 10 },
+                { "weekIndex", 5 }
+            }
+        },
+        {
+            "Saturday",
+            new Dictionary<string, object>() {
+                { "itemType", "ExtraStar" },
+                { "itemAmount", 10 },
+                { "weekIndex", 6 }
+            }
+        },
+        {
+            "Sunday",
+            new Dictionary<string, object>() {
+                { "itemType", "PowerOverwhelming" },
+                { "itemAmount", 10 },
+                { "weekIndex", 7 }
+            }
+        }
+    };
     // Start is called before the first frame update
     void Start()
     {
@@ -97,35 +154,7 @@ public class StageManager : MonoBehaviour
                 Debug.Log("Today => " + (int)today.DayOfWeek);
                 Debug.Log("Today => " + today.DayOfWeek);
 
-                int wi = 0;
-                if (weekday == "Monday")
-                {
-                    wi = 1;
-                }
-                if (weekday == "Tuesday")
-                {
-                    wi = 2;
-                }
-                if (weekday == "Wednesday")
-                {
-                    wi = 3;
-                }
-                if (weekday == "Thursday")
-                {
-                    wi = 4;
-                }
-                if (weekday == "Friday")
-                {
-                    wi = 5;
-                }
-                if (weekday == "Saturday")
-                {
-                    wi = 6;
-                }
-                if (weekday == "Sunday")
-                {
-                    wi = 7;
-                }
+                int wi = (int)DailyBonus[weekday]["weekIndex"];
 
                 int ti = 0;
                 if ((int)today.DayOfWeek == 0)
@@ -139,7 +168,21 @@ public class StageManager : MonoBehaviour
                 if (wi <= ti)
                 {
                     effect.effectFactor = 0f;
-                    btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+                    GameObject received = transform.Find("Received").gameObject;
+                    SpaceXCoder.Save save = GameSave.Load();
+                    string itemType = (string)DailyBonus[weekday]["itemType"];
+                    int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
+
+                    if (save.HasClockedIn(today, itemType, itemAmount) == true)
+                    {
+                        Debug.Log("HasClockedIn => true");
+                        received.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.Log("HasClockedIn => false");
+                        btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+                    }
                 } else if (wi > ti)
                 {
                     effect.effectFactor = 1f;
@@ -155,42 +198,9 @@ public class StageManager : MonoBehaviour
         {
             SpaceXCoder.Save save = GameSave.Load();
 
-            if (weekday == "Monday")
-            {
-                save.ReceiveItem("FogLight", 10);
-            }
-            else if (weekday == "Tuesday")
-            {
-                save.ReceiveItem("StopClock", 10);
-            }
-            else if (weekday == "Wednesday")
-            {
-                save.ReceiveItem("BombShortRange", 10);
-            }
-            else if (weekday == "Thursday")
-            {
-                save.ReceiveItem("RocketBomb", 10);
-            }
-            else if (weekday == "Friday")
-            {
-                save.ReceiveItem("Teleport", 10);
-            }
-            else if (weekday == "Saturday")
-            {
-                save.ReceiveItem("ExtraStar", 10);
-            }
-            else if (weekday == "Sunday")
-            {
-                /*
-                save.ReceiveItem("FogLight", 10);
-                save.ReceiveItem("StopClock", 10);
-                save.ReceiveItem("BombShortRange", 10);
-                save.ReceiveItem("RocketBomb", 10);
-                save.ReceiveItem("ExtraStar", 10);
-                save.ReceiveItem("Teleport", 10);
-                */
-                save.ReceiveItem("PowerOverwhelming", 10);
-            }
+            string itemType = (string)DailyBonus[weekday]["itemType"];
+            int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
+            save.ReceiveItem(itemType, itemAmount);
 
             GameSave.Write(save);
 

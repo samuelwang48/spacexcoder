@@ -5,7 +5,16 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-namespace SpaceXCoder {
+namespace SpaceXCoder
+{
+    [System.Serializable]
+    public class ClockIn
+    {
+        public string date;
+        public string itemType;
+        public int itemAmount;
+    }
+
     [System.Serializable]
     public class LvRecord
     {
@@ -102,13 +111,41 @@ namespace SpaceXCoder {
         public int unlocked = 0;
         public LvRecord[] lvRecords = new LvRecord[20];
         public MyItems myItems = new MyItems();
+        public List<ClockIn> myClockIns = new List<ClockIn>();
+
+        public bool AppendClockIn(string itemType, int itemAmount)
+        {
+            ClockIn bonus = new ClockIn() { 
+                date = System.DateTime.Now.ToString("yyyyMMdd"),
+                itemType = itemType,
+                itemAmount = itemAmount
+            };
+            Debug.Log("Append ClockIn => " + bonus.date );
+            if (myClockIns.Exists(x => x.date == bonus.date && x.itemType == itemType && x.itemAmount == itemAmount) == false)
+            {
+                myClockIns.Add(bonus);
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        public bool HasClockedIn(DateTime date, string itemType, int itemAmount)
+        {
+            string datestring = date.ToString("yyyyMMdd");
+            Debug.Log("HasClockedIn => " + datestring + ", " + itemType + ", " + itemAmount);
+            Debug.Log("HasClockedIn => " + myClockIns);
+
+            return myClockIns.Exists(x => x.date == datestring && x.itemType == itemType && x.itemAmount == itemAmount);
+        }
 
         public void ReceiveItem(string itemType, int itemAmount)
         {
             FieldInfo field = myItems.GetType().GetField(itemType);
 
             Debug.Log("Receive item: " + itemType + ", " + itemAmount);
-            if (field != null)
+            if (field != null && AppendClockIn(itemType, itemAmount) == true)
             {
                 int value = (int)field.GetValue(myItems);
                 field.SetValue(myItems, value + itemAmount);
