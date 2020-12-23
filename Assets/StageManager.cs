@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using SpaceXCoder;
 using System.Linq;
 using TMPro;
+using System;
 
 public class StageManager : MonoBehaviour
 {
@@ -85,9 +86,64 @@ public class StageManager : MonoBehaviour
         {
             Button btn = transform.GetComponent<Button>();
             string weekday = transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text;
-            if (weekday == "Monday" || weekday == "Tuesday" || weekday == "Wednesday" || weekday == "Thursday" || weekday == "Friday" || weekday == "Sunday")
+            
+            if (weekday == "Monday" || weekday == "Tuesday" || weekday == "Wednesday" || weekday == "Thursday" || weekday == "Friday" || weekday == "Saturday" || weekday == "Sunday")
             {
-                btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+
+                UIEffect effect = btn.transform.Find("Reward").GetComponent<UIEffect>();
+
+                DateTime today = System.DateTime.Now;
+                Debug.Log("Today => " + today);
+                Debug.Log("Today => " + (int)today.DayOfWeek);
+                Debug.Log("Today => " + today.DayOfWeek);
+
+                int wi = 0;
+                if (weekday == "Monday")
+                {
+                    wi = 1;
+                }
+                if (weekday == "Tuesday")
+                {
+                    wi = 2;
+                }
+                if (weekday == "Wednesday")
+                {
+                    wi = 3;
+                }
+                if (weekday == "Thursday")
+                {
+                    wi = 4;
+                }
+                if (weekday == "Friday")
+                {
+                    wi = 5;
+                }
+                if (weekday == "Saturday")
+                {
+                    wi = 6;
+                }
+                if (weekday == "Sunday")
+                {
+                    wi = 7;
+                }
+
+                int ti = 0;
+                if ((int)today.DayOfWeek == 0)
+                {
+                    ti = 7;
+                } else
+                {
+                    ti = (int)today.DayOfWeek;
+                }
+
+                if (wi <= ti)
+                {
+                    effect.effectFactor = 0f;
+                    btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+                } else if (wi > ti)
+                {
+                    effect.effectFactor = 1f;
+                }
             }
         });
     }
@@ -117,17 +173,23 @@ public class StageManager : MonoBehaviour
             }
             else if (weekday == "Friday")
             {
+                save.ReceiveItem("Teleport", 10);
+            }
+            else if (weekday == "Saturday")
+            {
                 save.ReceiveItem("ExtraStar", 10);
             }
             else if (weekday == "Sunday")
             {
+                /*
                 save.ReceiveItem("FogLight", 10);
                 save.ReceiveItem("StopClock", 10);
                 save.ReceiveItem("BombShortRange", 10);
                 save.ReceiveItem("RocketBomb", 10);
                 save.ReceiveItem("ExtraStar", 10);
-                save.ReceiveItem("Teleport", 100);
-                save.ReceiveItem("PowerOverwhelming", 20);
+                save.ReceiveItem("Teleport", 10);
+                */
+                save.ReceiveItem("PowerOverwhelming", 10);
             }
 
             GameSave.Write(save);
@@ -187,6 +249,31 @@ public class StageManager : MonoBehaviour
         BluryMask.GetComponentInChildren<UIEffectCapturedImage>().Capture();
         BluryMask.SetActive(true);
         BonusUI.SetActive(true);
+
+        /*
+        DateTime dateValue;
+        dateValue = new DateTime(2020, 12, 21);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 22);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 23);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 24);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 25);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 26);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 27);
+        Debug.Log((int)dateValue.DayOfWeek);
+        dateValue = new DateTime(2020, 12, 28);
+        Debug.Log((int)dateValue.DayOfWeek);
+
+
+        DateTime today = System.DateTime.Now;
+        Debug.Log("Today => " + today);
+        Debug.Log("Today => " + (int)today.DayOfWeek);
+        */
     }
 
     void HideBonusUI()
