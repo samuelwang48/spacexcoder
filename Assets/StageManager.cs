@@ -113,7 +113,7 @@ public class StageManager : MonoBehaviour
                 {
                     effect.effectFactor = 0f;
                     GameObject received = transform.Find("Received").gameObject;
-                    SpaceXCoder.Save save = GameSave.Load();
+                    SpaceXCoder.Save save = GameService.LoadSave();
                     string itemType = (string)DailyBonus[weekday]["itemType"];
                     int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
 
@@ -140,13 +140,13 @@ public class StageManager : MonoBehaviour
         GameObject received = transform.Find("Received").gameObject;
         if (received.activeSelf == false)
         {
-            SpaceXCoder.Save save = GameSave.Load();
+            SpaceXCoder.Save save = GameService.LoadSave();
 
             string itemType = (string)DailyBonus[weekday]["itemType"];
             int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
             save.ReceiveItem(itemType, itemAmount);
 
-            GameSave.Write(save);
+            GameService.Write(save);
 
             received.SetActive(true);
         }
@@ -159,7 +159,7 @@ public class StageManager : MonoBehaviour
         Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
 
         // begin inventory
-        SpaceXCoder.Save saved = GameSave.Load();
+        SpaceXCoder.Save saved = GameService.LoadSave();
 
         // Render inventory items
         Dictionary<string, int> dict = saved.ListItemDict();

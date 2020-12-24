@@ -19,7 +19,7 @@ public class LevelManager : MonoBehaviour
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate { ExitStage(); });
 
-        SpaceXCoder.Save save = GameSave.Load();
+        SpaceXCoder.Save save = GameService.LoadSave();
         // by default it is zero
         int unlocked = save.unlocked;
         Debug.Log("Unlocked level: " + unlocked);

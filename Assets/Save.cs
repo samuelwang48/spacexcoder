@@ -273,16 +273,16 @@ namespace SpaceXCoder
         }
     }
 
-    public class GameSave
+    public class GameService
     {
-        public static Save Load()
+        public static Save save = new Save();
+        public static Save LoadSave()
         {
-            SpaceXCoder.Save save = new Save();
-            Debug.Log("GameSave path: " + Application.persistentDataPath + "/gamesave.save");
-            if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
+            Debug.Log("GameService path: " + Application.persistentDataPath + "/GameService.save");
+            if (File.Exists(Application.persistentDataPath + "/GameService.save"))
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
+                FileStream file = File.Open(Application.persistentDataPath + "/GameService.save", FileMode.Open);
                 save = (Save)bf.Deserialize(file);
                 file.Close();
             }
@@ -301,9 +301,44 @@ namespace SpaceXCoder
             Debug.Log("Saving...");
             Debug.Log(json);
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
+            FileStream file = File.Create(Application.persistentDataPath + "/GameService.save");
             bf.Serialize(file, save);
             file.Close();
+        }
+
+        public static Dictionary<string, object> ReadLevelConfig(int level)
+        {
+            // e.g. {"GridWidth", 5}, {"GridHeight", 5}, {"RockQty", 5}, {"ResourceQty", 4}, {"FogGrowSpeed", 0.0003f}
+            FileStream file = File.Open(Application.dataPath + "/Resources/levels.csv", FileMode.Open);
+            StreamReader inp_stm = new StreamReader(file);
+            int ln = 0;
+            Dictionary<string, object> config = new Dictionary<string, object>();
+
+            while (!inp_stm.EndOfStream)
+            {
+                string inp_ln = inp_stm.ReadLine();
+                if (ln > 0)
+                {
+                    string[] cfg = inp_ln.Split(',');
+                    int start = 2;
+                    int index = int.Parse(cfg[start + 0]);
+
+                    if (index == level)
+                    {
+                        config["GridWidth"] = int.Parse(cfg[start + 1]);
+                        config["GridHeight"] = int.Parse(cfg[start + 2]);
+                        config["RockQty"] = int.Parse(cfg[start + 3]);
+                        config["ResourceQty"] = int.Parse(cfg[start + 4]);
+                        config["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
+                        Debug.Log("READ_LEVEL => " + index + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
+                        break;
+                    }
+                }
+
+                ln++;
+            }
+            inp_stm.Close();
+            return config;
         }
     }
 

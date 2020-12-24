@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using System.IO;
 using System;
 using TMPro;
 using SpaceXCoder;
@@ -163,37 +162,16 @@ public class GridManager : MonoBehaviour
         GridLayoutGroup glg = gameObject.GetComponent<GridLayoutGroup>();
         CurrentLevel = PlayerPrefs.GetInt("level");
         //CurrentLevel = 19;
-        Debug.Log("Current level is: " + CurrentLevel);
+        Debug.Log("Current level is => " + CurrentLevel);
 
-        // e.g. {"GridWidth", 5}, {"GridHeight", 5}, {"RockQty", 5}, {"ResourceQty", 4}, {"FogGrowSpeed", 0.0003f}
-        StreamReader inp_stm = new StreamReader(Application.dataPath + "/Resources/levels.csv");
+        Dictionary<string, object> cfg = GameService.ReadLevelConfig(CurrentLevel);
+        Debug.Log("Level Config => " + cfg["GridWidth"] + ", " + cfg["GridHeight"] + ", " + cfg["RockQty"] + ", " + cfg["ResourceQty"] + ", " + cfg["FogGrowSpeed"]);
 
-        while (!inp_stm.EndOfStream)
-        {
-            string inp_ln = inp_stm.ReadLine();
-            string[] level = inp_ln.Split(',');
-            int index = int.Parse(level[0]);
-
-            if (index == CurrentLevel)
-            {
-                GridWidth = int.Parse(level[1]);
-                GridHeight = int.Parse(level[2]);
-                RockQty = int.Parse(level[3]);
-                ResourceQty = int.Parse(level[4]);
-                FogGrowSpeed = float.Parse(level[5]);
-                Debug.Log("READ_LEVEL => " + index + ", " + level[1] + ", " + level[2] + ", " + level[3] + ", " + level[4] + ", " + level[5]);
-            }
-        }
-
-        inp_stm.Close();
-
-        /*
-        GridWidth = (int)level["GridWidth"];
-        GridHeight = (int)level["GridHeight"];
-        RockQty = (int)level["RockQty"];
-        ResourceQty = (int)level["ResourceQty"];
-        FogGrowSpeed = (float)level["FogGrowSpeed"];
-        */
+        GridWidth = (int)cfg["GridWidth"];
+        GridHeight = (int)cfg["GridHeight"];
+        RockQty = (int)cfg["RockQty"];
+        ResourceQty = (int)cfg["ResourceQty"];
+        FogGrowSpeed = (float)cfg["FogGrowSpeed"];
 
         if (GridHeight >= 17)
         {
@@ -269,7 +247,7 @@ public class GridManager : MonoBehaviour
         int cellIndex = 0;
 
         Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
-        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
+        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
         Transform containerTransform = GameInventoryOverlay.transform.Find("ItemGrid");
         GameObject newCell;
 
@@ -328,7 +306,7 @@ public class GridManager : MonoBehaviour
     {
 
         Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
-        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
+        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
 
         KeyValuePair<string, int> kv = dict.ElementAt(index);
         Dictionary<string, string> itemInfo = itemInfoDict[kv.Key];
@@ -441,7 +419,7 @@ public class GridManager : MonoBehaviour
     void UseGameItem()
     {
         Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
-        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
+        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
         KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
 
         Debug.Log("Use game item: " + kv.Key);
@@ -480,9 +458,9 @@ public class GridManager : MonoBehaviour
 
             Debug.Log("Use game item left: " + itemQtyLeft);
 
-            SpaceXCoder.Save save = GameSave.Load();
+            SpaceXCoder.Save save = GameService.LoadSave();
             save.ConsumeItem(kv.Key, QtyToBeUsed);
-            GameSave.Write(save);
+            GameService.Write(save);
 
             CurrentGameItemObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
 
@@ -654,7 +632,7 @@ public class GridManager : MonoBehaviour
 
     void IncreaseGameItemQtyToBeUsed()
     {
-        Dictionary<string, int> dict = GameSave.Load().ListItemDict();
+        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
         KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
         Transform t = ObjGameItemOverlay.transform;
         TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
@@ -1034,7 +1012,7 @@ public class GridManager : MonoBehaviour
         FreezeGame();
         WinModal.SetActive(true);
 
-        SpaceXCoder.Save save = GameSave.Load();
+        SpaceXCoder.Save save = GameService.LoadSave();
 
         int nextLevel = CurrentLevel + 1;
         int unlocked = save.Unlocked();
@@ -1085,7 +1063,7 @@ public class GridManager : MonoBehaviour
         Debug.Log("Win Time Left Floored: " + timeLeft);
 
 
-        GameSave.Write(save);
+        GameService.Write(save);
         Debug.Log("Game Saved");
     }
 
