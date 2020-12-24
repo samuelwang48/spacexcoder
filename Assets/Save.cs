@@ -36,6 +36,66 @@ namespace SpaceXCoder
 
     public class CONST
     {
+        public static Dictionary<string, Dictionary<string, object>> DAILY_BONUS = new Dictionary<string, Dictionary<string, object>>()
+        {
+            {
+                "Monday",
+                new Dictionary<string, object>() {
+                    { "itemType", "FogLight" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 1 }
+                }
+            },
+            {
+                "Tuesday",
+                new Dictionary<string, object>() {
+                    { "itemType", "StopClock" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 2 }
+                }
+            },
+            {
+                "Wednesday",
+                new Dictionary<string, object>() {
+                    { "itemType", "BombShortRange" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 3 }
+                }
+            },
+            {
+                "Thursday",
+                new Dictionary<string, object>() {
+                    { "itemType", "RocketBomb" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 4 }
+                }
+            },
+            {
+                "Friday",
+                new Dictionary<string, object>() {
+                    { "itemType", "Teleport" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 5 }
+                }
+            },
+            {
+                "Saturday",
+                new Dictionary<string, object>() {
+                    { "itemType", "ExtraStar" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 6 }
+                }
+            },
+            {
+                "Sunday",
+                new Dictionary<string, object>() {
+                    { "itemType", "PowerOverwhelming" },
+                    { "itemAmount", 10 },
+                    { "weekIndex", 7 }
+                }
+            }
+        };
+
         public static Dictionary<string, Dictionary<string, string>> ITEM_INFO = new Dictionary<string, Dictionary<string, string>>() {
             {
                 "FogLight",
@@ -113,19 +173,46 @@ namespace SpaceXCoder
         public MyItems myItems = new MyItems();
         public List<ClockIn> myClockIns = new List<ClockIn>();
 
+        public void Unlock(int lv)
+        {
+            unlocked = lv;
+        }
+
+        public int Unlocked()
+        {
+            return unlocked;
+        }
+
+        public void SetRecord(int index, LvRecord record)
+        {
+            lvRecords[index] = record;
+        }
+
+        public LvRecord GetRecord(int index)
+        {
+            return lvRecords[index];
+        }
+
+        public LvRecord[] GetAllRecords()
+        {
+            return lvRecords;
+        }
+
         public bool AppendClockIn(string itemType, int itemAmount)
         {
-            ClockIn bonus = new ClockIn() { 
+            ClockIn bonus = new ClockIn()
+            {
                 date = System.DateTime.Now.ToString("yyyyMMdd"),
                 itemType = itemType,
                 itemAmount = itemAmount
             };
-            Debug.Log("Append ClockIn => " + bonus.date );
+            Debug.Log("Append ClockIn => " + bonus.date);
             if (myClockIns.Exists(x => x.date == bonus.date && x.itemType == itemType && x.itemAmount == itemAmount) == false)
             {
                 myClockIns.Add(bonus);
                 return true;
-            } else
+            }
+            else
             {
                 return false;
             }
@@ -149,7 +236,7 @@ namespace SpaceXCoder
             {
                 int value = (int)field.GetValue(myItems);
                 field.SetValue(myItems, value + itemAmount);
-                
+
                 Debug.Log("Item received => " + itemType + ": " + field.GetValue(myItems));
             }
         }
