@@ -275,8 +275,8 @@ namespace SpaceXCoder
 
     public static class GameService
     {
-        public static string SavePath = Application.persistentDataPath + "/GameService.save";
-        public static string LevelPath = Application.dataPath + "/Resources/levels.csv";
+        public static string SavePath = Path.Combine(Application.persistentDataPath, "GameService.save");
+        public static string LevelPath = Path.Combine(Application.dataPath, "levels.csv");
         public static Save save = new Save();
         public static Save LoadSave()
         {
