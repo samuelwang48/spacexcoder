@@ -166,7 +166,7 @@ public class GridManager : MonoBehaviour
         Debug.Log("Current level is: " + CurrentLevel);
 
         // e.g. {"GridWidth", 5}, {"GridHeight", 5}, {"RockQty", 5}, {"ResourceQty", 4}, {"FogGrowSpeed", 0.0003f}
-        StreamReader inp_stm = new StreamReader("Assets/Resources/levels.csv");
+        StreamReader inp_stm = new StreamReader(Application.dataPath + "/Resources/levels.csv");
 
         while (!inp_stm.EndOfStream)
         {
