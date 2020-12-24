@@ -273,16 +273,18 @@ namespace SpaceXCoder
         }
     }
 
-    public class GameService
+    public static class GameService
     {
+        public static string SavePath = Application.persistentDataPath + "/GameService.save";
+        public static string LevelPath = Application.dataPath + "/Resources/levels.csv";
         public static Save save = new Save();
         public static Save LoadSave()
         {
-            Debug.Log("GameService path: " + Application.persistentDataPath + "/GameService.save");
-            if (File.Exists(Application.persistentDataPath + "/GameService.save"))
+            Debug.Log("GameService path: " + SavePath);
+            if (File.Exists(SavePath))
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(Application.persistentDataPath + "/GameService.save", FileMode.Open);
+                FileStream file = File.Open(SavePath, FileMode.Open);
                 save = (Save)bf.Deserialize(file);
                 file.Close();
             }
@@ -301,15 +303,52 @@ namespace SpaceXCoder
             Debug.Log("Saving...");
             Debug.Log(json);
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(Application.persistentDataPath + "/GameService.save");
+            FileStream file = File.Create(SavePath);
             bf.Serialize(file, save);
             file.Close();
+        }
+
+        public static List<Dictionary<string, object>> ReadLevelsByStage(string stage)
+        {
+            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+
+            // e.g. {"GridWidth", 5}, {"GridHeight", 5}, {"RockQty", 5}, {"ResourceQty", 4}, {"FogGrowSpeed", 0.0003f}
+            FileStream file = File.Open(LevelPath, FileMode.Open);
+            StreamReader inp_stm = new StreamReader(file);
+
+            int ln = 0;
+            while (!inp_stm.EndOfStream)
+            {
+                string inp_ln = inp_stm.ReadLine();
+                if (ln > 0)
+                {
+                    string[] cfg = inp_ln.Split(',');
+                    int start = 2;
+                    if (cfg[1] == stage)
+                    {
+                        Dictionary<string, object> level = new Dictionary<string, object>();
+
+                        level["GridWidth"] = int.Parse(cfg[start + 1]);
+                        level["GridHeight"] = int.Parse(cfg[start + 2]);
+                        level["RockQty"] = int.Parse(cfg[start + 3]);
+                        level["ResourceQty"] = int.Parse(cfg[start + 4]);
+                        level["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
+
+                        list.Add(level);
+                        Debug.Log("READ_STAGE => " + stage + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
+                    }
+                }
+                ln++;
+            }
+            inp_stm.Close();
+            file.Close();
+            return list;
         }
 
         public static Dictionary<string, object> ReadLevelConfig(int level)
         {
             // e.g. {"GridWidth", 5}, {"GridHeight", 5}, {"RockQty", 5}, {"ResourceQty", 4}, {"FogGrowSpeed", 0.0003f}
-            FileStream file = File.Open(Application.dataPath + "/Resources/levels.csv", FileMode.Open);
+            FileStream file = File.Open(LevelPath, FileMode.Open);
             StreamReader inp_stm = new StreamReader(file);
             int ln = 0;
             Dictionary<string, object> config = new Dictionary<string, object>();
@@ -321,23 +360,22 @@ namespace SpaceXCoder
                 {
                     string[] cfg = inp_ln.Split(',');
                     int start = 2;
-                    int index = int.Parse(cfg[start + 0]);
 
-                    if (index == level)
+                    if (int.Parse(cfg[start + 0]) == level)
                     {
                         config["GridWidth"] = int.Parse(cfg[start + 1]);
                         config["GridHeight"] = int.Parse(cfg[start + 2]);
                         config["RockQty"] = int.Parse(cfg[start + 3]);
                         config["ResourceQty"] = int.Parse(cfg[start + 4]);
                         config["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
-                        Debug.Log("READ_LEVEL => " + index + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
+                        Debug.Log("READ_LEVEL => " + level + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
                         break;
                     }
                 }
-
                 ln++;
             }
             inp_stm.Close();
+            file.Close();
             return config;
         }
     }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Collections;
 using SpaceXCoder;
 
 public class LevelManager : MonoBehaviour
@@ -10,11 +12,15 @@ public class LevelManager : MonoBehaviour
     public UnityEngine.Color ColorWinnerStarDark = new UnityEngine.Color(.24f, .26f, .38f, 1f);
     public UnityEngine.Color ColorWinnerStarBright = new UnityEngine.Color(0f, 0.728f, 1f, 1f);
     public UnityEngine.Color ColorWinnerStarHidden = new UnityEngine.Color(1f, 1f, 1f, 0f);
-
-    private const int LEVELS_PER_STAGE = 20;
+    public const int MAX_LEVEL_PER_STAGE = 20;
 
     // Start is called before the first frame update
     void Start()
+    {
+        InitStage();
+    }
+
+    void InitStage()
     {
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate { ExitStage(); });
@@ -36,9 +42,19 @@ public class LevelManager : MonoBehaviour
         UnityEngine.Color colorActive = new UnityEngine.Color();
         UnityEngine.ColorUtility.TryParseHtmlString("#fff", out colorActive);
 
-        for (int i = 0; i < LEVELS_PER_STAGE; i++)
+
+        List<Dictionary<string, object>> stage = GameService.ReadLevelsByStage("Mars");
+        int levels_per_stage = stage.Count;
+        Debug.Log("Mars levels_per_stage => " + levels_per_stage);
+        for (int i = 0; i < MAX_LEVEL_PER_STAGE; i++)
         {
             GameObject lvbtn = GameObject.Find("Lv" + i);
+            Debug.Log("Mars processing level => " + "Lv" + i);
+            if (i >= levels_per_stage)
+            {
+                lvbtn.SetActive(false);
+            }
+            
             LvRecord lvRecord = save.lvRecords[i];
             int score = lvRecord.score;
 
@@ -62,7 +78,6 @@ public class LevelManager : MonoBehaviour
                     bs.GetComponent<Image>().color = ColorWinnerStarDark;
                 }
             }
-
         }
     }
 
