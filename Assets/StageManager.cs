@@ -14,6 +14,7 @@ public class StageManager : MonoBehaviour
     public GameObject BtnAchievements;
     public GameObject BtnInventory;
     public GameObject BtnReward;
+    public GameObject BtnVehicles;
     public GameObject BluryMask;
 
     public GameObject BonusUI;
@@ -96,6 +97,11 @@ public class StageManager : MonoBehaviour
 
         Button btnReward = BtnReward.GetComponent<Button>();
         btnReward.onClick.AddListener(delegate { ShowBonusUI(); });
+
+        Button btnVehicles = BtnVehicles.GetComponent<Button>();
+        btnVehicles.onClick.AddListener(delegate { SceneManager.LoadScene("Vehicles"); });
+        
+
 
         Button btnRewardClose = BonusUI.transform.Find("BtnClose").GetComponent<Button>();
         btnRewardClose.onClick.AddListener(delegate { HideBonusUI(); });
