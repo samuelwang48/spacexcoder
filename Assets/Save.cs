@@ -275,8 +275,8 @@ namespace SpaceXCoder
 
     public static class GameService
     {
-        public static string SavePath = Path.Combine(Application.persistentDataPath, "GameService.save");
-        public static string LevelPath = Path.Combine(Application.dataPath, "levels.csv");
+        public static string SavePath = Application.persistentDataPath + "/GameService.save";
+        public static string LevelPath = System.IO.Directory.GetCurrentDirectory() + "/Assets/levels.csv";
         public static Save save = new Save();
         public static Save LoadSave()
         {
@@ -311,6 +311,7 @@ namespace SpaceXCoder
         public static List<Dictionary<string, object>> ReadLevelsByStage(string stage)
         {
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+            Debug.Log("LevelPath" + LevelPath);
 
             // e.g. {"GridWidth", 5}, {"GridHeight", 5}, {"RockQty", 5}, {"ResourceQty", 4}, {"FogGrowSpeed", 0.0003f}
             FileStream file = File.Open(LevelPath, FileMode.Open);
