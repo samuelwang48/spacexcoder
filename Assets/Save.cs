@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -169,9 +170,51 @@ namespace SpaceXCoder
     public class Save
     {
         public int unlocked = 0;
-        public LvRecord[] lvRecords = new LvRecord[20];
+        public LvRecord[] lvRecords = new LvRecord[0];
         public MyItems myItems = new MyItems();
         public List<ClockIn> myClockIns = new List<ClockIn>();
+
+        public LvRecord GetLvRecord(int i)
+        {
+            if (i > lvRecords.Length - 1)
+            {
+                Array.Resize(ref lvRecords, i + 1);
+                for (int j = 0; j < lvRecords.Length; j++)
+                {
+                    if (lvRecords[j] == null)
+                    {
+                        lvRecords[j] = new LvRecord()
+                        {
+                            score = 0,
+                            timeLeft = 0
+                        };
+                    }
+                }
+            }
+            return lvRecords[i];
+        }
+
+        public void SetLvRecord(int i, LvRecord record)
+        {
+            if (i > lvRecords.Length - 1)
+            {
+                Array.Resize(ref lvRecords, i + 1);
+                for (int j = 0; j < lvRecords.Length; j++)
+                {
+                    lvRecords[j] = new LvRecord()
+                    {
+                        score = 0,
+                        timeLeft = 0
+                    };
+                }
+            }
+            lvRecords[i] = record;
+        }
+
+        public LvRecord[] GetAllRecords()
+        {
+            return lvRecords;
+        }
 
         public void Unlock(int lv)
         {
@@ -181,21 +224,6 @@ namespace SpaceXCoder
         public int Unlocked()
         {
             return unlocked;
-        }
-
-        public void SetRecord(int index, LvRecord record)
-        {
-            lvRecords[index] = record;
-        }
-
-        public LvRecord GetRecord(int index)
-        {
-            return lvRecords[index];
-        }
-
-        public LvRecord[] GetAllRecords()
-        {
-            return lvRecords;
         }
 
         public bool AppendClockIn(string itemType, int itemAmount)
@@ -308,6 +336,24 @@ namespace SpaceXCoder
             file.Close();
         }
 
+        public static List<string> ReadStagesByChapter(string chapter)
+        {
+            List<string> list = new List<string>();
+            string[] ln = Levels.text.Split('\n');
+
+            for (int i = 1; i < ln.Length; i++)
+            {
+                string[] cfg = ln[i].Split(',');
+                if (cfg[0] == chapter)
+                {
+                    list.Add(cfg[1]);
+                }
+            }
+
+            IEnumerable<string> distinctStages = list.Distinct();
+            return list.Distinct().ToList();
+        }
+
         public static List<Dictionary<string, object>> ReadLevelsByStage(string stage)
         {
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
@@ -322,6 +368,7 @@ namespace SpaceXCoder
                 {
                     Dictionary<string, object> level = new Dictionary<string, object>();
 
+                    level["Level"] = int.Parse(cfg[start + 0]);
                     level["GridWidth"] = int.Parse(cfg[start + 1]);
                     level["GridHeight"] = int.Parse(cfg[start + 2]);
                     level["RockQty"] = int.Parse(cfg[start + 3]);
@@ -329,7 +376,7 @@ namespace SpaceXCoder
                     level["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
 
                     list.Add(level);
-                    Debug.Log("READ_STAGE => " + stage + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
+                    Debug.Log("READ_STAGE => " + stage + ", " + cfg[start + 0] + ", "  + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
                 }
             }
             return list;
@@ -348,6 +395,7 @@ namespace SpaceXCoder
 
                 if (int.Parse(cfg[start + 0]) == level)
                 {
+                    config["Level"] = int.Parse(cfg[start + 0]);
                     config["GridWidth"] = int.Parse(cfg[start + 1]);
                     config["GridHeight"] = int.Parse(cfg[start + 2]);
                     config["RockQty"] = int.Parse(cfg[start + 3]);

@@ -620,6 +620,9 @@ public class GridManager : MonoBehaviour
 
                     ResList.Remove(target);
 
+                    Transform bsc = BannerResourceContainer.transform;
+                    bsc.GetChild(EarnedResourceCount++).gameObject.GetComponent<Image>().color = ColorBannerResourceBright;
+
                     if (ResList.Count == 0)
                     {
                         CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
@@ -1017,7 +1020,7 @@ public class GridManager : MonoBehaviour
         int nextLevel = CurrentLevel + 1;
         int unlocked = save.Unlocked();
         //int currentLvTimeLeft = save.lvRecords[CurrentLevel].timeLeft;
-        int currentLvScore = save.GetRecord(CurrentLevel).score;
+        int currentLvScore = save.GetLvRecord(CurrentLevel).score;
         int timeLeft = (int)Math.Floor(TimeLeft);
 
         if (nextLevel > unlocked)
@@ -1049,7 +1052,7 @@ public class GridManager : MonoBehaviour
             lvRecord.score = score;
             lvRecord.timeLeft = timeLeft;
             Debug.Log("++++++++lvRecord: " + lvRecord.score + ", " + lvRecord.timeLeft);
-            save.SetRecord(CurrentLevel, lvRecord);
+            save.SetLvRecord(CurrentLevel, lvRecord);
         }
 
         int totalScore = save.GetAllRecords().ToList().Select(r => r.score).Sum();
@@ -1117,8 +1120,7 @@ public class GridManager : MonoBehaviour
 
     void ExitScene()
     {
-        int stage = PlayerPrefs.GetInt("stage");
-        SceneManager.LoadScene("Stage_" + stage);
+        SceneManager.LoadScene("Stage_0");
     }
 
     void FreezeGame()

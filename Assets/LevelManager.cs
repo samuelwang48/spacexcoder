@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 using SpaceXCoder;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class LevelManager : MonoBehaviour
 
         for (int i = 0; i < save.lvRecords.Length; i++)
         {
-            LvRecord lvRecord = save.lvRecords[i];
+            LvRecord lvRecord = save.GetLvRecord(i);
             Debug.Log("Lv: " + i + ", " + lvRecord.score + ", " + lvRecord.timeLeft);
         }
 
@@ -42,40 +43,46 @@ public class LevelManager : MonoBehaviour
         UnityEngine.Color colorActive = new UnityEngine.Color();
         UnityEngine.ColorUtility.TryParseHtmlString("#fff", out colorActive);
 
+        string stageName = PlayerPrefs.GetString("stage");
+        Debug.Log("stageName => " + stageName);
 
-        List<Dictionary<string, object>> stage = GameService.ReadLevelsByStage("Mars");
+        List<Dictionary<string, object>> stage = GameService.ReadLevelsByStage(stageName);
         int levels_per_stage = stage.Count;
         Debug.Log("Mars levels_per_stage => " + levels_per_stage);
         for (int i = 0; i < MAX_LEVEL_PER_STAGE; i++)
         {
             GameObject lvbtn = GameObject.Find("Lv" + i);
-            Debug.Log("Mars processing level => " + "Lv" + i);
             if (i >= levels_per_stage)
             {
                 lvbtn.SetActive(false);
             }
-            
-            LvRecord lvRecord = save.lvRecords[i];
-            int score = lvRecord.score;
-
-            if (i <= unlocked)
+            else
             {
-                lvbtn.GetComponent<Image>().color = colorActive;
-                int level = i;
-                lvbtn.GetComponent<Button>().onClick.AddListener(delegate { LoadLevel(level); });
-            }
+                int current = (int)stage[i]["Level"];
+                Debug.Log("Mars processing level => " + "Lv" + current);
+                lvbtn.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().SetText("Lv " + current.ToString());
 
-            Transform bsc = lvbtn.transform.GetChild(1).transform;
-            for (int bsi = 0; bsi < bsc.childCount; bsi++)
-            {
-                GameObject bs = bsc.GetChild(bsi).gameObject;
-                if (bsi < score)
+                LvRecord lvRecord = save.GetLvRecord(current);
+                int score = lvRecord.score;
+
+                if (current <= unlocked)
                 {
-                    bs.GetComponent<Image>().color = ColorWinnerStarBright;
-                }
-                else
-                {
-                    bs.GetComponent<Image>().color = ColorWinnerStarDark;
+                    lvbtn.GetComponent<Image>().color = colorActive;
+                    lvbtn.GetComponent<Button>().onClick.AddListener(delegate { LoadLevel(current); });
+
+                    Transform bsc = lvbtn.transform.GetChild(1).transform;
+                    for (int bsi = 0; bsi < bsc.childCount; bsi++)
+                    {
+                        GameObject bs = bsc.GetChild(bsi).gameObject;
+                        if (bsi < score)
+                        {
+                            bs.GetComponent<Image>().color = ColorWinnerStarBright;
+                        }
+                        else
+                        {
+                            bs.GetComponent<Image>().color = ColorWinnerStarDark;
+                        }
+                    }
                 }
             }
         }

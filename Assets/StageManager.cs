@@ -10,16 +10,7 @@ using System;
 
 public class StageManager : MonoBehaviour
 {
-
-    public GameObject Hop_0;
-    public GameObject Hop_1;
-    public GameObject Hop_2;
-    public GameObject Hop_3;
-    public GameObject Hop_4;
-    public GameObject Hop_5;
-    public GameObject Hop_6;
-    public GameObject Hop_7;
-	public GameObject BtnLeaderboard;
+    public GameObject BtnLeaderboard;
     public GameObject BtnAchievements;
     public GameObject BtnInventory;
     public GameObject BtnReward;
@@ -41,6 +32,10 @@ public class StageManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SpaceXCoder.Save save = GameService.LoadSave();
+        GameService.Write(save);
+
+        int unlocked = save.Unlocked();
 
         PopulateGrid();
 
@@ -61,14 +56,37 @@ public class StageManager : MonoBehaviour
                 Debug.Log("Authentication failed");
         });
 
-        Button btnHop_0 = Hop_0.GetComponent<Button>();
-		btnHop_0.onClick.AddListener(delegate { LoadStage(0); });
+        List<string> stages = GameService.ReadStagesByChapter("Solar");
 
-		Button btnLeaderboard = BtnLeaderboard.GetComponent<Button>();
-		btnLeaderboard.onClick.AddListener(delegate { Social.ShowLeaderboardUI(); });
+        Debug.Log("Solar Stages => " + string.Join(", ", stages));
 
-		Button btnAchievements = BtnAchievements.GetComponent<Button>();
-		btnAchievements.onClick.AddListener(delegate { Social.ShowAchievementsUI(); });
+        for (int i = 0; i < stages.Count; i++)
+        {
+            GameObject stageObj = GameObject.Find("T_" + i);
+            Debug.Log("stageObj => " + stageObj);
+            Button stageBtn = stageObj.GetComponent<Button>();
+            Debug.Log("stageBtn => " + stageBtn);
+
+            int startFrom = (int)GameService.ReadLevelsByStage(stages[i])[0]["Level"];
+
+            Debug.Log("startFrom => " + startFrom);
+            if (startFrom <= unlocked)
+            {
+                int j = i;
+                stageBtn.onClick.AddListener(delegate { LoadStage(stages[j]); });
+                GameObject.Find("Lock_" + i).SetActive(false);
+            }
+            else
+            {
+                stageObj.SetActive(false);
+            }
+        }
+
+        Button btnLeaderboard = BtnLeaderboard.GetComponent<Button>();
+        btnLeaderboard.onClick.AddListener(delegate { Social.ShowLeaderboardUI(); });
+
+        Button btnAchievements = BtnAchievements.GetComponent<Button>();
+        btnAchievements.onClick.AddListener(delegate { Social.ShowAchievementsUI(); });
 
         Button btnInventory = BtnInventory.GetComponent<Button>();
         btnInventory.onClick.AddListener(delegate { ShowInventoryUI(); });
@@ -113,7 +131,6 @@ public class StageManager : MonoBehaviour
                 {
                     effect.effectFactor = 0f;
                     GameObject received = transform.Find("Received").gameObject;
-                    SpaceXCoder.Save save = GameService.LoadSave();
                     string itemType = (string)DailyBonus[weekday]["itemType"];
                     int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
 
@@ -237,11 +254,11 @@ public class StageManager : MonoBehaviour
         BonusUI.SetActive(false);
     }
 
-    void LoadStage(int stage)
+    void LoadStage(string stage)
     {
         Debug.Log("About to start game stage: " + stage);
-        PlayerPrefs.SetInt("stage", stage);
-        SceneManager.LoadScene("Stage_" + stage);
+        PlayerPrefs.SetString("stage", stage);
+        SceneManager.LoadScene("Stage_0");
     }
 
     // Update is called once per frame

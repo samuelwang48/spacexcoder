@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 6306224}
   - component: {fileID: 6306223}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1328,7 +1328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1971,7 +1971,7 @@ GameObject:
   - component: {fileID: 401243626}
   - component: {fileID: 401243625}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2283,7 +2283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2318,7 +2318,7 @@ GameObject:
   - component: {fileID: 472233667}
   - component: {fileID: 472233666}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2511,7 +2511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2950,7 +2950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3058,7 +3058,7 @@ GameObject:
   - component: {fileID: 593505637}
   - component: {fileID: 593505636}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3871,7 +3871,7 @@ GameObject:
   - component: {fileID: 748921233}
   - component: {fileID: 748921232}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4355,7 +4355,7 @@ GameObject:
   - component: {fileID: 813850306}
   - component: {fileID: 813850305}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5040,7 +5040,7 @@ GameObject:
   - component: {fileID: 955579872}
   - component: {fileID: 955579871}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5233,7 +5233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -5341,7 +5341,7 @@ GameObject:
   - component: {fileID: 1009108469}
   - component: {fileID: 1009108468}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5534,7 +5534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -5569,7 +5569,7 @@ GameObject:
   - component: {fileID: 1050971117}
   - component: {fileID: 1050971116}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5724,7 +5724,7 @@ GameObject:
   - component: {fileID: 1053883402}
   - component: {fileID: 1053883401}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6071,7 +6071,7 @@ GameObject:
   - component: {fileID: 1074062366}
   - component: {fileID: 1074062365}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6337,7 +6337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6878,7 +6878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7143,7 +7143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7289,7 +7289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7362,7 +7362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7700,7 +7700,7 @@ GameObject:
   - component: {fileID: 1473945494}
   - component: {fileID: 1473945493}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7893,7 +7893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8001,7 +8001,7 @@ GameObject:
   - component: {fileID: 1506706421}
   - component: {fileID: 1506706420}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8395,7 +8395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8494,7 +8494,7 @@ GameObject:
   - component: {fileID: 1581790125}
   - component: {fileID: 1581790124}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9363,7 +9363,7 @@ GameObject:
   - component: {fileID: 1721430550}
   - component: {fileID: 1721430549}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9728,7 +9728,7 @@ GameObject:
   - component: {fileID: 1758305143}
   - component: {fileID: 1758305142}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9985,7 +9985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -10020,7 +10020,7 @@ GameObject:
   - component: {fileID: 1802977869}
   - component: {fileID: 1802977868}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10248,7 +10248,7 @@ GameObject:
   - component: {fileID: 1851382567}
   - component: {fileID: 1851382566}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10441,7 +10441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -10514,7 +10514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -10622,7 +10622,7 @@ GameObject:
   - component: {fileID: 1931916580}
   - component: {fileID: 1931916579}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10815,7 +10815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -10888,7 +10888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -11308,7 +11308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -11599,7 +11599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5821352, b: 1, a: 1}
+  m_Color: {r: 0.24313726, g: 0.26666668, b: 0.3882353, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -11707,7 +11707,7 @@ GameObject:
   - component: {fileID: 2077818474}
   - component: {fileID: 2077818473}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: LevelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
