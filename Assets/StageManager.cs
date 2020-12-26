@@ -140,7 +140,7 @@ public class StageManager : MonoBehaviour
                     string itemType = (string)DailyBonus[weekday]["itemType"];
                     int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
 
-                    if (save.HasClockedIn(today, itemType, itemAmount) == true)
+                    if (save.HasClockedInThisWeek(today, itemType, itemAmount) == true)
                     {
                         Debug.Log("HasClockedIn => true");
                         received.SetActive(true);

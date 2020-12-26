@@ -246,13 +246,29 @@ namespace SpaceXCoder
             }
         }
 
-        public bool HasClockedIn(DateTime date, string itemType, int itemAmount)
+        public bool HasClockedInThisWeek(DateTime date, string itemType, int itemAmount)
         {
-            string datestring = date.ToString("yyyyMMdd");
-            Debug.Log("HasClockedIn => " + datestring + ", " + itemType + ", " + itemAmount);
-            Debug.Log("HasClockedIn => " + myClockIns);
+            int ti = 0;
+            if ((int)date.DayOfWeek == 0)
+            {
+                ti = 7;
+            }
+            else
+            {
+                ti = (int)date.DayOfWeek;
+            }
 
-            return myClockIns.Exists(x => x.date == datestring && x.itemType == itemType && x.itemAmount == itemAmount);
+            bool exist = false;
+
+            for (int i = 0; i <= ti; i++)
+            {
+                if(myClockIns.Exists(x => x.date == date.AddDays(0 - i).ToString("yyyyMMdd") && x.itemType == itemType && x.itemAmount == itemAmount))
+                {
+                    exist = true;
+                }
+            }
+
+            return exist;
         }
 
         public void ReceiveItem(string itemType, int itemAmount)
