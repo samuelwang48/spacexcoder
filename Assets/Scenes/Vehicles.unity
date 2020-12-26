@@ -800,7 +800,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 162624111}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &185002930
+--- !u!65 &185002930
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185002929}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.593672, y: 3.2538838, z: 10.428596}
+  m_Center: {x: 0, y: -0.000000059604645, z: 0}
+--- !u!114 &185002934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -809,10 +822,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 185002929}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2387d6bbabd03d74ca1a6249aff31446, type: 3}
+  m_Script: {fileID: 11500000, guid: c3dd22233cb13c14e9ec8e0be662276b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotateSpeed: 1.1
+  is_dragable: 0
+  is_rotation: 1
+  rotation_speed: 0.5
+  is_scale: 1
+  max_scale: 3
+  min_scale: 0.2
+  mouse_drag_texture: {fileID: 0}
+--- !u!114 &185002935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185002929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b633460422ad5a45975559d05df6049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is_dragable: 0
+  long_touch_drag_time: 1
+  is_rotation: 1
+  rotation_speed: 0.5
+  is_scale: 1
+  scale_speed: 0.007
+  max_scale: 3
+  min_scale: 0.2
 --- !u!1 &200598060
 GameObject:
   m_ObjectHideFlags: 0
