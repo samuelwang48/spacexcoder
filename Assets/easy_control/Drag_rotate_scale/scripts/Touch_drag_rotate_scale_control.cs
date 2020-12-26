@@ -9,7 +9,6 @@ using UnityEngine.UI;
 */
 public class Touch_drag_rotate_scale_control : MonoBehaviour
 {
-
     //init transform
     private Vector3 init_position;
     private Quaternion init_rotation;
@@ -48,7 +47,8 @@ public class Touch_drag_rotate_scale_control : MonoBehaviour
     [Header("Does it need to scale")]
     public bool is_scale;
 
-    [Header("scale speed")][Range(0.001f, 0.02f)]
+    [Header("scale speed")]
+    [Range(0.001f, 0.02f)]
     public float scale_speed;
 
     [Header("max scale and min scale")]
@@ -67,6 +67,7 @@ public class Touch_drag_rotate_scale_control : MonoBehaviour
         this.init_scale = this.transform.localScale;
     }
 
+#if UNITY_IPHONE || UNITY_ANDROID
     void Update()
     {
         //没有触摸，就没有正在拖拽中，也不计时拖拽
@@ -184,7 +185,7 @@ public class Touch_drag_rotate_scale_control : MonoBehaviour
                 }
             }
 
-           
+
             #endregion
         }
         #endregion
@@ -233,6 +234,7 @@ public class Touch_drag_rotate_scale_control : MonoBehaviour
         }
         #endregion
     }
+#endif
 
     //reset the transform 
     public void reset_transform()
@@ -241,5 +243,4 @@ public class Touch_drag_rotate_scale_control : MonoBehaviour
         this.transform.rotation = this.init_rotation;
         this.transform.localScale = this.init_scale;
     }
-
 }

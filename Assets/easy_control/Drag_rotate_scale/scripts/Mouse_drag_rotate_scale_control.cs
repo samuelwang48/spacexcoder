@@ -9,6 +9,7 @@ using UnityEngine.UI;
 */
 public class Mouse_drag_rotate_scale_control : MonoBehaviour
 {
+
     //init transform
     private Vector3 init_position;
     private Quaternion init_rotation;
@@ -67,6 +68,7 @@ public class Mouse_drag_rotate_scale_control : MonoBehaviour
         this.init_scale = this.transform.localScale;
     }
 
+#if UNITY_EDITOR
     // Update is called once per frame
     void Update()
     {
@@ -192,6 +194,7 @@ public class Mouse_drag_rotate_scale_control : MonoBehaviour
         }
         #endregion
     }
+#endif
 
     //reset the transform 
     public void reset_transform()
@@ -200,5 +203,6 @@ public class Mouse_drag_rotate_scale_control : MonoBehaviour
         this.transform.rotation = this.init_rotation;
         this.transform.localScale = this.init_scale;
     }
+
 }
 
