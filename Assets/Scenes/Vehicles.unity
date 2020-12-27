@@ -11037,7 +11037,7 @@ MonoBehaviour:
   is_rotation: 1
   rotation_speed: 0.1
   is_scale: 1
-  max_scale: 3
+  max_scale: 8
   min_scale: 0.2
   mouse_drag_texture: {fileID: 0}
   is_mouse_down: 0
@@ -11072,7 +11072,7 @@ MonoBehaviour:
   rotation_speed: 0.1
   is_scale: 1
   scale_speed: 0.005
-  max_scale: 3
+  max_scale: 8
   min_scale: 0.2
 --- !u!33 &7871379006244030329
 MeshFilter:
