@@ -3853,8 +3853,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2.1
+  m_Color: {r: 1, g: 0.5050869, b: 0, a: 1}
+  m_Intensity: 8.55
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -4552,7 +4552,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1085761636}
   m_Layer: 0
-  m_Name: Lieutenant
+  m_Name: S0
   m_TagString: ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7066,7 +7066,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1633685825}
   m_Layer: 0
-  m_Name: Major
+  m_Name: S2
   m_TagString: ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7537,8 +7537,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 12.09
+  m_Color: {r: 1, g: 0.051886797, b: 0.051886797, a: 1}
+  m_Intensity: 9.04
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -8123,7 +8123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1991600669}
   m_Layer: 0
-  m_Name: Captain
+  m_Name: S1
   m_TagString: ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9035,13 +9035,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7721373797678995514}
-  m_LocalRotation: {x: 0.94234985, y: 0, z: -0.3346293, w: 0}
-  m_LocalPosition: {x: 0.0027809, y: 17, z: 0.0061411}
-  m_LocalScale: {x: 2.5028424, y: 2.5028424, z: 2.5028424}
+  m_LocalRotation: {x: 0.9792446, y: -0.015055967, z: 0.18591537, w: 0.07930208}
+  m_LocalPosition: {x: 0, y: 22, z: -1}
+  m_LocalScale: {x: 2.3443325, y: 2.3443325, z: 2.3443325}
   m_Children: []
   m_Father: {fileID: 1589829100312604784}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 219.1, z: 180}
+  m_LocalEulerAnglesHint: {x: 9.26, y: 158.5, z: 180.00002}
 --- !u!23 &1305321703791458619
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9307,7 +9307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3131025655627697053}
   m_Layer: 0
-  m_Name: Colonel
+  m_Name: S3
   m_TagString: ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9414,7 +9414,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1589829100312604784}
   m_Layer: 0
-  m_Name: General
+  m_Name: S4
   m_TagString: ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

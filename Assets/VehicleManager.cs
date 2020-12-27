@@ -42,7 +42,15 @@ public class VehicleManager : MonoBehaviour
             GameObject b = GameObject.Find("R" + i.ToString());
                 
             b.GetComponent<Button>().onClick.AddListener(() => {
-                GameObject current = li[j];
+                GameObject current = null;
+                for (int k = 0; k < 5; k++)
+                {
+                    if (li[k].name == "S" + j.ToString())
+                    {
+                        Debug.Log("current name => " + li[k].name);
+                        current = li[k];
+                    }
+                }
                 prev.SetActive(false);
                 current.SetActive(true);
                 prev = current;
