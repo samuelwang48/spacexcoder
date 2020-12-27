@@ -53,7 +53,7 @@ public class Mouse_drag_rotate_scale_control : MonoBehaviour
     public Texture2D mouse_drag_texture;
 
     //the statu if the mouse is down
-    public bool is_mouse_down = false;
+    private bool is_mouse_down = false;
 
     //the mouse position
     private float mouse_position_x;
