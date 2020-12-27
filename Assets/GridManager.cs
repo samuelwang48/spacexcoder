@@ -240,66 +240,18 @@ public class GridManager : MonoBehaviour
 
     void InitGameInventoryOverlay()
     {
+        SpaceXCoder.Inventory.InitGameInventoryOverlay(
+            PrefabItemTpl,
+            InventoryCellPrefab,
+            GameInventoryOverlay,
+            GameItemClick
+        );
+    }
 
-        int gridWidth = 2;
-        int gridHeight = 5;
-        int numberToCreate = gridWidth * gridHeight;
-        int cellIndex = 0;
-
-        Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
-        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
-        Transform containerTransform = GameInventoryOverlay.transform.Find("ItemGrid");
-        GameObject newCell;
-
-        /*
-        GridLayoutGroup glg = containerTransform.gameObject.GetComponent<GridLayoutGroup>();
-        glg.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-        glg.constraintCount = gridWidth;
-        */
-
-        // GameInventoryOverlay.SetActive(false);
-
-        for (int i = 0; i < numberToCreate; i++)
-        {
-            newCell = (GameObject)Instantiate(InventoryCellPrefab, containerTransform);
-            InventoryGridList.Add(newCell);
-        }
-
-        for (int index = 0; index < dict.Count; index++)
-        {
-            var kv = dict.ElementAt(index);
-            Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
-            Transform InventoryCell = InventoryGridList[cellIndex].transform;
-
-            //if (kv.Value > 0)
-            //{
-            GameObject newObj = Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
-            newObj.transform.SetParent(InventoryCell);
-            newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
-            newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
-            newObj.transform.Find("Life").gameObject.SetActive(false);
-            newObj.transform.Find("Image/CD").gameObject.SetActive(false);
-            newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
-
-            Button itemBtn = newObj.GetComponent<Button>();
-            int i = index;
-            itemBtn.onClick.AddListener(delegate {
-                int cd = newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent;
-
-                if (cd > 0)
-                {
-                    Debug.Log("cd time => " + cd + " wait till it becomes zero");
-                    return;
-                }
-                else
-                {
-                    GameItemClicked(newObj, i);
-                    UseGameItem();
-                }
-            });
-            cellIndex++;
-            //}
-        }
+    void GameItemClick(GameObject newObj, int i)
+    {
+        GameItemClicked(newObj, i);
+        UseGameItem();
     }
 
     void GameItemClicked(GameObject gameItem, int index)
