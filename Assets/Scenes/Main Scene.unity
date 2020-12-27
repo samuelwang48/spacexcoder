@@ -1029,6 +1029,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
 --- !u!224 &159688156 stripped
@@ -1477,6 +1497,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
@@ -5187,6 +5227,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
 --- !u!224 &721375297 stripped
@@ -6099,6 +6159,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
@@ -9598,6 +9678,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
 --- !u!224 &1391310576 stripped
@@ -12310,6 +12410,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
@@ -15669,6 +15789,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
 --- !u!1001 &3244997549563028298
@@ -15792,6 +15932,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244997551103251774, guid: 54effa9e182b94ff68963bc5ee0a9df8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54effa9e182b94ff68963bc5ee0a9df8, type: 3}
