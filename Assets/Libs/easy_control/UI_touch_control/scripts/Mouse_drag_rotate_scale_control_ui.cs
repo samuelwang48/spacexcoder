@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Events;
 /*
 	成都时代互动科技有限公司 www.epoching.com 
                  

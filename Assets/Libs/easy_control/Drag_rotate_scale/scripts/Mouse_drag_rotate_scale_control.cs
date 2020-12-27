@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 /*
 	成都时代互动科技有限公司 www.epoching.com 
                  
@@ -210,7 +208,6 @@ public class Mouse_drag_rotate_scale_control : MonoBehaviour
         eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        Debug.Log("RaycastResult => " + results.Count);
         return results.Count > 0;
     }
 
