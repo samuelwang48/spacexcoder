@@ -3851,7 +3851,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.5050869, b: 0, a: 1}
+  m_Color: {r: 0.07644081, g: 0, b: 1, a: 1}
   m_Intensity: 8.55
   m_Range: 10
   m_SpotAngle: 30
@@ -4063,12 +4063,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   is_dragable: 0
   long_touch_drag_time: 0
-  is_rotation: 0
-  rotation_speed: 0
+  is_rotation: 1
+  rotation_speed: 0.1
   is_scale: 1
-  scale_speed: 0
-  max_scale: 0
-  min_scale: 0
+  scale_speed: 0.005
+  max_scale: 3
+  min_scale: 0.02
 --- !u!114 &875295669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9541,8 +9541,8 @@ GameObject:
   - component: {fileID: 7023294702753703764}
   - component: {fileID: 3624069736852069293}
   - component: {fileID: 875295670}
-  - component: {fileID: 875295668}
   - component: {fileID: 875295669}
+  - component: {fileID: 875295668}
   m_Layer: 0
   m_Name: Rotatee
   m_TagString: shipRotator
@@ -10641,8 +10641,8 @@ MonoBehaviour:
   rotation_speed: 0.1
   is_scale: 1
   scale_speed: 0.005
-  max_scale: 0
-  min_scale: 0
+  max_scale: 3
+  min_scale: 0.2
 --- !u!1 &6621468143150980813
 GameObject:
   m_ObjectHideFlags: 0
