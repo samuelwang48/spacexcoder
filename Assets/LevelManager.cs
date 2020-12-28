@@ -28,7 +28,7 @@ public class LevelManager : MonoBehaviour
 
         SpaceXCoder.Save save = GameService.LoadSave();
         // by default it is zero
-        int unlocked = save.unlocked;
+        int unlocked = save.Unlocked();
         Debug.Log("Unlocked level: " + unlocked);
         Debug.Log("lvRecords: " + save.lvRecords);
 

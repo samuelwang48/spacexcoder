@@ -38,6 +38,7 @@ public class GridManager : MonoBehaviour
     public GameObject prefab;
     public GameObject RoverPrefab;
     public GameObject RockPrefab;
+    public GameObject GrownRockPrefab;
     public GameObject ResourcePrefab;
     public GameObject InventoryCellPrefab;
     public GameObject InstructionView;
@@ -1198,7 +1199,8 @@ public class GridManager : MonoBehaviour
             });
         });
 
-        //Debug.Log(string.Join(", ", allCord));
+        Debug.Log("all cordinates");
+        Debug.Log(string.Join(", ", allCord));
 
         System.Random random = new System.Random();
         int randomIndex = random.Next(0, allCord.Count);
@@ -1260,6 +1262,33 @@ public class GridManager : MonoBehaviour
 
             RockList.Add(rock);
             allCord.RemoveAt(randomIndex);
+        });
+
+        List<int> grownRockList = Enumerable.Range(0, 3).ToList();
+        grownRockList.ForEach(i =>
+        {
+            //Debug.Log(i);
+            randomIndex = random.Next(0, allCord.Count);
+            Rock rock = new Rock();
+            rock.X = allCord[randomIndex].X;
+            rock.Y = allCord[randomIndex].Y;
+
+            cell = GridList[(rock.Y * GridWidth) + rock.X];
+            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
+            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
+
+            Vector3 scale = transform.localScale;
+            //scale.Set(150f, 150f, 150f);
+            //scale.Set(0.3f, 0.3f, 1);
+
+            rock.GameObject = Instantiate(GrownRockPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            rock.GameObject.transform.SetParent(cell.gameObject.transform);
+            rock.GameObject.transform.localPosition = Vector3.zero;
+            rock.GameObject.transform.localScale = scale;
+            rock.GameObject.GetComponent<Image>().color = ColorRockNormal;
+            //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
+
+            RockList.Add(rock);
         });
 
         List<int> resList = Enumerable.Range(0, ResourceQty).ToList();

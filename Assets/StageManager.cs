@@ -83,6 +83,28 @@ public class StageManager : MonoBehaviour
             }
         }
 
+        GameObject testToggler = GameObject.Find("TestToggle");
+        Toggle m_Toggle = testToggler.GetComponent<Toggle>();
+
+        if (PlayerPrefs.GetInt("TesterUnlocked") > 0)
+        {
+            m_Toggle.isOn = true;
+        }
+
+        m_Toggle.onValueChanged.AddListener(delegate {
+            Debug.Log("Test Toggle => " + m_Toggle.isOn);
+            if(m_Toggle.isOn == true)
+            {
+                PlayerPrefs.SetInt("TesterUnlocked", 100);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("TesterUnlocked", -1);
+            }
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        });
+
+
         Button btnLeaderboard = BtnLeaderboard.GetComponent<Button>();
         btnLeaderboard.onClick.AddListener(delegate { Social.ShowLeaderboardUI(); });
 

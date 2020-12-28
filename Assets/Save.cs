@@ -223,7 +223,14 @@ namespace SpaceXCoder
 
         public int Unlocked()
         {
-            return unlocked;
+            if(PlayerPrefs.GetInt("TesterUnlocked") > 0)
+            {
+                return PlayerPrefs.GetInt("TesterUnlocked");
+            }
+            else
+            {
+                return unlocked;
+            }
         }
 
         public bool AppendClockIn(string itemType, int itemAmount)

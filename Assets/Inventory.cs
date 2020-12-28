@@ -17,7 +17,7 @@ namespace SpaceXCoder
         )
         {
             List<GameObject> InventoryGridList = new List<GameObject>();
-            int gridWidth = 10;
+            int gridWidth = 8;
             int gridHeight = 1;
             int numberToCreate = gridWidth * gridHeight;
             int cellIndex = 0;
