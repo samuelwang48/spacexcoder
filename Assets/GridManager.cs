@@ -1264,6 +1264,31 @@ public class GridManager : MonoBehaviour
             allCord.RemoveAt(randomIndex);
         });
 
+        List<int> resList = Enumerable.Range(0, ResourceQty).ToList();
+        resList.ForEach(i =>
+        {
+            //Debug.Log(i);
+            randomIndex = random.Next(0, allCord.Count);
+            Resource res = new Resource();
+            res.X = allCord[randomIndex].X;
+            res.Y = allCord[randomIndex].Y;
+
+            cell = GridList[(res.Y * GridWidth) + res.X];
+            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
+            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
+
+            Vector3 scale = transform.localScale;
+            scale.Set(0.8f, 0.8f, 1);
+
+            res.GameObject = Instantiate(ResourcePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            res.GameObject.transform.SetParent(cell.gameObject.transform);
+            res.GameObject.transform.localPosition = Vector3.zero;
+            res.GameObject.transform.localScale = scale;
+
+            ResList.Add(res);
+            allCord.RemoveAt(randomIndex);
+        });
+
         List<int> grownRockList = Enumerable.Range(0, 3).ToList();
         grownRockList.ForEach(i =>
         {
@@ -1289,31 +1314,6 @@ public class GridManager : MonoBehaviour
             //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
 
             RockList.Add(rock);
-        });
-
-        List<int> resList = Enumerable.Range(0, ResourceQty).ToList();
-        resList.ForEach(i =>
-        {
-            //Debug.Log(i);
-            randomIndex = random.Next(0, allCord.Count);
-            Resource res = new Resource();
-            res.X = allCord[randomIndex].X;
-            res.Y = allCord[randomIndex].Y;
-
-            cell = GridList[(res.Y * GridWidth) + res.X];
-            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
-            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
-
-            Vector3 scale = transform.localScale;
-            scale.Set(0.8f, 0.8f, 1);
-
-            res.GameObject = Instantiate(ResourcePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            res.GameObject.transform.SetParent(cell.gameObject.transform);
-            res.GameObject.transform.localPosition = Vector3.zero;
-            res.GameObject.transform.localScale = scale;
-
-            ResList.Add(res);
-            allCord.RemoveAt(randomIndex);
         });
 
         /*

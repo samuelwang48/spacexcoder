@@ -1343,6 +1343,8 @@ MonoBehaviour:
     type: 3}
   RockPrefab: {fileID: 1180117296344796812, guid: a877c32b52f23452bae886d280a5bbc4,
     type: 3}
+  GrownRockPrefab: {fileID: 360778061917218600, guid: 38717a61eba15084cb37f844e0b4daf4,
+    type: 3}
   ResourcePrefab: {fileID: 289218822830736172, guid: 9ca3160b73b1248bdb9282e622833e3b,
     type: 3}
   InventoryCellPrefab: {fileID: 893403413104995057, guid: b7bd705a9a7be454c9ed2aca40361c98,
