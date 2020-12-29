@@ -123,8 +123,6 @@ public class StageManager : MonoBehaviour
         Button btnVehicles = BtnVehicles.GetComponent<Button>();
         btnVehicles.onClick.AddListener(delegate { SceneManager.LoadScene("Vehicles"); });
         
-
-
         Button btnRewardClose = BonusUI.transform.Find("BtnClose").GetComponent<Button>();
         btnRewardClose.onClick.AddListener(delegate { HideBonusUI(); });
 
@@ -155,26 +153,34 @@ public class StageManager : MonoBehaviour
                     ti = (int)today.DayOfWeek;
                 }
 
-                if (wi <= ti)
+
+                if (PlayerPrefs.GetInt("TesterUnlocked") > 0)
                 {
+                    btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+                }
+                else
+                {
+                    if (wi <= ti)
+                    {
                     effect.effectFactor = 0f;
                     GameObject received = transform.Find("Received").gameObject;
                     string itemType = (string)DailyBonus[weekday]["itemType"];
                     int itemAmount = (int)DailyBonus[weekday]["itemAmount"];
 
-                    if (save.HasClockedInThisWeek(today, itemType, itemAmount) == true)
+                        if (save.HasClockedInThisWeek(today, itemType, itemAmount) == true)
+                        {
+                            Debug.Log("HasClockedIn => true");
+                            received.SetActive(true);
+                        }
+                        else
+                        {
+                            Debug.Log("HasClockedIn => false");
+                            btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
+                        }
+                    } else if (wi > ti)
                     {
-                        Debug.Log("HasClockedIn => true");
-                        received.SetActive(true);
+                        effect.effectFactor = 1f;
                     }
-                    else
-                    {
-                        Debug.Log("HasClockedIn => false");
-                        btn.onClick.AddListener(delegate { ReceiveDailyBonus(transform, weekday); });
-                    }
-                } else if (wi > ti)
-                {
-                    effect.effectFactor = 1f;
                 }
             }
         });

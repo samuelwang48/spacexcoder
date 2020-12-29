@@ -94,7 +94,7 @@ public class GridManager : MonoBehaviour
     // public float DistanceY = 1f;
     // public float ObjPosZ = -1f;
     public float MinFogScale = 1f;
-    private float BaseFogScale = 10f;
+    private float BaseFogScale = 20f;
     public float FogGrowSpeed = 0.1f;
     private bool IsFogReady = false;
     public int RockGrowNumber = 0;
@@ -134,7 +134,7 @@ public class GridManager : MonoBehaviour
     private UnityEngine.Color ColorBlack = new UnityEngine.Color(0f, 0f, 0f, 1f);
 
 
-    private float TimeLeft = 91f; //~0.0003f fog speed
+    private float TimeLeft = 90f; //~0.0003f fog speed
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
     private float ProgressBgHeight;
@@ -187,6 +187,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1f;
+        TimeLeft += 1f;
 
         InitLevel();
 
@@ -1091,6 +1092,9 @@ public class GridManager : MonoBehaviour
     }
 
     private string LastMinuteSecond = "";
+    private string PropagatedGrownRockMinuteSecond = "";
+    private int GrownRockPropagationSeconds = 5;
+    private List<Rock> PropagatingGrownRock = new List<Rock>();
 
     void Update()
     {
@@ -1143,7 +1147,7 @@ public class GridManager : MonoBehaviour
 
             if (IsFogReady == true)
             {
-                float fogScale = BaseFogScale * (1 - FogGrowSpeed);
+                float fogScale = BaseFogScale * (1f - FogGrowSpeed * 0.0000001f);
                 if (fogScale > MinFogScale)
                 {
                     ScaleFog(fogScale);
@@ -1153,6 +1157,31 @@ public class GridManager : MonoBehaviour
             // difficulties
             if (RockGrowNumber != 0 && RockGrowTime != 0)
             {
+                if (PropagatedGrownRockMinuteSecond == minutes.ToString() + ":" + seconds.ToString() && PropagatingGrownRock.Count > 0)
+                {
+                    PropagatingGrownRock.ForEach(rock =>
+                    {
+                        if (Rover.X == rock.X && Rover.Y == rock.Y)
+                        {
+                            GameOver();
+                        }
+                        Animator rockAnim = rock.GameObject.GetComponent<Animator>();
+                        if (rockAnim != null)
+                        {
+                            rockAnim.enabled = false;
+                            Image rockImage = rock.GameObject.GetComponent<Image>();
+                            rockImage.sprite = Resources.Load<Sprite>("rock");
+                            rockImage.color = ColorRockNormal;
+                        }
+                        RockList.Add(rock);
+                    });
+                    PropagatingGrownRock.RemoveAll(rock => rock != null);
+                    Debug.Log("Rock propagated");
+                }
+            }
+
+            if (RockGrowNumber != 0 && RockGrowTime != 0 && RemainingCord.Count >= RockGrowNumber)
+            {
                 // Debug.Log(Mathf.FloorToInt(TimeSpent) + " Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds ");
                 // We have to grow some rocks over some time
                 // every RockGrowTime we need to grow RockGrowNumber
@@ -1160,9 +1189,54 @@ public class GridManager : MonoBehaviour
 
                 if (LastMinuteSecond != minutes.ToString() + ":" + seconds.ToString())
                 {
+                    Debug.Log(Mathf.FloorToInt(TimeSpent) + " | Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds | remaining space " + RemainingCord.Count);
+
                     if (seconds % RockGrowTime == 0 && Mathf.FloorToInt(TimeSpent) != 0)
                     {
-                        Debug.Log(Mathf.FloorToInt(TimeSpent) + " | Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds ");
+                        List<int> grownRockList = Enumerable.Range(0, RockGrowNumber).ToList();
+
+                        System.Random random = new System.Random();
+
+                        grownRockList.ForEach(i =>
+                        {
+                            int randomIndex = random.Next(0, RemainingCord.Count);
+                            Rock rock = new Rock();
+                            rock.X = RemainingCord[randomIndex].X;
+                            rock.Y = RemainingCord[randomIndex].Y;
+
+                            GameObject cell = GridList[(rock.Y * GridWidth) + rock.X];
+                            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
+                            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
+
+                            Vector3 scale = transform.localScale;
+                            //scale.Set(150f, 150f, 150f);
+                            //scale.Set(0.3f, 0.3f, 1);
+
+                            rock.GameObject = Instantiate(GrownRockPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+                            rock.GameObject.transform.SetParent(cell.gameObject.transform);
+                            rock.GameObject.transform.localPosition = Vector3.zero;
+                            rock.GameObject.transform.localScale = scale;
+                            rock.GameObject.GetComponent<Image>().color = ColorRockNormal;
+                            //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
+
+                            PropagatingGrownRock.Add(rock);
+                            RemainingCord.RemoveAt(randomIndex);
+                        });
+
+                        int next_minutes;
+                        int next_seconds;
+                        if (TimeLeft - GrownRockPropagationSeconds <= 60f)
+                        {
+                            next_minutes = 0;
+                            next_seconds = Mathf.FloorToInt(TimeLeft - GrownRockPropagationSeconds);
+                        }
+                        else
+                        {
+                            next_minutes = minutes;
+                            next_seconds = seconds - GrownRockPropagationSeconds;
+                        }
+                        PropagatedGrownRockMinuteSecond = next_minutes.ToString() + ":" + next_seconds.ToString();
+                        Debug.Log("newly grown rock to be propagated at " + PropagatedGrownRockMinuteSecond);
                     }
                 }
 
@@ -1202,7 +1276,7 @@ public class GridManager : MonoBehaviour
         BaseFogScale = fogScale;
     }
 
-
+    private List<System.Drawing.Point> RemainingCord = new List<System.Drawing.Point>();
     //IEnumerator GenMap()
     void GenMap()
     {
@@ -1316,32 +1390,7 @@ public class GridManager : MonoBehaviour
             allCord.RemoveAt(randomIndex);
         });
 
-        List<int> grownRockList = Enumerable.Range(0, 3).ToList();
-        grownRockList.ForEach(i =>
-        {
-            //Debug.Log(i);
-            randomIndex = random.Next(0, allCord.Count);
-            Rock rock = new Rock();
-            rock.X = allCord[randomIndex].X;
-            rock.Y = allCord[randomIndex].Y;
-
-            cell = GridList[(rock.Y * GridWidth) + rock.X];
-            //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
-            //localPosition = new Vector3(pos.x, pos.y, ObjPosZ);
-
-            Vector3 scale = transform.localScale;
-            //scale.Set(150f, 150f, 150f);
-            //scale.Set(0.3f, 0.3f, 1);
-
-            rock.GameObject = Instantiate(GrownRockPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            rock.GameObject.transform.SetParent(cell.gameObject.transform);
-            rock.GameObject.transform.localPosition = Vector3.zero;
-            rock.GameObject.transform.localScale = scale;
-            rock.GameObject.GetComponent<Image>().color = ColorRockNormal;
-            //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
-
-            RockList.Add(rock);
-        });
+        RemainingCord = allCord;
 
         /*
         for (int i = 0; i < grid.Length; i++)
@@ -1364,6 +1413,7 @@ public class GridManager : MonoBehaviour
             AStarFind(grid, startPos, endPos, i);
         }
         Debug.Log(Time.realtimeSinceStartup);
+
     }
 
     //IEnumerator AStarFind(int[][] map, int[] start, int[] end, int i)

@@ -101,7 +101,7 @@ namespace SpaceXCoder
             {
                 "FogLight",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/addons/engeniring_06_b" },
+                    { "Sprite", "engeniring_06_b" },
                     { "Name", "Fog Light" },
                     { "Stackable", "false" }
                 }
@@ -109,7 +109,7 @@ namespace SpaceXCoder
             {
                 "StopClock",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/addons/engeniring_33_b" },
+                    { "Sprite", "engeniring_33_b" },
                     { "Name", "Stop Clock" },
                     { "Stackable", "true" }
                 }
@@ -117,7 +117,7 @@ namespace SpaceXCoder
             {
                 "BombShortRange",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_98" },
+                    { "Sprite", "en_craft_98" },
                     { "Name", "Short Range Bomb" },
                     { "Stackable", "false" },
                     { "Life", "0.5" },
@@ -127,7 +127,7 @@ namespace SpaceXCoder
             {
                 "RocketBomb",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_95" },
+                    { "Sprite", "en_craft_95" },
                     { "Name", "Rocket Bomb" },
                     { "Stackable", "false" },
                     { "Life", "0.5" },
@@ -137,7 +137,7 @@ namespace SpaceXCoder
             {
                 "ExtraStar",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/addons/engeniring_09_b" },
+                    { "Sprite", "engeniring_09_b" },
                     { "Name", "Extra Star" },
                     { "Stackable", "false" },
                     { "SingleUse", "true" },//TODO
@@ -146,7 +146,7 @@ namespace SpaceXCoder
             {
                 "Teleport",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_51" },
+                    { "Sprite", "en_craft_51" },
                     { "Name", "Teleport" },
                     { "Stackable", "false" },
                     { "Life", "0.5" },
@@ -156,7 +156,7 @@ namespace SpaceXCoder
             {
                 "PowerOverwhelming",
                 new Dictionary<string, string>() {
-                    { "Sprite", "EngineeringCraftIcons/bg/en_craft_25" },
+                    { "Sprite", "en_craft_25" },
                     { "Name", "Power Overwhelming" },
                     { "Stackable", "false" },
                     { "Life", "10" },
