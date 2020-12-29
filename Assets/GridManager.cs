@@ -97,6 +97,8 @@ public class GridManager : MonoBehaviour
     private float BaseFogScale = 10f;
     public float FogGrowSpeed = 0.1f;
     private bool IsFogReady = false;
+    public int RockGrowNumber = 0;
+    public float RockGrowTime = 0f;
 
     private string[] DIR = { "Up", "Right", "Down", "Left" };
 
@@ -132,7 +134,7 @@ public class GridManager : MonoBehaviour
     private UnityEngine.Color ColorBlack = new UnityEngine.Color(0f, 0f, 0f, 1f);
 
 
-    private float TimeLeft = 90f; //~0.0003f fog speed
+    private float TimeLeft = 91f; //~0.0003f fog speed
     private float TimeSpent = 0f;
     private float ProgressBgWidth;
     private float ProgressBgHeight;
@@ -166,13 +168,15 @@ public class GridManager : MonoBehaviour
         Debug.Log("Current level is => " + CurrentLevel);
 
         Dictionary<string, object> cfg = GameService.ReadLevelConfig(CurrentLevel);
-        Debug.Log("Level Config => " + cfg["GridWidth"] + ", " + cfg["GridHeight"] + ", " + cfg["RockQty"] + ", " + cfg["ResourceQty"] + ", " + cfg["FogGrowSpeed"]);
+        Debug.Log("Level Config => " + cfg["GridWidth"] + ", " + cfg["GridHeight"] + ", " + cfg["RockQty"] + ", " + cfg["ResourceQty"] + ", " + cfg["FogGrowSpeed"] + ", " + cfg["RockGrowNumber"] + ", " + cfg["RockGrowTime"]);
 
         GridWidth = (int)cfg["GridWidth"];
         GridHeight = (int)cfg["GridHeight"];
         RockQty = (int)cfg["RockQty"];
         ResourceQty = (int)cfg["ResourceQty"];
         FogGrowSpeed = (float)cfg["FogGrowSpeed"];
+        RockGrowNumber = (int)cfg["RockGrowNumber"];
+        RockGrowTime = (float)cfg["RockGrowTime"];
 
         if (GridHeight >= 17)
         {
@@ -1086,6 +1090,8 @@ public class GridManager : MonoBehaviour
         IsGameFrozen = false;
     }
 
+    private string LastMinuteSecond = "";
+
     void Update()
     {
         if (IsGameFrozen == true)
@@ -1143,6 +1149,27 @@ public class GridManager : MonoBehaviour
                     ScaleFog(fogScale);
                 }
             }
+
+            // difficulties
+            if (RockGrowNumber != 0 && RockGrowTime != 0)
+            {
+                // Debug.Log(Mathf.FloorToInt(TimeSpent) + " Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds ");
+                // We have to grow some rocks over some time
+                // every RockGrowTime we need to grow RockGrowNumber
+                // the newly grown rocks can be anywhere the existing rocks are not present
+
+                if (LastMinuteSecond != minutes.ToString() + ":" + seconds.ToString())
+                {
+                    if (seconds % RockGrowTime == 0 && Mathf.FloorToInt(TimeSpent) != 0)
+                    {
+                        Debug.Log(Mathf.FloorToInt(TimeSpent) + " | Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds ");
+                    }
+                }
+
+                LastMinuteSecond = minutes.ToString() + ":" + seconds.ToString();
+            }
+
+
         }
     }
 

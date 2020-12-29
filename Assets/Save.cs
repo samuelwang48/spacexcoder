@@ -390,16 +390,10 @@ namespace SpaceXCoder
                 if (cfg[1] == stage)
                 {
                     Dictionary<string, object> level = new Dictionary<string, object>();
-
-                    level["Level"] = int.Parse(cfg[start + 0]);
-                    level["GridWidth"] = int.Parse(cfg[start + 1]);
-                    level["GridHeight"] = int.Parse(cfg[start + 2]);
-                    level["RockQty"] = int.Parse(cfg[start + 3]);
-                    level["ResourceQty"] = int.Parse(cfg[start + 4]);
-                    level["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
+                    level = ParseLevelConfig(cfg, start);
 
                     list.Add(level);
-                    Debug.Log("READ_STAGE => " + stage + ", " + cfg[start + 0] + ", "  + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
+                    Debug.Log("READ_STAGE => " + stage + ", " + cfg[start + 0] + ", "  + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5] + ", " + cfg[start + 6] + ", " + cfg[start + 7]);
                 }
             }
             return list;
@@ -418,16 +412,27 @@ namespace SpaceXCoder
 
                 if (int.Parse(cfg[start + 0]) == level)
                 {
-                    config["Level"] = int.Parse(cfg[start + 0]);
-                    config["GridWidth"] = int.Parse(cfg[start + 1]);
-                    config["GridHeight"] = int.Parse(cfg[start + 2]);
-                    config["RockQty"] = int.Parse(cfg[start + 3]);
-                    config["ResourceQty"] = int.Parse(cfg[start + 4]);
-                    config["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
-                    Debug.Log("READ_LEVEL => " + level + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5]);
+                    config = ParseLevelConfig(cfg, start);
+                    Debug.Log("READ_LEVEL => " + level + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5] + ", " + cfg[start + 6] + ", " + cfg[start + 7]);
                     break;
                 }
             }
+            return config;
+        }
+
+        private static Dictionary<string, object> ParseLevelConfig(string[] cfg, int start)
+        {
+            Dictionary<string, object> config = new Dictionary<string, object>();
+
+            config["Level"] = int.Parse(cfg[start + 0]);
+            config["GridWidth"] = int.Parse(cfg[start + 1]);
+            config["GridHeight"] = int.Parse(cfg[start + 2]);
+            config["RockQty"] = int.Parse(cfg[start + 3]);
+            config["ResourceQty"] = int.Parse(cfg[start + 4]);
+            config["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
+            config["RockGrowNumber"] = int.Parse(cfg[start + 6]);
+            config["RockGrowTime"] = float.Parse(cfg[start + 7]);
+
             return config;
         }
     }
