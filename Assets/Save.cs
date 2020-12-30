@@ -242,14 +242,23 @@ namespace SpaceXCoder
                 itemAmount = itemAmount
             };
             Debug.Log("Append ClockIn => " + bonus.date);
-            if (myClockIns.Exists(x => x.date == bonus.date && x.itemType == itemType && x.itemAmount == itemAmount) == false)
+
+            if (PlayerPrefs.GetInt("TesterUnlocked") > 0)
             {
                 myClockIns.Add(bonus);
                 return true;
             }
             else
             {
-                return false;
+                if (myClockIns.Exists(x => x.date == bonus.date && x.itemType == itemType && x.itemAmount == itemAmount) == false)
+                {
+                    myClockIns.Add(bonus);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 

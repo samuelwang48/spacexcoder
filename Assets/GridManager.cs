@@ -157,6 +157,7 @@ public class GridManager : MonoBehaviour
 
     public GameObject EffectShortRangeBomb;
     public GameObject EffectTeleport;
+    public GameObject EffectBlackhole;
     public GameObject EffectPowerOverwhelming;
 
 
@@ -1389,6 +1390,14 @@ public class GridManager : MonoBehaviour
             ResList.Add(res);
             allCord.RemoveAt(randomIndex);
         });
+
+        Vector3 bscale = transform.localScale;
+        bscale.Set(190f, 190f, 190f);
+        cell = GridList[(1 * GridWidth) + 1];
+        GameObject effect = (GameObject)Instantiate(EffectBlackhole, Vector3.zero, Quaternion.identity) as GameObject;
+        effect.transform.SetParent(cell.gameObject.transform);
+        effect.transform.localPosition = Vector3.zero;
+        effect.transform.localScale = bscale;
 
         RemainingCord = allCord;
 
