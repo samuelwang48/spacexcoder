@@ -402,7 +402,8 @@ namespace SpaceXCoder
                     level = ParseLevelConfig(cfg, start);
 
                     list.Add(level);
-                    Debug.Log("READ_STAGE => " + stage + ", " + cfg[start + 0] + ", "  + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5] + ", " + cfg[start + 6] + ", " + cfg[start + 7]);
+                    Debug.Log("READ_LEVEL1 => " + stage + ", " + cfg[start + 0] + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5] + ", " + cfg[start + 6] + ", " + cfg[start + 7]);
+                    Debug.Log("READ_LEVEL2 => " + stage + ", " + cfg[start + 8] + ", " + cfg[start + 9] + ", " + cfg[start + 10] + ", " + cfg[start + 11] + ", " + cfg[start + 12] + ", " + cfg[start + 13] + ", " + cfg[start + 14]);
                 }
             }
             return list;
@@ -422,7 +423,8 @@ namespace SpaceXCoder
                 if (int.Parse(cfg[start + 0]) == level)
                 {
                     config = ParseLevelConfig(cfg, start);
-                    Debug.Log("READ_LEVEL => " + level + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5] + ", " + cfg[start + 6] + ", " + cfg[start + 7]);
+                    Debug.Log("READ_LEVEL1 => " + level + ", " + cfg[start + 1] + ", " + cfg[start + 2] + ", " + cfg[start + 3] + ", " + cfg[start + 4] + ", " + cfg[start + 5] + ", " + cfg[start + 6] + ", " + cfg[start + 7]);
+                    Debug.Log("READ_LEVEL2 => " + level + ", " + cfg[start + 8] + ", " + cfg[start + 9] + ", " + cfg[start + 10] + ", " + cfg[start + 11] + ", " + cfg[start + 12] + ", " + cfg[start + 13] + ", " + cfg[start + 14]);
                     break;
                 }
             }
@@ -440,7 +442,14 @@ namespace SpaceXCoder
             config["ResourceQty"] = int.Parse(cfg[start + 4]);
             config["FogGrowSpeed"] = float.Parse(cfg[start + 5]);
             config["RockGrowNumber"] = int.Parse(cfg[start + 6]);
-            config["RockGrowTime"] = float.Parse(cfg[start + 7]);
+            config["RockGrowTime"] = int.Parse(cfg[start + 7]);
+            config["BlackholeNumber"] = int.Parse(cfg[start + 8]);
+            config["BlackholeTimeMin"] = int.Parse(cfg[start + 9]);
+            config["BlackholeTimeMax"] = int.Parse(cfg[start + 10]);
+            config["BlackholeLifeMin"] = int.Parse(cfg[start + 11]);
+            config["BlackholeLifeMax"] = int.Parse(cfg[start + 12]);
+            config["BlackholeSizeMin"] = int.Parse(cfg[start + 13]);
+            config["BlackholeSizeMax"] = int.Parse(cfg[start + 14]);
 
             return config;
         }

@@ -98,7 +98,14 @@ public class GridManager : MonoBehaviour
     public float FogGrowSpeed = 0.1f;
     private bool IsFogReady = false;
     public int RockGrowNumber = 0;
-    public float RockGrowTime = 0f;
+    public int RockGrowTime = 0;
+    public int BlackholeNumber = 0;
+    public int BlackholeTimeMin = 0;
+    public int BlackholeTimeMax = 0;
+    public int BlackholeLifeMin = 0;
+    public int BlackholeLifeMax = 0;
+    public int BlackholeSizeMin = 0;
+    public int BlackholeSizeMax = 0;
 
     private string[] DIR = { "Up", "Right", "Down", "Left" };
 
@@ -169,7 +176,8 @@ public class GridManager : MonoBehaviour
         Debug.Log("Current level is => " + CurrentLevel);
 
         Dictionary<string, object> cfg = GameService.ReadLevelConfig(CurrentLevel);
-        Debug.Log("Level Config => " + cfg["GridWidth"] + ", " + cfg["GridHeight"] + ", " + cfg["RockQty"] + ", " + cfg["ResourceQty"] + ", " + cfg["FogGrowSpeed"] + ", " + cfg["RockGrowNumber"] + ", " + cfg["RockGrowTime"]);
+        Debug.Log("Level Config1 => " + cfg["GridWidth"] + ", " + cfg["GridHeight"] + ", " + cfg["RockQty"] + ", " + cfg["ResourceQty"] + ", " + cfg["FogGrowSpeed"] + ", " + cfg["RockGrowNumber"] + ", " + cfg["RockGrowTime"]);
+        Debug.Log("Level Config2 => " + cfg["BlackholeNumber"] + ", " + cfg["BlackholeTimeMin"] + ", " + cfg["BlackholeTimeMax"] + ", " + cfg["BlackholeLifeMin"] + ", " + cfg["BlackholeLifeMax"] + ", " + cfg["BlackholeSizeMin"] + ", " + cfg["BlackholeSizeMax"]);
 
         GridWidth = (int)cfg["GridWidth"];
         GridHeight = (int)cfg["GridHeight"];
@@ -177,7 +185,15 @@ public class GridManager : MonoBehaviour
         ResourceQty = (int)cfg["ResourceQty"];
         FogGrowSpeed = (float)cfg["FogGrowSpeed"];
         RockGrowNumber = (int)cfg["RockGrowNumber"];
-        RockGrowTime = (float)cfg["RockGrowTime"];
+        RockGrowTime = (int)cfg["RockGrowTime"];
+        BlackholeNumber = (int)cfg["BlackholeNumber"];
+        BlackholeTimeMin = (int)cfg["BlackholeTimeMin"];
+        BlackholeTimeMax = (int)cfg["BlackholeTimeMax"];
+        BlackholeLifeMin = (int)cfg["BlackholeLifeMin"];
+        BlackholeLifeMax = (int)cfg["BlackholeLifeMax"];
+        BlackholeSizeMin = (int)cfg["BlackholeSizeMin"];
+        BlackholeSizeMax = (int)cfg["BlackholeSizeMax"];
+
 
         if (GridHeight >= 17)
         {
@@ -1097,6 +1113,16 @@ public class GridManager : MonoBehaviour
     private int GrownRockPropagationSeconds = 5;
     private List<Rock> PropagatingGrownRock = new List<Rock>();
 
+    private List<System.Drawing.Point> PropagatedBlackholeNumber = new List<System.Drawing.Point>();
+    private string PropagatedBlackholeMinuteSecond = "";
+    private int BlackholePropagationSeconds = 5;
+    private bool PropagatingBlackhole = false;
+
+    private bool FindBlackholeArea(System.Drawing.Point c, int posX, int posY, int size)
+    {
+        return (c.X >= posX && c.X < posX + size) && (c.Y >= posY && c.Y < posY + size);
+    }
+
     void Update()
     {
         if (IsGameFrozen == true)
@@ -1156,7 +1182,64 @@ public class GridManager : MonoBehaviour
             }
 
             // difficulties
-            if (RockGrowNumber != 0 && RockGrowTime != 0)
+
+            if (BlackholeNumber > 0 && PropagatedBlackholeNumber.Count < BlackholeNumber)
+            {
+                if (LastMinuteSecond != minutes.ToString() + ":" + seconds.ToString())
+                {
+                    if ((seconds % BlackholeTimeMin == 0 || seconds % BlackholeTimeMax == 0) && Mathf.FloorToInt(TimeSpent) != 0)
+                    {
+                        int size = new System.Random().Next(BlackholeSizeMin, BlackholeSizeMax);
+                        Debug.Log("Available Blackhole coordinates_ size => " + size);
+                        float baseScale = 60f * size;
+
+                        List<System.Drawing.Point> availCoord = AllCoord.FindAll(c => c.X < GridWidth - size + 1 && c.Y < GridHeight - size + 1);
+                        System.Random random = new System.Random();
+                        Debug.Log("Available Blackhole coordinates0 => " + availCoord.Count);
+                        int rand = random.Next(availCoord.Count);
+                        int posX = availCoord[rand].X;
+                        int posY = availCoord[rand].Y;
+                        availCoord.RemoveAt(rand);
+                        Debug.Log("Available Blackhole coordinates1 => " + AllCoord.Count);
+
+                        while(availCoord.Count > 0)
+                        {
+                            List<System.Drawing.Point> area = AllCoord.FindAll(c => FindBlackholeArea(c, posX, posY, size));
+                            Debug.Log("Available Blackhole coordinates2 => " + area.Count);
+
+                            if (area.Count < size * size)
+                            {
+                                rand = random.Next(availCoord.Count);
+                                posX = availCoord[rand].X;
+                                posY = availCoord[rand].Y;
+                                availCoord.RemoveAt(rand);
+                            }
+                            else
+                            {
+                                AllCoord.RemoveAll(c => FindBlackholeArea(c, posX, posY, size));
+                                Debug.Log("Available Blackhole coordinates3 => " + AllCoord.Count);
+                                Debug.Log("Blackhole coordinate => posX: " + posX + ", posY: " + posY);
+
+                                Vector3 bscale = transform.localScale;
+                                bscale.Set(baseScale, baseScale, baseScale);
+                                GameObject cell = GridList[(posY * GridWidth) + posX];
+                                GameObject blackhole = (GameObject)Instantiate(EffectBlackhole, Vector3.zero, Quaternion.identity) as GameObject;
+                                blackhole.transform.SetParent(cell.gameObject.transform);
+                                blackhole.transform.localPosition = new Vector3(50f * (size - 1), -50f * (size - 1), 0f);
+                                blackhole.transform.localScale = bscale;
+
+                                PropagatedBlackholeNumber.Add(new System.Drawing.Point(posX, posY));
+
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            //propagating rocks
+            if (RockGrowNumber > 0 && RockGrowTime != 0)
             {
                 if (PropagatedGrownRockMinuteSecond == minutes.ToString() + ":" + seconds.ToString() && PropagatingGrownRock.Count > 0)
                 {
@@ -1180,8 +1263,8 @@ public class GridManager : MonoBehaviour
                     Debug.Log("Rock propagated");
                 }
             }
-
-            if (RockGrowNumber != 0 && RockGrowTime != 0 && RemainingCord.Count >= RockGrowNumber)
+            // rocks propagation warning
+            if (RockGrowNumber > 0 && RockGrowTime != 0 && RemainingCoord.Count >= RockGrowNumber)
             {
                 // Debug.Log(Mathf.FloorToInt(TimeSpent) + " Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds ");
                 // We have to grow some rocks over some time
@@ -1190,7 +1273,7 @@ public class GridManager : MonoBehaviour
 
                 if (LastMinuteSecond != minutes.ToString() + ":" + seconds.ToString())
                 {
-                    Debug.Log(Mathf.FloorToInt(TimeSpent) + " | Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds | remaining space " + RemainingCord.Count);
+                    Debug.Log(Mathf.FloorToInt(TimeSpent) + " | Grow " + RockGrowNumber + " rocks over " + RockGrowTime + " seconds | remaining space " + RemainingCoord.Count);
 
                     if (seconds % RockGrowTime == 0 && Mathf.FloorToInt(TimeSpent) != 0)
                     {
@@ -1200,10 +1283,10 @@ public class GridManager : MonoBehaviour
 
                         grownRockList.ForEach(i =>
                         {
-                            int randomIndex = random.Next(0, RemainingCord.Count);
+                            int randomIndex = random.Next(0, RemainingCoord.Count);
                             Rock rock = new Rock();
-                            rock.X = RemainingCord[randomIndex].X;
-                            rock.Y = RemainingCord[randomIndex].Y;
+                            rock.X = RemainingCoord[randomIndex].X;
+                            rock.Y = RemainingCoord[randomIndex].Y;
 
                             GameObject cell = GridList[(rock.Y * GridWidth) + rock.X];
                             //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
@@ -1221,7 +1304,7 @@ public class GridManager : MonoBehaviour
                             //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
 
                             PropagatingGrownRock.Add(rock);
-                            RemainingCord.RemoveAt(randomIndex);
+                            RemainingCoord.RemoveAt(randomIndex);
                         });
 
                         int next_minutes;
@@ -1240,10 +1323,9 @@ public class GridManager : MonoBehaviour
                         Debug.Log("newly grown rock to be propagated at " + PropagatedGrownRockMinuteSecond);
                     }
                 }
-
-                LastMinuteSecond = minutes.ToString() + ":" + seconds.ToString();
             }
 
+            LastMinuteSecond = minutes.ToString() + ":" + seconds.ToString();
 
         }
     }
@@ -1277,7 +1359,8 @@ public class GridManager : MonoBehaviour
         BaseFogScale = fogScale;
     }
 
-    private List<System.Drawing.Point> RemainingCord = new List<System.Drawing.Point>();
+    private List<System.Drawing.Point> RemainingCoord = new List<System.Drawing.Point>();
+    private List<System.Drawing.Point> AllCoord = new List<System.Drawing.Point>();
     //IEnumerator GenMap()
     void GenMap()
     {
@@ -1285,7 +1368,7 @@ public class GridManager : MonoBehaviour
 
         List<int> allX = Enumerable.Range(0, GridWidth).ToList();
         List<int> allY = Enumerable.Range(0, GridHeight).ToList();
-        List<System.Drawing.Point> allCord = new List<System.Drawing.Point>();
+        List<System.Drawing.Point> allCoord = new List<System.Drawing.Point>();
         int[][] grid = new int[GridHeight][];
 
         //Debug.Log("[" + string.Join(", ", allX) + "]");
@@ -1296,24 +1379,25 @@ public class GridManager : MonoBehaviour
             grid[y] = new int[GridWidth];
             allX.ForEach(x =>
             {
-                allCord.Add(new System.Drawing.Point(x, y));
+                allCoord.Add(new System.Drawing.Point(x, y));
+                AllCoord.Add(new System.Drawing.Point(x, y));
                 grid[y][x] = 0;
             });
         });
 
-        Debug.Log("all cordinates");
-        Debug.Log(string.Join(", ", allCord));
+        Debug.Log("all coordinates");
+        Debug.Log(string.Join(", ", allCoord));
 
         System.Random random = new System.Random();
-        int randomIndex = random.Next(0, allCord.Count);
+        int randomIndex = random.Next(0, allCoord.Count);
         int randomDir = 0;// random.Next(0, DIR.Length);
 
         Debug.Log("Rover Direction: " + randomDir);
 
         Rover rover = new Rover();
         rover.dir = randomDir;
-        rover.X = allCord[randomIndex].X;
-        rover.Y = allCord[randomIndex].Y;
+        rover.X = allCoord[randomIndex].X;
+        rover.Y = allCoord[randomIndex].Y;
         //Debug.Log(rover.X);
         //Debug.Log(rover.Y);
         //Debug.Log(((rover.Y * GridWidth) + rover.X + 1));
@@ -1331,9 +1415,9 @@ public class GridManager : MonoBehaviour
         rover.GameObject.transform.localScale = roverScale;
 
         Rover = rover;
-        //Debug.Log("allCord.count=>" + allCord.Count);
-        allCord.RemoveAt(randomIndex);
-        //Debug.Log("allCord.count=>" + allCord.Count);
+        //Debug.Log("allCoord.count=>" + allCoord.Count);
+        allCoord.RemoveAt(randomIndex);
+        //Debug.Log("allCoord.count=>" + allCoord.Count);
 
         RoverRotate(randomDir);
 
@@ -1341,10 +1425,10 @@ public class GridManager : MonoBehaviour
         rockList.ForEach(i =>
         {
             //Debug.Log(i);
-            randomIndex = random.Next(0, allCord.Count);
+            randomIndex = random.Next(0, allCoord.Count);
             Rock rock = new Rock();
-            rock.X = allCord[randomIndex].X;
-            rock.Y = allCord[randomIndex].Y;
+            rock.X = allCoord[randomIndex].X;
+            rock.Y = allCoord[randomIndex].Y;
             grid[rock.Y][rock.X] = 1;
 
             cell = GridList[(rock.Y * GridWidth) + rock.X];
@@ -1363,17 +1447,17 @@ public class GridManager : MonoBehaviour
             //rock.GameObject.transform.Rotate(-93f, -8.5f, 9f, Space.World);
 
             RockList.Add(rock);
-            allCord.RemoveAt(randomIndex);
+            allCoord.RemoveAt(randomIndex);
         });
 
         List<int> resList = Enumerable.Range(0, ResourceQty).ToList();
         resList.ForEach(i =>
         {
             //Debug.Log(i);
-            randomIndex = random.Next(0, allCord.Count);
+            randomIndex = random.Next(0, allCoord.Count);
             Resource res = new Resource();
-            res.X = allCord[randomIndex].X;
-            res.Y = allCord[randomIndex].Y;
+            res.X = allCoord[randomIndex].X;
+            res.Y = allCoord[randomIndex].Y;
 
             cell = GridList[(res.Y * GridWidth) + res.X];
             //pos = cell.gameObject.GetComponent<RectTransform>().localPosition;
@@ -1388,18 +1472,10 @@ public class GridManager : MonoBehaviour
             res.GameObject.transform.localScale = scale;
 
             ResList.Add(res);
-            allCord.RemoveAt(randomIndex);
+            allCoord.RemoveAt(randomIndex);
         });
 
-        Vector3 bscale = transform.localScale;
-        bscale.Set(190f, 190f, 190f);
-        cell = GridList[(1 * GridWidth) + 1];
-        GameObject effect = (GameObject)Instantiate(EffectBlackhole, Vector3.zero, Quaternion.identity) as GameObject;
-        effect.transform.SetParent(cell.gameObject.transform);
-        effect.transform.localPosition = Vector3.zero;
-        effect.transform.localScale = bscale;
-
-        RemainingCord = allCord;
+        RemainingCoord = allCoord;
 
         /*
         for (int i = 0; i < grid.Length; i++)
