@@ -1347,14 +1347,14 @@ MonoBehaviour:
     type: 3}
   ResourcePrefab: {fileID: 289218822830736172, guid: 9ca3160b73b1248bdb9282e622833e3b,
     type: 3}
-  InventoryCellPrefab: {fileID: 893403413104995057, guid: b7bd705a9a7be454c9ed2aca40361c98,
+  SkillGridCellPrefab: {fileID: 893403413104995057, guid: b7bd705a9a7be454c9ed2aca40361c98,
     type: 3}
+  SkillGridContainer: {fileID: 1250021090}
   InstructionView: {fileID: 946028589}
   GridScrollView: {fileID: 1773305988}
   BannerResourceContainer: {fileID: 870564639}
   WinModal: {fileID: 1577261741}
   LoseModal: {fileID: 337172103}
-  GameInventoryOverlay: {fileID: 1250021090}
   PrefabItemTpl: {fileID: 6440713599820287465, guid: c3b6f8f3aaa224e609e53b8e3ae5bc49,
     type: 3}
   ObjTurnLeft: {fileID: 944266815}
@@ -1362,7 +1362,6 @@ MonoBehaviour:
   ObjForward: {fileID: 162043438}
   ObjUndo: {fileID: 1495564591}
   ObjSend: {fileID: 175031211}
-  ObjGameInventory: {fileID: 382292903}
   ObjGameItemOverlay: {fileID: 2072869435}
   ObjGameSplashRover: {fileID: 1757721539}
   ObjTimeLeftText: {fileID: 1737785409}
@@ -2374,7 +2373,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280361249
+    rgba: 4280427042
   m_fontColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4139,7 +4138,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 321.7, y: 238.33002}
+  m_AnchoredPosition: {x: 321.7, y: 238.33008}
   m_SizeDelta: {x: 507.5, y: 476.65}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!1 &637134823
@@ -10787,7 +10786,7 @@ GameObject:
   - component: {fileID: 2044730804}
   - component: {fileID: 2044730803}
   m_Layer: 0
-  m_Name: GameInventoryOverlay
+  m_Name: SelectionUpper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

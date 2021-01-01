@@ -9,6 +9,13 @@ using UnityEngine;
 namespace SpaceXCoder
 {
     [System.Serializable]
+    public class DashConfig
+    {
+        public string name;
+        public string type;
+    }
+
+    [System.Serializable]
     public class ClockIn
     {
         public string date;
@@ -173,6 +180,22 @@ namespace SpaceXCoder
         public LvRecord[] lvRecords = new LvRecord[0];
         public MyItems myItems = new MyItems();
         public List<ClockIn> myClockIns = new List<ClockIn>();
+        public DashConfig[] myDashConfig = new DashConfig[20];
+
+        public DashConfig[] GetDashConfig()
+        {
+            if (myDashConfig == null)
+            {
+                myDashConfig = new DashConfig[20];
+            }
+            return myDashConfig;
+        }
+
+        public void UpdateDashConfig(int i, string name, string type)
+        {
+            myDashConfig[i].name = name;
+            myDashConfig[i].type = type;
+        }
 
         public LvRecord GetLvRecord(int i)
         {

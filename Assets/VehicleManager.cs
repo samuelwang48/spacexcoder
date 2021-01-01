@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+﻿using SpaceXCoder;
+using System.Text.RegularExpressions;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using UnityEngine.UI.Extensions;
+using static UnityEngine.UI.Extensions.ReorderableList;
 
 public class VehicleManager : MonoBehaviour
 {
     public GameObject ObjExitStage;
     public float RotateSpeed = 1.1f;
     public GameObject PrefabItemTpl;
-    public GameObject InventoryCellPrefab;
-    public GameObject GameInventoryOverlay;
+    public GameObject SkillGridCellPrefab;
+    public GameObject SkillGridContainer;
+    public GameObject RemovalArea;
+    public GameObject[] SkillSlot;
 
-    public object MouseDisable { get; private set; }
-
+    void Awake()
+    {
+        SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot");
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -21,8 +28,8 @@ public class VehicleManager : MonoBehaviour
 
         SpaceXCoder.Inventory.InitSkillList(
             PrefabItemTpl,
-            InventoryCellPrefab,
-            GameInventoryOverlay,
+            SkillGridCellPrefab,
+            SkillGridContainer,
             null
         );
 
@@ -67,5 +74,59 @@ public class VehicleManager : MonoBehaviour
     void ExitStage()
     {
         SceneManager.LoadScene("Main Scene");
+    }
+    public void SelectionAdded(ReorderableListEventStruct item)
+    {
+        Debug.Log("Event Received SelectionAdded");
+        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+        RemovalArea.SetActive(false);
+    }
+
+    public void SkillAdded(ReorderableListEventStruct item)
+    {
+        Regex rgxSkill = new Regex(@"^Skill.*");
+        Regex rgxGameItem = new Regex(@"^InventoryCell.*");
+
+        Transform slot = item.DroppedObject.transform.parent.transform.parent;
+        int index = System.Array.IndexOf(SkillSlot, slot.gameObject);
+        string name = item.DroppedObject.name;
+        string type;
+        if (rgxSkill.IsMatch(name))
+        {
+            type = "Skill";
+        }
+        else if (rgxGameItem.IsMatch(name))
+        {
+            type = "GameItem";
+        }
+        else
+        {
+            type = "Unknown";
+        }
+
+        Debug.Log("Event Received SkillAdded");
+        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+        Debug.Log("Event Received " + slot.name);
+        Debug.Log("Event Received " + index);
+        Save save = GameService.LoadSave();
+        DashConfig[] myDashConfig = save.GetDashConfig();
+        Debug.Log("Event Received " + myDashConfig.Length);
+        Debug.Log("Event Received " + name + " : " + type);
+
+        //save.UpdateDashConfig(index, name, type);
+    }
+
+    public void SelectionGrabbed(ReorderableListEventStruct item)
+    {
+        Debug.Log("Event Received SelectionGrabbed");
+        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+        RemovalArea.SetActive(true);
+    }
+
+    public void RemovalAdded(ReorderableListEventStruct item)
+    {
+        Debug.Log("Event Received RemovalAdded");
+        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+        Destroy(item.DroppedObject);
     }
 }

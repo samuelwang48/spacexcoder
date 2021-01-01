@@ -4451,7 +4451,7 @@ RectTransform:
   m_Children:
   - {fileID: 1539753844}
   m_Father: {fileID: 1590270474}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5942,7 +5942,7 @@ RectTransform:
   m_Children:
   - {fileID: 178749716}
   m_Father: {fileID: 1590270474}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6778,7 +6778,7 @@ RectTransform:
   m_Children:
   - {fileID: 1319984272}
   m_Father: {fileID: 1590270474}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8444,7 +8444,7 @@ RectTransform:
   m_Children:
   - {fileID: 889450906}
   m_Father: {fileID: 1590270474}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9284,7 +9284,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Vehicle Stash
+  m_text: Spaceship Dash
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9353,7 +9353,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1319984273}
-    characterCount: 13
+    characterCount: 14
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -12238,11 +12238,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -82.15032}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 876735166}
   - {fileID: 756115675}
   - {fileID: 1188551345}
   - {fileID: 589033347}
   - {fileID: 1605318917}
-  - {fileID: 876735166}
   m_Father: {fileID: 250540328}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12570,7 +12570,7 @@ RectTransform:
   m_Children:
   - {fileID: 1921569945}
   m_Father: {fileID: 1590270474}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

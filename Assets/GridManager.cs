@@ -40,14 +40,14 @@ public class GridManager : MonoBehaviour
     public GameObject RockPrefab;
     public GameObject GrownRockPrefab;
     public GameObject ResourcePrefab;
-    public GameObject InventoryCellPrefab;
+    public GameObject SkillGridCellPrefab;
+    public GameObject SkillGridContainer;
     public GameObject InstructionView;
 
     public GameObject GridScrollView;
     public GameObject BannerResourceContainer;
     public GameObject WinModal;
     public GameObject LoseModal;
-    public GameObject GameInventoryOverlay;
     public GameObject PrefabItemTpl;
 
     public GameObject ObjTurnLeft;
@@ -55,7 +55,6 @@ public class GridManager : MonoBehaviour
     public GameObject ObjForward;
     public GameObject ObjUndo;
     public GameObject ObjSend;
-    public GameObject ObjGameInventory;
     public GameObject ObjGameItemOverlay;
     public GameObject ObjGameSplashRover;
 
@@ -209,7 +208,7 @@ public class GridManager : MonoBehaviour
 
         InitWinModal();
         InitLoseModal();
-        InitGameInventoryOverlay();
+        InitSkillList();
         InitGameItemOverlay();
 
         InitBanner();
@@ -260,12 +259,12 @@ public class GridManager : MonoBehaviour
         LoseModal.SetActive(false);
     }
 
-    void InitGameInventoryOverlay()
+    void InitSkillList()
     {
-        SpaceXCoder.Inventory.InitGameInventoryOverlay(
+        SpaceXCoder.Inventory.InitSkillList(
             PrefabItemTpl,
-            InventoryCellPrefab,
-            GameInventoryOverlay,
+            SkillGridCellPrefab,
+            SkillGridContainer,
             GameItemClick
         );
     }
@@ -637,15 +636,6 @@ public class GridManager : MonoBehaviour
         qtyText.SetText(QtyToBeUsed.ToString());
     }
 
-    /*
-    void ToggleGameInventoryOverlay()
-    {
-        bool isActive = !GameInventoryOverlay.activeSelf;
-        GameInventoryOverlay.SetActive(isActive);
-        ObjGameItemOverlay.SetActive(isActive);
-    }
-    */
-
     void InitEarnedStar()
     {
         Transform bsc = ObjWinnerStarContainer.transform;
@@ -690,7 +680,6 @@ public class GridManager : MonoBehaviour
         Button btnForceExit = ObjForceExit.GetComponent<Button>();
         Button btnPlayAgain = ObjPlayAgain.GetComponent<Button>();
         Button btnGameOverExit = ObjGameOverExit.GetComponent<Button>();
-        //Button btnGameInventory = ObjGameInventory.GetComponent<Button>();
 
         UpdateCtrlBtnStatus(true);
 
@@ -704,8 +693,6 @@ public class GridManager : MonoBehaviour
 
         btnPlayAgain.onClick.AddListener(delegate { PlayAgain(); });
         btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
-
-        //btnGameInventory.onClick.AddListener(delegate { ToggleGameInventoryOverlay(); });
     }
 
     void CenterGrid()
