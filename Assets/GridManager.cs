@@ -115,7 +115,6 @@ public class GridManager : MonoBehaviour
     private List<Resource> ResList = new List<Resource>();
     private List<GameObject> BannerResourceList = new List<GameObject>();
     private List<string> Instruction = new List<string>();
-    private List<GameObject> InventoryGridList = new List<GameObject>();
 
     public UnityEngine.Color ColorRockNormal = new UnityEngine.Color(0.84f, 0.81f, 0f, 1f);
     public UnityEngine.Color ColorRockError = new UnityEngine.Color(1f, 0f, 0f, 1f);

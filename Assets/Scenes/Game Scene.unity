@@ -1354,7 +1354,7 @@ MonoBehaviour:
   BannerResourceContainer: {fileID: 870564639}
   WinModal: {fileID: 1577261741}
   LoseModal: {fileID: 337172103}
-  GameInventoryOverlay: {fileID: 2044730801}
+  GameInventoryOverlay: {fileID: 1250021090}
   PrefabItemTpl: {fileID: 6440713599820287465, guid: c3b6f8f3aaa224e609e53b8e3ae5bc49,
     type: 3}
   ObjTurnLeft: {fileID: 944266815}

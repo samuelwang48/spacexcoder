@@ -120,6 +120,7 @@ namespace UnityEngine.UI.Extensions
 
         public void OnDrag(PointerEventData eventData)
         {
+            Vector3 canvasScale = GameObject.Find("Canvas").GetComponent<RectTransform>().localScale;
             if (!_isDragging)
                 return;
             if (!isValid)
@@ -132,6 +133,8 @@ namespace UnityEngine.UI.Extensions
             Vector3 worldPoint;
             RectTransformUtility.ScreenPointToWorldPointInRectangle(canvas.GetComponent<RectTransform>(), eventData.position,
                 canvas.worldCamera, out worldPoint);
+            worldPoint.y += 100f * canvasScale.y;
+            eventData.position = new Vector2(eventData.position.x, eventData.position.y + 100f * canvasScale.y);
             _draggingObject.position = worldPoint;
 
             //Check everything under the cursor to find a ReorderableList

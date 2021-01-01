@@ -19,7 +19,7 @@ public class VehicleManager : MonoBehaviour
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate { ExitStage(); });
 
-        SpaceXCoder.Inventory.InitGameInventoryOverlay(
+        SpaceXCoder.Inventory.InitSkillList(
             PrefabItemTpl,
             InventoryCellPrefab,
             GameInventoryOverlay,

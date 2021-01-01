@@ -9,6 +9,73 @@ namespace SpaceXCoder
 {
     public static class Inventory
     {
+        public static void InitSkillList(
+            GameObject PrefabItemTpl,
+            GameObject InventoryCellPrefab,
+            GameObject GameInventoryOverlay,
+            Action<GameObject, int> Callback
+        )
+        {
+            int gridWidth = 8;
+            int gridHeight = 1;
+            int numberToCreate = gridWidth * gridHeight;
+            int cellIndex = 0;
+
+            List<GameObject> SkillList = new List<GameObject>();
+            Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
+            Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
+            GameObject newCell;
+
+            for (int i = 0; i < numberToCreate; i++)
+            {
+                newCell = UnityEngine.Object.Instantiate(InventoryCellPrefab, GameInventoryOverlay.transform);
+                SkillList.Add(newCell);
+            }
+
+            for (int index = 0; index < dict.Count; index++)
+            {
+                var kv = dict.ElementAt(index);
+                Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
+                Transform InventoryCell = SkillList[cellIndex].transform;
+
+                //if (kv.Value > 0)
+                //{
+                GameObject newObj = UnityEngine.Object.Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
+                newObj.transform.SetParent(InventoryCell);
+                newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
+                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+                newObj.transform.Find("Life").gameObject.SetActive(false);
+                newObj.transform.Find("Image/CD").gameObject.SetActive(false);
+                newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
+
+                Button itemBtn = newObj.GetComponent<Button>();
+                int i = index;
+                itemBtn.onClick.AddListener(delegate {
+                    int cd = newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent;
+
+                    if (cd > 0)
+                    {
+                        Debug.Log("cd time => " + cd + " wait till it becomes zero");
+                        return;
+                    }
+                    else
+                    {
+                        //GameItemClicked(newObj, i);
+                        //UseGameItem();
+                        if (Callback != null)
+                        {
+                            Callback(newObj, i);
+                        }
+                    }
+                });
+
+                newObj.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
+                cellIndex++;
+                //}
+            }
+        }
+
         public static void InitGameInventoryOverlay(
             GameObject PrefabItemTpl,
             GameObject InventoryCellPrefab,
@@ -16,20 +83,19 @@ namespace SpaceXCoder
             Action<GameObject, int> Callback
         )
         {
-            List<GameObject> InventoryGridList = new List<GameObject>();
             int gridWidth = 8;
             int gridHeight = 1;
             int numberToCreate = gridWidth * gridHeight;
             int cellIndex = 0;
 
+            List<GameObject> InventoryGridList = new List<GameObject>();
             Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
             Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
-            Transform containerTransform = GameInventoryOverlay.transform.Find("ItemGrid");
             GameObject newCell;
 
             for (int i = 0; i < numberToCreate; i++)
             {
-                newCell = UnityEngine.Object.Instantiate(InventoryCellPrefab, containerTransform);
+                newCell = UnityEngine.Object.Instantiate(InventoryCellPrefab, GameInventoryOverlay.transform);
                 InventoryGridList.Add(newCell);
             }
 
