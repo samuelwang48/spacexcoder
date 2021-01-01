@@ -83,6 +83,7 @@ namespace UnityEngine.UI.Extensions
             _draggingObjectLE = _draggingObject.GetComponent<LayoutElement>();
             _draggingObject.SetParent(_reorderableList.DraggableArea, true);
             _draggingObject.SetAsLastSibling();
+            _draggingObject.localScale = transform.localScale;
 
             //Create a fake element for previewing placement
             _fakeElement = new GameObject("Fake").AddComponent<RectTransform>();
