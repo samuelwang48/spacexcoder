@@ -124,13 +124,14 @@ public class VehicleManager : MonoBehaviour
 
     public void SkillGrabbed(ReorderableListEventStruct item)
     {
+        Regex rgxGameItem = new Regex(@"^\d+$");
         Transform t = item.DroppedObject.transform.GetChild(0).transform;
+        string objectName = t.name;
         Debug.Log("Event Received SkillGrabbed2 => " + t.name);
-        int gameItemIndex = int.Parse(t.name);
-        Transform qty = t.GetChild(1);
-
-        if (qty != null)
+        if (rgxGameItem.IsMatch(objectName))
         {
+            Transform qty = t.GetChild(1);
+            int gameItemIndex = int.Parse(objectName);
             Debug.Log("Event Received SkillGrabbed3 => " + qty.name);
             Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
             KeyValuePair<string, int> kv = dict.ElementAt(gameItemIndex);
