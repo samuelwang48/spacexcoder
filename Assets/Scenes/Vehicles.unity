@@ -1531,7 +1531,7 @@ GameObject:
   - component: {fileID: 142986048}
   m_Layer: 5
   m_Name: Send
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3099,7 +3099,7 @@ GameObject:
   - component: {fileID: 279097963}
   m_Layer: 5
   m_Name: Do
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3971,7 +3971,7 @@ GameObject:
   - component: {fileID: 433707926}
   m_Layer: 5
   m_Name: TurnRight
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5230,7 +5230,7 @@ GameObject:
   - component: {fileID: 601529693}
   m_Layer: 5
   m_Name: while
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5496,7 +5496,7 @@ GameObject:
   - component: {fileID: 632544529}
   m_Layer: 5
   m_Name: Forward
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6017,7 +6017,7 @@ GameObject:
   - component: {fileID: 742841788}
   m_Layer: 5
   m_Name: TurnLeft
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6136,7 +6136,7 @@ GameObject:
   - component: {fileID: 773849758}
   m_Layer: 5
   m_Name: For
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6350,7 +6350,7 @@ GameObject:
   - component: {fileID: 801406512}
   m_Layer: 5
   m_Name: Else
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7256,6 +7256,79 @@ MonoBehaviour:
   SkillGridContainer: {fileID: 965460703}
   RemovalArea: {fileID: 602430176}
   SkillSlot: []
+  save:
+    unlocked: 0
+    lvRecords: []
+    myItems:
+      FogLight: 0
+      StopClock: 0
+      BombShortRange: 0
+      RocketBomb: 0
+      ExtraStar: 0
+      Teleport: 0
+      PowerOverwhelming: 0
+    myClockIns: []
+    myDashConfig:
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
+    - gameItemIndex: 0
+      skillName: 
+      type: 
 --- !u!1 &885105171
 GameObject:
   m_ObjectHideFlags: 0
@@ -7270,7 +7343,7 @@ GameObject:
   - component: {fileID: 885105173}
   m_Layer: 5
   m_Name: If
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11733,7 +11806,7 @@ GameObject:
   - component: {fileID: 1458508640}
   m_Layer: 5
   m_Name: Backspace
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12018,7 +12091,7 @@ GameObject:
   - component: {fileID: 1471382655}
   m_Layer: 5
   m_Name: BackwardUntil
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13824,7 +13897,7 @@ GameObject:
   - component: {fileID: 1640487831}
   m_Layer: 5
   m_Name: ForwardUntil
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14135,7 +14208,7 @@ GameObject:
   - component: {fileID: 1695144037}
   m_Layer: 5
   m_Name: Backward
-  m_TagString: Untagged
+  m_TagString: skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

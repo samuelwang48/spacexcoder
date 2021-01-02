@@ -11,7 +11,7 @@ namespace SpaceXCoder
     [System.Serializable]
     public class DashConfig
     {
-        public int gameItemIndex;
+        public int gameItemIndex = -1;
         public string skillName;
         public string type;
     }
@@ -185,23 +185,15 @@ namespace SpaceXCoder
 
         public DashConfig[] GetDashConfig()
         {
-            if (myDashConfig == null)
-            {
-                myDashConfig = new DashConfig[20];
-            }
             return myDashConfig;
         }
 
         public void UpdateDashConfig(int i, int gameItemIndex, string skillName, string type)
         {
-            if (myDashConfig == null)
-            {
-                myDashConfig = new DashConfig[20];
-            }
-            if (myDashConfig[i] == null)
-            {
-                myDashConfig[i] = new DashConfig();
-            }
+            Debug.Log("Dash update length => " + myDashConfig.Length);
+            Debug.Log("Dash update at 0 => " + myDashConfig[0]);
+            Debug.Log("Dash update => " + i + ", " + gameItemIndex + ", " + skillName + ", " + type);
+            Debug.Log("Dash update => " + myDashConfig[i]);
             myDashConfig[i].gameItemIndex = gameItemIndex;
             myDashConfig[i].skillName = skillName;
             myDashConfig[i].type = type;

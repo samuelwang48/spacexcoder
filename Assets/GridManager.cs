@@ -40,8 +40,6 @@ public class GridManager : MonoBehaviour
     public GameObject RockPrefab;
     public GameObject GrownRockPrefab;
     public GameObject ResourcePrefab;
-    public GameObject SkillGridCellPrefab;
-    public GameObject SkillGridContainer;
     public GameObject InstructionView;
 
     public GameObject GridScrollView;
@@ -50,12 +48,11 @@ public class GridManager : MonoBehaviour
     public GameObject LoseModal;
     public GameObject PrefabItemTpl;
 
-    public GameObject ObjTurnLeft;
-    public GameObject ObjTurnRight;
-    public GameObject ObjForward;
-    public GameObject ObjUndo;
-    public GameObject ObjSend;
-    public GameObject ObjGameItemOverlay;
+    private GameObject ObjTurnLeft;
+    private GameObject ObjTurnRight;
+    private GameObject ObjForward;
+    private GameObject ObjUndo;
+    private GameObject ObjSend;
     public GameObject ObjGameSplashRover;
 
     public GameObject ObjTimeLeftText;
@@ -154,10 +151,6 @@ public class GridManager : MonoBehaviour
 
     private int CurrentLevel;
 
-    private int QtyToBeUsed = 1;
-
-    private int CurrentGameItemIndex;
-    private GameObject CurrentGameItemObj;
     private bool ExtraStarUsed = false;
 
     public GameObject EffectShortRangeBomb;
@@ -209,7 +202,7 @@ public class GridManager : MonoBehaviour
         InitWinModal();
         InitLoseModal();
         InitSkillList();
-        InitGameItemOverlay();
+        // InitGameItemOverlay();
 
         InitBanner();
 
@@ -261,84 +254,20 @@ public class GridManager : MonoBehaviour
 
     void InitSkillList()
     {
-        SpaceXCoder.Inventory.InitGameItemList(
-            PrefabItemTpl,
-            SkillGridCellPrefab,
-            SkillGridContainer,
-            GameItemClick
-        );
+        GameObject[] SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot");
+        SpaceXCoder.Inventory.InitDash(SkillSlot, PrefabItemTpl, GameItemClick);
     }
 
-    void GameItemClick(GameObject newObj, int i)
+    void GameItemClick(GameObject newObj, DashConfig config)
     {
-        GameItemClicked(newObj, i);
-        UseGameItem();
-    }
-
-    void GameItemClicked(GameObject gameItem, int index)
-    {
-
-        Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
-        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
-
-        KeyValuePair<string, int> kv = dict.ElementAt(index);
-        Dictionary<string, string> itemInfo = itemInfoDict[kv.Key];
-
-        Transform t = ObjGameItemOverlay.transform;
-        Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
-        Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
-        Button btnUse = t.Find("Use").GetComponent<Button>();
-        TextMeshProUGUI itemQty = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
-
-        CurrentGameItemObj = gameItem;
-        CurrentGameItemIndex = index;
-
-        // Item is only allowed to be used once each round
-        if (CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled == true)
+        if (config.type == "GameItem")
         {
-            btnMoreItem.interactable = false;
-            btnLessItem.interactable = false;
-            btnUse.interactable = false;
-            QtyToBeUsed = 0;
-            return;
+            UseGameItem(config.gameItemIndex, newObj, 1);
         }
-
-        Debug.Log("Game Item index: " + index);
-        Debug.Log("Game Item Clicked: " + kv.Key + "=>" + kv.Value);
-
-        t.Find("ItemTpl/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo["Sprite"]);
-        t.Find("ItemTpl/Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
-        t.Find("ItemName").GetComponent<TextMeshProUGUI>().SetText(itemInfo["Name"]);
-
-        if (kv.Value <= 0) {
-            btnMoreItem.interactable = false;
-            btnLessItem.interactable = false;
-            btnUse.interactable = false;
-            QtyToBeUsed = 0;
-        }
-        else
+        else if (config.type == "Skill")
         {
-            btnMoreItem.interactable = itemInfo["Stackable"] == "false" ? false : true;
-            btnLessItem.interactable = itemInfo["Stackable"] == "false" ? false : true;
-            btnUse.interactable = true;
-            QtyToBeUsed = 1;
+            HandleSkill(config.skillName, newObj);
         }
-
-        itemQty.SetText(QtyToBeUsed.ToString());
-    }
-
-    void InitGameItemOverlay()
-    {
-        ObjGameItemOverlay.SetActive(false);
-
-        Transform t = ObjGameItemOverlay.transform;
-        Button btnMoreItem = t.Find("Qty/BtnMoreItem").GetComponent<Button>();
-        Button btnLessItem = t.Find("Qty/BtnLessItem").GetComponent<Button>();
-        Button btnUse = t.Find("Use").GetComponent<Button>();
-
-        btnMoreItem.onClick.AddListener(delegate { IncreaseGameItemQtyToBeUsed(); });
-        btnLessItem.onClick.AddListener(delegate { DecreaseGameItemQtyToBeUsed(); });
-        btnUse.onClick.AddListener(delegate { UseGameItem(); });
     }
 
     IEnumerator CooldownAnimation(GameObject cd, float time)
@@ -389,53 +318,66 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void UseGameItem()
+    void UseGameItem(int currentGameItemIndex, GameObject currentGameItemObj, int qtyToBeUsed)
     {
         Dictionary<string, Dictionary<string, string>> itemInfoDict = SpaceXCoder.CONST.ITEM_INFO;
         Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
-        KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
+        KeyValuePair<string, int> kv = dict.ElementAt(currentGameItemIndex);
 
+        Debug.Log("Use game item: " + currentGameItemObj.name);
         Debug.Log("Use game item: " + kv.Key);
-        Debug.Log("Use game item to be used: " + QtyToBeUsed);
+        Debug.Log("Use game item to be used: " + qtyToBeUsed);
         Debug.Log("Use game item stock: " + kv.Value);
 
         if (kv.Value > 0)
         {
-            int itemQtyLeft = kv.Value - QtyToBeUsed;
+            int itemQtyLeft = kv.Value - qtyToBeUsed;
 
-            if (itemInfoDict[kv.Key].ContainsKey("CD") == true)
-            {
-                string cooldown_str = itemInfoDict[kv.Key]["CD"];
-                float cooldown_time = float.Parse(cooldown_str);
-                if (cooldown_time > 0)
-                {
-                    GameObject cd = CurrentGameItemObj.transform.Find("Image/CD").gameObject;
-                    cd.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
-                    cd.SetActive(true);
-                    StartCoroutine(CooldownAnimation(cd, cooldown_time));
-                }
-            }
+            Transform[] items = currentGameItemObj.transform.parent.transform.parent.transform.parent.GetComponentsInChildren<Transform>();
 
-            if (itemInfoDict[kv.Key].ContainsKey("Life") == true)
+            for (int i = 0; i < items.Length; i++)
             {
-                string life_str = itemInfoDict[kv.Key]["Life"];
-                float life_time = float.Parse(life_str);
-                if (life_time > 0)
+                GameObject item = items[i].gameObject;
+                if (item.name == currentGameItemObj.name)
                 {
-                    GameObject life = CurrentGameItemObj.transform.Find("Life").gameObject;
-                    life.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
-                    life.SetActive(true);
-                    StartCoroutine(LifeAnimation(life, life_time, kv.Key));
+                    Debug.Log("Use game item similar item: " + item.name);
+
+                    if (itemInfoDict[kv.Key].ContainsKey("CD") == true)
+                    {
+                        string cooldown_str = itemInfoDict[kv.Key]["CD"];
+                        float cooldown_time = float.Parse(cooldown_str);
+                        if (cooldown_time > 0)
+                        {
+                            GameObject cd = item.transform.Find("Image/CD").gameObject;
+                            cd.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
+                            cd.SetActive(true);
+                            StartCoroutine(CooldownAnimation(cd, cooldown_time));
+                        }
+                    }
+
+                    if (itemInfoDict[kv.Key].ContainsKey("Life") == true)
+                    {
+                        string life_str = itemInfoDict[kv.Key]["Life"];
+                        float life_time = float.Parse(life_str);
+                        if (life_time > 0)
+                        {
+                            GameObject life = item.transform.Find("Life").gameObject;
+                            life.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 100;
+                            life.SetActive(true);
+                            StartCoroutine(LifeAnimation(life, life_time, kv.Key));
+                        }
+                    }
+
+                    item.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
                 }
             }
 
             Debug.Log("Use game item left: " + itemQtyLeft);
 
             SpaceXCoder.Save save = GameService.LoadSave();
-            save.ConsumeItem(kv.Key, QtyToBeUsed);
+            save.ConsumeItem(kv.Key, qtyToBeUsed);
             GameService.Write(save);
 
-            CurrentGameItemObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(itemQtyLeft.ToString());
 
             if (kv.Key == "FogLight")
             {
@@ -483,7 +425,7 @@ public class GridManager : MonoBehaviour
 
                 List<Rock> rockList = null;
 
-                
+
                 if (Rover.dir == 0)
                 {
                     rockList = RockList.Where(rock => rock.X == Rover.X && rock.Y < Rover.Y).ToList();
@@ -515,7 +457,7 @@ public class GridManager : MonoBehaviour
             }
             else if (kv.Key == "ExtraStar")
             {
-                CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+                currentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
                 ExtraStarUsed = true;
             }
             else if (kv.Key == "PowerOverwhelming")
@@ -598,42 +540,12 @@ public class GridManager : MonoBehaviour
 
                     if (ResList.Count == 0)
                     {
-                        CurrentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
+                        currentGameItemObj.transform.Find("Image").GetComponent<UIEffect>().enabled = true;
                         GameWin();
                     }
                 }
             }
         }
-    }
-
-    void IncreaseGameItemQtyToBeUsed()
-    {
-        Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
-        KeyValuePair<string, int> kv = dict.ElementAt(CurrentGameItemIndex);
-        Transform t = ObjGameItemOverlay.transform;
-        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
-
-        QtyToBeUsed++;
-        if (QtyToBeUsed > kv.Value)
-        {
-            QtyToBeUsed = kv.Value;
-        }
-        Debug.Log("QTY " + QtyToBeUsed);
-        qtyText.SetText(QtyToBeUsed.ToString());
-    }
-
-    void DecreaseGameItemQtyToBeUsed()
-    {
-        Transform t = ObjGameItemOverlay.transform;
-        TextMeshProUGUI qtyText = t.Find("Qty/GameItemQty/Text").GetComponent<TextMeshProUGUI>();
-
-        QtyToBeUsed--;
-        if (QtyToBeUsed < 1)
-        {
-            QtyToBeUsed = 1;
-        }
-        Debug.Log("QTY " + QtyToBeUsed);
-        qtyText.SetText(QtyToBeUsed.ToString());
     }
 
     void InitEarnedStar()
@@ -671,28 +583,49 @@ public class GridManager : MonoBehaviour
 
     void InitButtons()
     {
-        Button btnTurnLeft = ObjTurnLeft.GetComponent<Button>();
-        Button btnTurnRight = ObjTurnRight.GetComponent<Button>();
-        Button btnFoward = ObjForward.GetComponent<Button>();
-        Button btnUndo = ObjUndo.GetComponent<Button>();
-        Button btnSend = ObjSend.GetComponent<Button>();
         Button btnFinishContinue = ObjFinishContinue.GetComponent<Button>();
         Button btnForceExit = ObjForceExit.GetComponent<Button>();
         Button btnPlayAgain = ObjPlayAgain.GetComponent<Button>();
         Button btnGameOverExit = ObjGameOverExit.GetComponent<Button>();
 
         UpdateCtrlBtnStatus(true);
-
-        btnTurnLeft.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
-        btnTurnRight.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
-        btnFoward.onClick.AddListener(delegate { AppendInstruction("Forward"); });
-        btnUndo.onClick.AddListener(delegate { UndoInstruction("Undo"); });
-        btnSend.onClick.AddListener(delegate { SendInstruction("Send"); });
         btnFinishContinue.onClick.AddListener(delegate { FinishContinue(); });
         btnForceExit.onClick.AddListener(delegate { ForceExit(); });
 
         btnPlayAgain.onClick.AddListener(delegate { PlayAgain(); });
         btnGameOverExit.onClick.AddListener(delegate { ForceExit(); });
+    }
+
+    void HandleSkill(string skillName, GameObject newObj)
+    {
+        Debug.Log("Skill init => " + skillName);
+        Button btn = newObj.GetComponent<Button>();
+
+        if (skillName == "Forward")
+        {
+            ObjForward = newObj;
+            btn.onClick.AddListener(delegate { AppendInstruction("Forward"); });
+        }
+        else if (skillName == "TurnLeft")
+        {
+            ObjTurnLeft = newObj;
+            btn.onClick.AddListener(delegate { AppendInstruction("TurnLeft"); });
+        }
+        else if (skillName == "TurnRight")
+        {
+            ObjTurnRight = newObj;
+            btn.onClick.AddListener(delegate { AppendInstruction("TurnRight"); });
+        }
+        else if (skillName == "Backspace")
+        {
+            ObjUndo = newObj;
+            btn.onClick.AddListener(delegate { UndoInstruction("Undo"); });
+        }
+        else if (skillName == "Send")
+        {
+            ObjSend = newObj;
+            btn.onClick.AddListener(delegate { SendInstruction("Send"); });
+        }
     }
 
     void CenterGrid()
@@ -1160,7 +1093,7 @@ public class GridManager : MonoBehaviour
 
             if (IsFogReady == true)
             {
-                float fogScale = BaseFogScale * (1f - FogGrowSpeed * 0.0000001f);
+                float fogScale = BaseFogScale * (1f - FogGrowSpeed * 0.00001f);
                 if (fogScale > MinFogScale)
                 {
                     ScaleFog(fogScale);

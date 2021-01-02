@@ -17,39 +17,14 @@ public class VehicleManager : MonoBehaviour
     public GameObject SkillGridContainer;
     public GameObject RemovalArea;
     public GameObject[] SkillSlot;
-    public DashConfig[] myDashConfig;
     public Save save;
 
 
     void Awake()
     {
         save = GameService.LoadSave();
-        myDashConfig = save.GetDashConfig();
         SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot");
-
-        for (int i = 0; i < myDashConfig.Length; i++)
-        {
-            DashConfig c = myDashConfig[i];
-            if (c != null)
-            {
-                Debug.Log("Dash Config => " + i + ", " + c.gameItemIndex + ", " + c.type);
-                if (c.type == "GameItem" && c.gameItemIndex > -1)
-                {
-                    Debug.Log("Dash Config GameItem => " + c.gameItemIndex);
-                    GameObject newObj = SpaceXCoder.Inventory.PopulateItem(SkillSlot[i].transform.GetChild(0).transform, PrefabItemTpl, c.gameItemIndex);
-                    newObj.AddComponent<LayoutElement>();
-                }
-                else if (c.type == "Skill" && c.skillName != "")
-                {
-                    GameObject obj = GameObject.Find(c.skillName);
-                    Transform parent = SkillSlot[i].transform.GetChild(0).transform;
-                    GameObject newObj = UnityEngine.Object.Instantiate(obj, parent) as GameObject;
-                    newObj.transform.SetParent(parent);
-                    newObj.transform.SetSiblingIndex(0);
-                    newObj.AddComponent<LayoutElement>();
-                }
-            }
-        }
+        SpaceXCoder.Inventory.InitDash(SkillSlot, PrefabItemTpl, null);
     }
     // Start is called before the first frame update
     void Start()
@@ -60,8 +35,7 @@ public class VehicleManager : MonoBehaviour
         SpaceXCoder.Inventory.InitGameItemList(
             PrefabItemTpl,
             SkillGridCellPrefab,
-            SkillGridContainer,
-            null
+            SkillGridContainer
         );
 
         GameObject[] list = GameObject.FindGameObjectsWithTag("ship");
@@ -108,8 +82,40 @@ public class VehicleManager : MonoBehaviour
     }
     public void SelectionAdded(ReorderableListEventStruct item)
     {
+        int fromIndex = System.Array.IndexOf(SkillSlot, item.FromList.gameObject);
+        int toIndex = System.Array.IndexOf(SkillSlot, item.ToList.gameObject);
+        Regex rgxGameItem = new Regex(@"^\d+$");
+        string skillName = Regex.Replace(item.SourceObject.name, "^(.*)\\(.*$", "$1");
+        string itemTag = item.SourceObject.tag;
+        string objectName = item.SourceObject.name;
+        string type;
+
         Debug.Log("Event Received SelectionAdded");
         Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+        Debug.Log("Event Received item.FromList.gameObject " + item.FromList.gameObject.name);
+        Debug.Log("Event Received item.ToList.gameObject " + item.ToList.gameObject.name);
+        Debug.Log("Event Received toIndex " + toIndex);
+        Debug.Log("Event Received itemTag " + itemTag);
+
+        if (itemTag == "skill")
+        {
+            type = "Skill";
+            Debug.Log("Event Received skillName => " + skillName);
+            save.UpdateDashConfig(fromIndex, -1, "", "");
+            save.UpdateDashConfig(toIndex, -1, skillName, type);
+        }
+        else if (rgxGameItem.IsMatch(objectName))
+        {
+            type = "GameItem";
+            int gameItemIndex = int.Parse(objectName);
+            save.UpdateDashConfig(fromIndex, -1, "", "");
+            save.UpdateDashConfig(toIndex, gameItemIndex, "", type);
+        }
+        else
+        {
+            type = "Unknown";
+        }
+        GameService.Write(save);
         RemovalArea.SetActive(false);
     }
 
@@ -126,7 +132,6 @@ public class VehicleManager : MonoBehaviour
         Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
         Debug.Log("Event Received " + item.ToList.name);
         Debug.Log("Event Received " + index);
-        Debug.Log("Event Received " + myDashConfig.Length);
 
         if (rgxSkill.IsMatch(objectName))
         {
