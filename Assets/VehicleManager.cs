@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class VehicleManager : MonoBehaviour
     void Awake()
     {
         save = GameService.LoadSave();
-        SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot");
+        SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot").ToList<GameObject>().OrderBy(x => int.Parse(x.name)).ToArray();
         SpaceXCoder.Inventory.InitDash(SkillSlot, PrefabItemTpl, null);
     }
     // Start is called before the first frame update
@@ -119,6 +120,21 @@ public class VehicleManager : MonoBehaviour
         RemovalArea.SetActive(false);
     }
 
+    public void SkillGrabbed(ReorderableListEventStruct item)
+    {
+        Transform t = item.DroppedObject.transform.GetChild(0).transform;
+        Debug.Log("Event Received SkillGrabbed2 => " + t.name);
+        int gameItemIndex = int.Parse(t.name);
+        Transform qty = t.GetChild(1);
+
+        if (qty != null)
+        {
+            Debug.Log("Event Received SkillGrabbed3 => " + qty.name);
+            Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
+            KeyValuePair<string, int> kv = dict.ElementAt(gameItemIndex);
+            qty.GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+        }
+    }
     public void SkillAdded(ReorderableListEventStruct item)
     {
         Regex rgxSkill = new Regex(@"^Skill.*");

@@ -38,8 +38,6 @@ public class LevelManager : MonoBehaviour
             Debug.Log("Lv: " + i + ", " + lvRecord.score + ", " + lvRecord.timeLeft);
         }
 
-        //LvButton = GameObject.FindGameObjectsWithTag("lvbtn");
-
         UnityEngine.Color colorActive = new UnityEngine.Color();
         UnityEngine.ColorUtility.TryParseHtmlString("#fff", out colorActive);
 

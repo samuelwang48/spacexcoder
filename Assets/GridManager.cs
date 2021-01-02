@@ -254,7 +254,7 @@ public class GridManager : MonoBehaviour
 
     void InitSkillList()
     {
-        GameObject[] SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot");
+        GameObject[] SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot").ToList<GameObject>().OrderBy(x => int.Parse(x.name)).ToArray();
         SpaceXCoder.Inventory.InitDash(SkillSlot, PrefabItemTpl, GameItemClick);
     }
 
