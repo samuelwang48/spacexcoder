@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 3232869}
   - component: {fileID: 3232868}
   m_Layer: 5
-  m_Name: 13
+  m_Name: Slot_13
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1008,7 +1008,7 @@ GameObject:
   - component: {fileID: 64440174}
   - component: {fileID: 64440173}
   m_Layer: 5
-  m_Name: 7
+  m_Name: Slot_7
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1713,10 +1713,10 @@ RectTransform:
   m_Father: {fileID: 739917496}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 64, y: -64}
-  m_SizeDelta: {x: 128, y: 128}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &169653560
 MonoBehaviour:
@@ -1981,7 +1981,7 @@ GameObject:
   - component: {fileID: 177596159}
   - component: {fileID: 177596158}
   m_Layer: 5
-  m_Name: 0
+  m_Name: Slot_0
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2640,6 +2640,7 @@ MonoBehaviour:
   ResourcePrefab: {fileID: 289218822830736172, guid: 9ca3160b73b1248bdb9282e622833e3b,
     type: 3}
   InstructionView: {fileID: 946028589}
+  SlotRoot: {fileID: 280252258}
   GridScrollView: {fileID: 1773305988}
   BannerResourceContainer: {fileID: 870564639}
   WinModal: {fileID: 1577261741}
@@ -2738,7 +2739,7 @@ GameObject:
   - component: {fileID: 253790219}
   - component: {fileID: 253790218}
   m_Layer: 5
-  m_Name: 18
+  m_Name: Slot_18
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3109,7 +3110,7 @@ RectTransform:
   - {fileID: 381081851}
   - {fileID: 1949257379}
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -3257,6 +3258,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266312643}
   m_CullTransparentMesh: 0
+--- !u!1 &280252258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 280252259}
+  m_Layer: 0
+  m_Name: SlotRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &280252259
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280252258}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2044730802}
+  - {fileID: 611570142}
+  m_Father: {fileID: 1641889298}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &288989118
 GameObject:
   m_ObjectHideFlags: 0
@@ -4096,7 +4134,7 @@ RectTransform:
   - {fileID: 768328695}
   - {fileID: 849549831}
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5661,7 +5699,7 @@ GameObject:
   - component: {fileID: 423911983}
   - component: {fileID: 423911982}
   m_Layer: 5
-  m_Name: 17
+  m_Name: Slot_17
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6941,10 +6979,10 @@ RectTransform:
   m_Father: {fileID: 516813293}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 64, y: -64}
-  m_SizeDelta: {x: 128, y: 128}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &577274435
 MonoBehaviour:
@@ -7246,12 +7284,12 @@ RectTransform:
   - {fileID: 423911981}
   - {fileID: 253790217}
   - {fileID: 836547970}
-  m_Father: {fileID: 1641889298}
-  m_RootOrder: 3
+  m_Father: {fileID: 280252259}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 289, y: 224.5}
+  m_AnchoredPosition: {x: 289, y: -943.5}
   m_SizeDelta: {x: 546.9756, y: 449.144}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!114 &611570143
@@ -7682,7 +7720,7 @@ GameObject:
   - component: {fileID: 697775395}
   - component: {fileID: 697775394}
   m_Layer: 5
-  m_Name: 12
+  m_Name: Slot_12
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8291,7 +8329,7 @@ GameObject:
   - component: {fileID: 781803735}
   - component: {fileID: 781803734}
   m_Layer: 5
-  m_Name: 16
+  m_Name: Slot_16
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8815,7 +8853,7 @@ GameObject:
   - component: {fileID: 836547972}
   - component: {fileID: 836547971}
   m_Layer: 5
-  m_Name: 19
+  m_Name: Slot_19
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9385,7 +9423,7 @@ GameObject:
   - component: {fileID: 911621170}
   - component: {fileID: 911621169}
   m_Layer: 5
-  m_Name: 8
+  m_Name: Slot_8
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10612,7 +10650,7 @@ GameObject:
   - component: {fileID: 990258558}
   - component: {fileID: 990258557}
   m_Layer: 5
-  m_Name: 9
+  m_Name: Slot_9
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10870,7 +10908,7 @@ GameObject:
   - component: {fileID: 1003002019}
   - component: {fileID: 1003002018}
   m_Layer: 5
-  m_Name: 14
+  m_Name: Slot_14
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11054,7 +11092,7 @@ GameObject:
   - component: {fileID: 1038553212}
   - component: {fileID: 1038553211}
   m_Layer: 5
-  m_Name: 1
+  m_Name: Slot_1
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11192,7 +11230,7 @@ RectTransform:
   - {fileID: 359103441}
   - {fileID: 338259087}
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -11497,7 +11535,7 @@ GameObject:
   - component: {fileID: 1094365585}
   - component: {fileID: 1094365584}
   m_Layer: 5
-  m_Name: 2
+  m_Name: Slot_2
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11681,7 +11719,7 @@ GameObject:
   - component: {fileID: 1109593532}
   - component: {fileID: 1109593531}
   m_Layer: 5
-  m_Name: 11
+  m_Name: Slot_11
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13663,7 +13701,7 @@ GameObject:
   - component: {fileID: 1311281875}
   - component: {fileID: 1311281874}
   m_Layer: 5
-  m_Name: 5
+  m_Name: Slot_5
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14087,7 +14125,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -14643,7 +14681,7 @@ GameObject:
   - component: {fileID: 1443045999}
   - component: {fileID: 1443045998}
   m_Layer: 5
-  m_Name: 4
+  m_Name: Slot_4
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14732,7 +14770,7 @@ GameObject:
   - component: {fileID: 1453003166}
   - component: {fileID: 1453003165}
   m_Layer: 5
-  m_Name: 3
+  m_Name: Slot_3
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15696,7 +15734,7 @@ RectTransform:
   - {fileID: 1958569117}
   - {fileID: 27317776}
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -15775,7 +15813,7 @@ RectTransform:
   - {fileID: 548118127}
   - {fileID: 870564640}
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -15915,8 +15953,7 @@ RectTransform:
   m_Children:
   - {fileID: 1880059386}
   - {fileID: 259179356}
-  - {fileID: 2044730802}
-  - {fileID: 611570142}
+  - {fileID: 280252259}
   - {fileID: 265137530}
   - {fileID: 1380571819}
   - {fileID: 1590757617}
@@ -17588,7 +17625,7 @@ GameObject:
   - component: {fileID: 1781771399}
   - component: {fileID: 1781771398}
   m_Layer: 5
-  m_Name: 6
+  m_Name: Slot_6
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19491,7 +19528,7 @@ GameObject:
   - component: {fileID: 1936999401}
   - component: {fileID: 1936999400}
   m_Layer: 5
-  m_Name: 10
+  m_Name: Slot_10
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20174,7 +20211,7 @@ GameObject:
   - component: {fileID: 1977360177}
   - component: {fileID: 1977360176}
   m_Layer: 5
-  m_Name: 15
+  m_Name: Slot_15
   m_TagString: skillSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20980,12 +21017,12 @@ RectTransform:
   m_Children:
   - {fileID: 256686037}
   - {fileID: 1250021091}
-  m_Father: {fileID: 1641889298}
-  m_RootOrder: 2
+  m_Father: {fileID: 280252259}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.0064468, y: 545.7}
+  m_AnchoredPosition: {x: 0.0064468, y: -622.3}
   m_SizeDelta: {x: 1125, y: 138.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2044730803
@@ -21061,7 +21098,7 @@ RectTransform:
   - {fileID: 4396960366048205792}
   - {fileID: 1187820438}
   m_Father: {fileID: 1641889298}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}

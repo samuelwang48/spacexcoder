@@ -9,6 +9,7 @@ using TMPro;
 public class LevelManager : MonoBehaviour
 {
     public GameObject ObjExitStage;
+    public GameObject BtnVehicles;
 
     public UnityEngine.Color ColorWinnerStarDark = new UnityEngine.Color(.24f, .26f, .38f, 1f);
     public UnityEngine.Color ColorWinnerStarBright = new UnityEngine.Color(0f, 0.728f, 1f, 1f);
@@ -25,6 +26,12 @@ public class LevelManager : MonoBehaviour
     {
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate { ExitStage(); });
+
+        Button btnVehicles = BtnVehicles.GetComponent<Button>();
+        btnVehicles.onClick.AddListener(delegate {
+            PlayerPrefs.SetString("VehicleExitToScene", "Stage_0");
+            SceneManager.LoadScene("Vehicles");
+        });
 
         SpaceXCoder.Save save = GameService.LoadSave();
         // by default it is zero

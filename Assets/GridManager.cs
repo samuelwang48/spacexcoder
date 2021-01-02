@@ -41,6 +41,7 @@ public class GridManager : MonoBehaviour
     public GameObject GrownRockPrefab;
     public GameObject ResourcePrefab;
     public GameObject InstructionView;
+    public GameObject SlotRoot;
 
     public GameObject GridScrollView;
     public GameObject BannerResourceContainer;
@@ -254,7 +255,7 @@ public class GridManager : MonoBehaviour
 
     void InitSkillList()
     {
-        GameObject[] SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot").ToList<GameObject>().OrderBy(x => int.Parse(x.name)).ToArray();
+        GameObject[] SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot").ToList<GameObject>().OrderBy(x => int.Parse(x.name.Replace("Slot_", ""))).ToArray();
         SpaceXCoder.Inventory.InitDash(SkillSlot, PrefabItemTpl, GameItemClick);
     }
 
@@ -333,7 +334,7 @@ public class GridManager : MonoBehaviour
         {
             int itemQtyLeft = kv.Value - qtyToBeUsed;
 
-            Transform[] items = currentGameItemObj.transform.parent.transform.parent.transform.parent.GetComponentsInChildren<Transform>();
+            Transform[] items = SlotRoot.GetComponentsInChildren<Transform>();
 
             for (int i = 0; i < items.Length; i++)
             {

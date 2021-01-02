@@ -142,7 +142,10 @@ public class StageManager : MonoBehaviour
         btnReward.onClick.AddListener(delegate { ShowBonusUI(); });
 
         Button btnVehicles = BtnVehicles.GetComponent<Button>();
-        btnVehicles.onClick.AddListener(delegate { SceneManager.LoadScene("Vehicles"); });
+        btnVehicles.onClick.AddListener(delegate {
+            PlayerPrefs.SetString("VehicleExitToScene", "Main Scene");
+            SceneManager.LoadScene("Vehicles");
+        });
         
         Button btnRewardClose = BonusUI.transform.Find("BtnClose").GetComponent<Button>();
         btnRewardClose.onClick.AddListener(delegate { HideBonusUI(); });

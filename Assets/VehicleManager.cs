@@ -24,14 +24,16 @@ public class VehicleManager : MonoBehaviour
     void Awake()
     {
         save = GameService.LoadSave();
-        SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot").ToList<GameObject>().OrderBy(x => int.Parse(x.name)).ToArray();
+        SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot").ToList<GameObject>().OrderBy(x => int.Parse(x.name.Replace("Slot_", ""))).ToArray();
         SpaceXCoder.Inventory.InitDash(SkillSlot, PrefabItemTpl, null);
     }
     // Start is called before the first frame update
     void Start()
     {
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
-        btnExitStage.onClick.AddListener(delegate { ExitStage(); });
+        btnExitStage.onClick.AddListener(delegate {
+            ExitStage();
+        });
 
         SpaceXCoder.Inventory.InitGameItemList(
             PrefabItemTpl,
@@ -79,7 +81,7 @@ public class VehicleManager : MonoBehaviour
 
     void ExitStage()
     {
-        SceneManager.LoadScene("Main Scene");
+        SceneManager.LoadScene(PlayerPrefs.GetString("VehicleExitToScene"));
     }
     public void SelectionAdded(ReorderableListEventStruct item)
     {
