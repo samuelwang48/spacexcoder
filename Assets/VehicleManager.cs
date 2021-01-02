@@ -1,4 +1,6 @@
 ﻿using SpaceXCoder;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,10 +17,39 @@ public class VehicleManager : MonoBehaviour
     public GameObject SkillGridContainer;
     public GameObject RemovalArea;
     public GameObject[] SkillSlot;
+    public DashConfig[] myDashConfig;
+    public Save save;
+
 
     void Awake()
     {
+        save = GameService.LoadSave();
+        myDashConfig = save.GetDashConfig();
         SkillSlot = GameObject.FindGameObjectsWithTag("skillSlot");
+
+        for (int i = 0; i < myDashConfig.Length; i++)
+        {
+            DashConfig c = myDashConfig[i];
+            if (c != null)
+            {
+                Debug.Log("Dash Config => " + i + ", " + c.gameItemIndex + ", " + c.type);
+                if (c.type == "GameItem" && c.gameItemIndex > -1)
+                {
+                    Debug.Log("Dash Config GameItem => " + c.gameItemIndex);
+                    GameObject newObj = SpaceXCoder.Inventory.PopulateItem(SkillSlot[i].transform.GetChild(0).transform, PrefabItemTpl, c.gameItemIndex);
+                    newObj.AddComponent<LayoutElement>();
+                }
+                else if (c.type == "Skill" && c.skillName != "")
+                {
+                    GameObject obj = GameObject.Find(c.skillName);
+                    Transform parent = SkillSlot[i].transform.GetChild(0).transform;
+                    GameObject newObj = UnityEngine.Object.Instantiate(obj, parent) as GameObject;
+                    newObj.transform.SetParent(parent);
+                    newObj.transform.SetSiblingIndex(0);
+                    newObj.AddComponent<LayoutElement>();
+                }
+            }
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -26,7 +57,7 @@ public class VehicleManager : MonoBehaviour
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate { ExitStage(); });
 
-        SpaceXCoder.Inventory.InitSkillList(
+        SpaceXCoder.Inventory.InitGameItemList(
             PrefabItemTpl,
             SkillGridCellPrefab,
             SkillGridContainer,
@@ -87,33 +118,33 @@ public class VehicleManager : MonoBehaviour
         Regex rgxSkill = new Regex(@"^Skill.*");
         Regex rgxGameItem = new Regex(@"^InventoryCell.*");
 
-        Transform slot = item.DroppedObject.transform.parent.transform.parent;
-        int index = System.Array.IndexOf(SkillSlot, slot.gameObject);
-        string name = item.DroppedObject.name;
+        int index = System.Array.IndexOf(SkillSlot, item.ToList.gameObject);
+        string objectName = item.DroppedObject.name;
         string type;
-        if (rgxSkill.IsMatch(name))
+
+        Debug.Log("Event Received SkillAdded");
+        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+        Debug.Log("Event Received " + item.ToList.name);
+        Debug.Log("Event Received " + index);
+        Debug.Log("Event Received " + myDashConfig.Length);
+
+        if (rgxSkill.IsMatch(objectName))
         {
             type = "Skill";
+            string skillName = item.DroppedObject.transform.GetChild(0).name;
+            save.UpdateDashConfig(index, -1, skillName, type);
         }
-        else if (rgxGameItem.IsMatch(name))
+        else if (rgxGameItem.IsMatch(objectName))
         {
             type = "GameItem";
+            int gameItemIndex = int.Parse(item.DroppedObject.transform.GetChild(0).name);
+            save.UpdateDashConfig(index, gameItemIndex, "", type);
         }
         else
         {
             type = "Unknown";
         }
-
-        Debug.Log("Event Received SkillAdded");
-        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
-        Debug.Log("Event Received " + slot.name);
-        Debug.Log("Event Received " + index);
-        Save save = GameService.LoadSave();
-        DashConfig[] myDashConfig = save.GetDashConfig();
-        Debug.Log("Event Received " + myDashConfig.Length);
-        Debug.Log("Event Received " + name + " : " + type);
-
-        //save.UpdateDashConfig(index, name, type);
+        GameService.Write(save);
     }
 
     public void SelectionGrabbed(ReorderableListEventStruct item)
@@ -126,7 +157,13 @@ public class VehicleManager : MonoBehaviour
     public void RemovalAdded(ReorderableListEventStruct item)
     {
         Debug.Log("Event Received RemovalAdded");
-        Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
+
+        Debug.Log("Event Received RemovalAdded => " + (item.DroppedObject == item.SourceObject) + " FromIndex " + item.FromIndex + " FromList " + item.FromList);
+        int index = System.Array.IndexOf(SkillSlot, item.FromList.gameObject);
+        save.UpdateDashConfig(index, -1, "", "");
+        GameService.Write(save);
+
         Destroy(item.DroppedObject);
+        RemovalArea.SetActive(false);
     }
 }

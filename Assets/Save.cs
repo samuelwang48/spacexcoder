@@ -11,7 +11,8 @@ namespace SpaceXCoder
     [System.Serializable]
     public class DashConfig
     {
-        public string name;
+        public int gameItemIndex;
+        public string skillName;
         public string type;
     }
 
@@ -191,9 +192,18 @@ namespace SpaceXCoder
             return myDashConfig;
         }
 
-        public void UpdateDashConfig(int i, string name, string type)
+        public void UpdateDashConfig(int i, int gameItemIndex, string skillName, string type)
         {
-            myDashConfig[i].name = name;
+            if (myDashConfig == null)
+            {
+                myDashConfig = new DashConfig[20];
+            }
+            if (myDashConfig[i] == null)
+            {
+                myDashConfig[i] = new DashConfig();
+            }
+            myDashConfig[i].gameItemIndex = gameItemIndex;
+            myDashConfig[i].skillName = skillName;
             myDashConfig[i].type = type;
         }
 

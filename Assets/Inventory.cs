@@ -9,7 +9,7 @@ namespace SpaceXCoder
 {
     public static class Inventory
     {
-        public static void InitSkillList(
+        public static void InitGameItemList(
             GameObject PrefabItemTpl,
             GameObject InventoryCellPrefab,
             GameObject GameInventoryOverlay,
@@ -21,32 +21,23 @@ namespace SpaceXCoder
             int numberToCreate = gridWidth * gridHeight;
             int cellIndex = 0;
 
-            List<GameObject> SkillList = new List<GameObject>();
-            Dictionary<string, Dictionary<string, string>> itemInfo = SpaceXCoder.CONST.ITEM_INFO;
             Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
+            List<GameObject> GameItemList = new List<GameObject>();
             GameObject newCell;
 
             for (int i = 0; i < numberToCreate; i++)
             {
                 newCell = UnityEngine.Object.Instantiate(InventoryCellPrefab, GameInventoryOverlay.transform);
-                SkillList.Add(newCell);
+                GameItemList.Add(newCell);
             }
 
             for (int index = 0; index < dict.Count; index++)
             {
-                var kv = dict.ElementAt(index);
-                Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value);
-                Transform InventoryCell = SkillList[cellIndex].transform;
+                Transform InventoryCell = GameItemList[cellIndex].transform;
 
                 //if (kv.Value > 0)
                 //{
-                GameObject newObj = UnityEngine.Object.Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
-                newObj.transform.SetParent(InventoryCell);
-                newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(itemInfo[kv.Key]["Sprite"]);
-                newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
-                newObj.transform.Find("Life").gameObject.SetActive(false);
-                newObj.transform.Find("Image/CD").gameObject.SetActive(false);
-                newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
+                GameObject newObj = PopulateItem(InventoryCell, PrefabItemTpl, index);
 
                 Button itemBtn = newObj.GetComponent<Button>();
                 int i = index;
@@ -72,6 +63,24 @@ namespace SpaceXCoder
                 cellIndex++;
                 //}
             }
+        }
+        public static GameObject PopulateItem(Transform InventoryCell, GameObject PrefabItemTpl, int index)
+        {
+            Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
+            KeyValuePair<string, int> kv = dict.ElementAt(index);
+            Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value + " | sprite " + SpaceXCoder.CONST.ITEM_INFO[kv.Key]["Sprite"]);
+            GameObject newObj = UnityEngine.Object.Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
+            newObj.transform.SetParent(InventoryCell);
+            newObj.transform.SetSiblingIndex(0);
+            newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(SpaceXCoder.CONST.ITEM_INFO[kv.Key]["Sprite"]);
+            newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
+            newObj.transform.Find("Life").gameObject.SetActive(false);
+            newObj.transform.Find("Image/CD").gameObject.SetActive(false);
+            newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
+            InventoryCell.GetChild(0).name = index.ToString();
+            InventoryCell.gameObject.AddComponent<LayoutElement>();
+
+            return newObj;
         }
     }
 }

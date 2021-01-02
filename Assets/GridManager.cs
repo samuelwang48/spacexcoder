@@ -261,7 +261,7 @@ public class GridManager : MonoBehaviour
 
     void InitSkillList()
     {
-        SpaceXCoder.Inventory.InitSkillList(
+        SpaceXCoder.Inventory.InitGameItemList(
             PrefabItemTpl,
             SkillGridCellPrefab,
             SkillGridContainer,
