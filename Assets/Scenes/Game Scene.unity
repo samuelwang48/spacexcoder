@@ -2645,6 +2645,8 @@ MonoBehaviour:
   BannerResourceContainer: {fileID: 870564639}
   WinModal: {fileID: 1577261741}
   LoseModal: {fileID: 337172103}
+  InventoryCellPrefab: {fileID: 893403413104995057, guid: b7bd705a9a7be454c9ed2aca40361c98,
+    type: 3}
   PrefabItemTpl: {fileID: 6440713599820287465, guid: c3b6f8f3aaa224e609e53b8e3ae5bc49,
     type: 3}
   ObjGameSplashRover: {fileID: 1757721539}

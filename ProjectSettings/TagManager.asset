@@ -9,6 +9,8 @@ TagManager:
   - shipRotator
   - skillSlot
   - skill
+  - draggableBg
+  - gameItem
   layers:
   - Default
   - TransparentFX

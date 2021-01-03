@@ -22,6 +22,7 @@ namespace SpaceXCoder
                     {
                         Debug.Log("Dash Config GameItem => " + c.gameItemIndex);
                         GameObject newObj = SpaceXCoder.Inventory.PopulateItem(SkillSlot[i].transform.GetChild(0).transform, PrefabItemTpl, c.gameItemIndex);
+                        newObj.transform.SetSiblingIndex(0);
                         newObj.AddComponent<LayoutElement>();
 
                         if (Callback != null)
@@ -60,47 +61,29 @@ namespace SpaceXCoder
             }
         }
 
-        public static void InitGameItemList(
-            GameObject PrefabItemTpl,
-            GameObject InventoryCellPrefab,
-            GameObject GameInventoryOverlay
-        )
+        public static void InitGameItemList(GameObject PrefabItemTpl, GameObject GameInventoryOverlay)
         {
-            int gridWidth = 8;
-            int gridHeight = 1;
-            int numberToCreate = gridWidth * gridHeight;
-
             Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
-            List<GameObject> GameItemList = new List<GameObject>();
-            GameObject newCell;
-
-            for (int i = 0; i < numberToCreate; i++)
-            {
-                newCell = UnityEngine.Object.Instantiate(InventoryCellPrefab, GameInventoryOverlay.transform);
-                GameItemList.Add(newCell);
-            }
-
             for (int index = 0; index < dict.Count; index++)
             {
-                Transform InventoryCell = GameItemList[index].transform;
-                PopulateItem(InventoryCell, PrefabItemTpl, index);
+                PopulateItem(GameInventoryOverlay.transform, PrefabItemTpl, index);
             }
         }
-        public static GameObject PopulateItem(Transform InventoryCell, GameObject PrefabItemTpl, int index)
+        public static GameObject PopulateItem(Transform ContainerCell, GameObject PrefabItemTpl, int index)
         {
             Dictionary<string, int> dict = GameService.LoadSave().ListItemDict();
             KeyValuePair<string, int> kv = dict.ElementAt(index);
             Debug.Log("key value pair: " + kv.Key + "=>" + kv.Value + " | sprite " + SpaceXCoder.CONST.ITEM_INFO[kv.Key]["Sprite"]);
-            GameObject newObj = UnityEngine.Object.Instantiate(PrefabItemTpl, InventoryCell) as GameObject;
-            newObj.transform.SetParent(InventoryCell);
-            newObj.transform.SetSiblingIndex(0);
+            GameObject newObj = UnityEngine.Object.Instantiate(PrefabItemTpl, ContainerCell) as GameObject;
+            newObj.transform.SetParent(ContainerCell);
             newObj.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(SpaceXCoder.CONST.ITEM_INFO[kv.Key]["Sprite"]);
             newObj.transform.Find("Qty").GetComponent<TextMeshProUGUI>().SetText(kv.Value.ToString());
             newObj.transform.Find("Life").gameObject.SetActive(false);
             newObj.transform.Find("Image/CD").gameObject.SetActive(false);
             newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
-            InventoryCell.GetChild(0).name = index.ToString();
-            InventoryCell.gameObject.AddComponent<LayoutElement>();
+            newObj.name = index.ToString();
+            newObj.tag = "gameItem";
+            ContainerCell.gameObject.AddComponent<LayoutElement>();
 
             return newObj;
         }
