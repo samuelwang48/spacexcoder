@@ -83,7 +83,7 @@ namespace SpaceXCoder
             newObj.transform.Find("Image/CD").gameObject.GetComponent<UnityEngine.UI.Extensions.UICircle>().FillPercent = 0;
             newObj.name = index.ToString();
             newObj.tag = "gameItem";
-            ContainerCell.gameObject.AddComponent<LayoutElement>();
+            newObj.AddComponent<LayoutElement>();
 
             return newObj;
         }

@@ -31,7 +31,6 @@ namespace UnityEngine.UI.Extensions
             _rect = GetComponent<RectTransform>();
             _cachedChildren = new List<Transform>();
             _cachedListElement = new List<ReorderableListElement>();
-
             StartCoroutine(RefreshChildren());
         }
 
@@ -40,9 +39,6 @@ namespace UnityEngine.UI.Extensions
             //Handle new chilren
             for (int i = 0; i < _rect.childCount; i++)
             {
-                if (_cachedChildren.Contains(_rect.GetChild(i)))
-                    continue;
-
                 //Get or Create ReorderableListElement
                 _ele = _rect.GetChild(i).gameObject.GetComponent<ReorderableListElement>() ??
                        _rect.GetChild(i).gameObject.AddComponent<ReorderableListElement>();

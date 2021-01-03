@@ -17,6 +17,7 @@ public class VehicleManager : MonoBehaviour
     public GameObject SkillGridContainer;
     public GameObject RemovalArea;
     public GameObject[] SkillSlot;
+    public GameObject ResetModal;
     public Save save;
 
 
@@ -87,8 +88,25 @@ public class VehicleManager : MonoBehaviour
     {
         SceneManager.LoadScene(PlayerPrefs.GetString("VehicleExitToScene"));
     }
+
+    public string ReplaceCloneInName(string name)
+    {
+        return Regex.Replace(name, "\\(.*$", "");
+    }
+
     public void SelectionAdded(ReorderableListEventStruct item)
     {
+        RemovalArea.SetActive(false);
+        Debug.Log("next sibling => " + item.FromList.gameObject.name + ", " + item.ToList.gameObject.name);
+        Debug.Log("next sibling => " + item.SourceObject.gameObject.name + ", " + item.DroppedObject.gameObject.name);
+        if (item.FromList.gameObject.name == item.ToList.gameObject.name)
+        {
+            return;
+        }
+
+        item.SourceObject.name = ReplaceCloneInName(item.SourceObject.name);
+        item.DroppedObject.name = ReplaceCloneInName(item.DroppedObject.name);
+
         int fromIndex = System.Array.IndexOf(SkillSlot, item.FromList.gameObject);
         int toIndex = System.Array.IndexOf(SkillSlot, item.ToList.gameObject);
         string sourceItemTag = item.SourceObject.tag;
@@ -112,14 +130,15 @@ public class VehicleManager : MonoBehaviour
         */
         if (sourceType == "Skill")
         {
-            string sourceSkillName = Regex.Replace(sourceObjectName, "^(.*)\\(.*$", "$1");
+            string sourceSkillName = ReplaceCloneInName(sourceObjectName);
             Debug.Log("Event Received skillName => " + sourceSkillName);
             
             save.UpdateDashConfig(toIndex, -1, sourceSkillName, sourceType);
         }
         else if (sourceType == "GameItem")
         {
-            int gameItemIndex = int.Parse(Regex.Replace(sourceObjectName, "^(.*)\\(.*$", "$1"));
+            int gameItemIndex = int.Parse(ReplaceCloneInName(sourceObjectName));
+            Debug.Log("Event Received gameItemIndex => " + gameItemIndex);
             save.UpdateDashConfig(toIndex, gameItemIndex, "", sourceType);
         }
 
@@ -136,13 +155,13 @@ public class VehicleManager : MonoBehaviour
 
             if (targetType == "Skill")
             {
-                string targetSkillName = Regex.Replace(targetObjectName, "^(.*)\\(.*$", "$1");
+                string targetSkillName = ReplaceCloneInName(targetObjectName);
                 Debug.Log("Event Received targetSkillName => " + targetSkillName);
                 save.UpdateDashConfig(fromIndex, -1, targetSkillName, targetType);
             }
             else if (targetType == "GameItem")
             {
-                int targetGameItemIndex = int.Parse(Regex.Replace(targetObjectName, "^(.*)\\(.*$", "$1"));
+                int targetGameItemIndex = int.Parse(ReplaceCloneInName(targetObjectName));
                 Debug.Log("Event Received targetGameItemIndex => " + targetGameItemIndex);
                 save.UpdateDashConfig(fromIndex, targetGameItemIndex, "", targetType);
             }
@@ -150,25 +169,25 @@ public class VehicleManager : MonoBehaviour
             int i = item.SourceObject.transform.GetSiblingIndex();
             GameObject next = item.SourceObject.transform.parent.GetChild(i + 2).gameObject;
             Debug.Log("next sibling => " + next.name);
+            next.name = ReplaceCloneInName(next.name);
             next.transform.SetParent(item.FromList.transform.GetChild(0));
             next.transform.SetSiblingIndex(0);
         }
-        else {
+        else
+        {
             save.UpdateDashConfig(fromIndex, -1, "", "");
         }
 
-
         GameService.Write(save);
-        RemovalArea.SetActive(false);
     }
 
     public void SkillGrabbed(ReorderableListEventStruct item)
     {
-        Regex rgxGameItem = new Regex(@"^\d+$");
-        Transform t = item.DroppedObject.transform.GetChild(0).transform;
-        string objectName = t.name;
-        Debug.Log("Event Received SkillGrabbed2 => " + t.name);
-        if (rgxGameItem.IsMatch(objectName))
+        Transform t = item.DroppedObject.transform;
+        string objectName = ReplaceCloneInName(t.name);
+        Debug.Log("Event Received SkillGrabbed2 t.name => " + t.name);
+        Debug.Log("Event Received SkillGrabbed2 item.SourceObject.tag => " + item.SourceObject.tag);
+        if (item.SourceObject.tag == "gameItem")
         {
             Transform qty = t.GetChild(1);
             int gameItemIndex = int.Parse(objectName);
@@ -180,6 +199,9 @@ public class VehicleManager : MonoBehaviour
     }
     public void SkillAdded(ReorderableListEventStruct item)
     {
+        item.SourceObject.name = ReplaceCloneInName(item.SourceObject.name);
+        item.DroppedObject.name = ReplaceCloneInName(item.DroppedObject.name);
+
         int index = System.Array.IndexOf(SkillSlot, item.ToList.gameObject);
         string itemTag = item.DroppedObject.tag;
         string type = "Unknown";
@@ -197,12 +219,12 @@ public class VehicleManager : MonoBehaviour
 
         if (type == "Skill")
         {
-            string skillName = item.SourceObject.name;
+            string skillName = ReplaceCloneInName(item.SourceObject.name);
             save.UpdateDashConfig(index, -1, skillName, type);
         }
         else if (type == "GameItem")
         {
-            int gameItemIndex = int.Parse(item.SourceObject.name);
+            int gameItemIndex = int.Parse(ReplaceCloneInName(item.SourceObject.name));
             save.UpdateDashConfig(index, gameItemIndex, "", type);
         }
 
@@ -219,20 +241,23 @@ public class VehicleManager : MonoBehaviour
 
     public void SelectionGrabbed(ReorderableListEventStruct item)
     {
+        RemovalArea.SetActive(true);
         Debug.Log("Event Received SelectionGrabbed");
         Debug.Log("Event Received Hello World, is my item a clone? [" + item.IsAClone + "]");
-        RemovalArea.SetActive(true);
     }
 
     public void RemovalAdded(ReorderableListEventStruct item)
     {
+        RemovalArea.SetActive(false);
+
         Debug.Log("Event Received RemovalAdded");
         Debug.Log("Event Received RemovalAdded => " + (item.DroppedObject == item.SourceObject) + " FromIndex " + item.FromIndex + " FromList " + item.FromList);
+
         int index = System.Array.IndexOf(SkillSlot, item.FromList.gameObject);
         save.UpdateDashConfig(index, -1, "", "");
-        GameService.Write(save);
 
         Destroy(item.DroppedObject);
-        RemovalArea.SetActive(false);
+
+        GameService.Write(save);
     }
 }
