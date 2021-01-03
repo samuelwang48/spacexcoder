@@ -260,4 +260,11 @@ public class VehicleManager : MonoBehaviour
 
         GameService.Write(save);
     }
+
+    public void ResetDash()
+    {
+        save.ResetDashConfig();
+        GameService.Write(save);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }

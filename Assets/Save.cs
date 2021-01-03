@@ -188,6 +188,28 @@ namespace SpaceXCoder
             return myDashConfig;
         }
 
+        public void ResetDashConfig()
+        {
+            for (int i = 0; i < myDashConfig.Length; i++)
+            {
+                myDashConfig[i] = new DashConfig();
+            }
+
+            UpdateDashConfig(0, 0, "", "GameItem");
+            UpdateDashConfig(1, 1, "", "GameItem");
+            UpdateDashConfig(2, 2, "", "GameItem");
+            UpdateDashConfig(3, 3, "", "GameItem");
+            UpdateDashConfig(4, 4, "", "GameItem");
+            UpdateDashConfig(5, 5, "", "GameItem");
+            UpdateDashConfig(6, 6, "", "GameItem");
+
+            UpdateDashConfig(10, -1, "Forward", "Skill");
+            UpdateDashConfig(13, -1, "TurnLeft", "Skill");
+            UpdateDashConfig(14, -1, "Backspace", "Skill");
+            UpdateDashConfig(15, -1, "TurnRight", "Skill");
+            UpdateDashConfig(18, -1, "Send", "Skill");
+        }
+
         public void UpdateDashConfig(int i, int gameItemIndex, string skillName, string type)
         {
             Debug.Log("Dash update length => " + myDashConfig.Length);

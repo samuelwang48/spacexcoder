@@ -37,19 +37,7 @@ public class StageManager : MonoBehaviour
         if (PlayerPrefs.HasKey("FirstRun") == false)
         {
             Debug.Log("First run, populate default dash configuration");
-            save.UpdateDashConfig(0, 0, "", "GameItem");
-            save.UpdateDashConfig(1, 1, "", "GameItem");
-            save.UpdateDashConfig(2, 2, "", "GameItem");
-            save.UpdateDashConfig(3, 3, "", "GameItem");
-            save.UpdateDashConfig(4, 4, "", "GameItem");
-            save.UpdateDashConfig(5, 5, "", "GameItem");
-            save.UpdateDashConfig(6, 6, "", "GameItem");
-
-            save.UpdateDashConfig(10, -1, "Forward", "Skill");
-            save.UpdateDashConfig(13, -1, "TurnLeft", "Skill");
-            save.UpdateDashConfig(14, -1, "Backspace", "Skill");
-            save.UpdateDashConfig(15, -1, "TurnRight", "Skill");
-            save.UpdateDashConfig(18, -1, "Send", "Skill");
+            save.ResetDashConfig();
 
             PlayerPrefs.SetInt("FirstRun", 1);
         }
