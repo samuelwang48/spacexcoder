@@ -36,6 +36,16 @@ public class VehicleManager : MonoBehaviour
             g.GetComponent<ReorderableListElement>().enabled = false;
         });
 
+        GameObject.FindGameObjectsWithTag("newProgram").ToList<GameObject>().ForEach(g => {
+            Debug.Log("g.name => " + g.name);
+            g.GetComponent<ReorderableListElement>().enabled = false;
+
+            Button btnNewProgram = g.GetComponent<Button>();
+            btnNewProgram.onClick.AddListener(delegate {
+                NewProgram();
+            });
+        });
+
         Button btnExitStage = ObjExitStage.GetComponent<Button>();
         btnExitStage.onClick.AddListener(delegate {
             ExitStage();
@@ -76,6 +86,23 @@ public class VehicleManager : MonoBehaviour
                 prev = current;
             });
         }
+    }
+
+    void NewProgram()
+    {
+        Debug.Log("New Program");
+
+        // Add a full-screen UniWebView component.
+        var webView = gameObject.AddComponent<UniWebView>();
+        webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+
+        // Load a URL.
+        webView.Load("http://192.168.56.101:8000/code/");
+
+        // Show it.
+        webView.Show();
+
+        Debug.Log("webView ready");
     }
 
     // Update is called once per frame
