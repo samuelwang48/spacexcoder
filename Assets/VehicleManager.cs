@@ -97,7 +97,7 @@ public class VehicleManager : MonoBehaviour
         webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
 
         // Load a URL.
-        webView.Load("http://192.168.56.101:8000");
+        webView.Load("http://192.168.56.101:8000/code/");
 
         // Show it.
         webView.Show();
