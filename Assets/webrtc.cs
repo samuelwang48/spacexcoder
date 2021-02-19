@@ -1,16 +1,28 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using SocketIOClient;
 using SocketIOClient.ConnectInterval;
+using TMPro;
 using UnityEngine;
+using UnityToolbag;
+
+public class ISocketId
+{
+    public KeyValuePair<string, string> sid { get; set; }
+}
 
 public class webrtc : MonoBehaviour
 {
+    public GameObject btn;
+    public GameObject container;
+    public static string MySocketId;
+
     void Start()
     {
 
-        var uri = new Uri("http://192.168.0.184:5003");
+        var uri = new Uri("http://192.168.0.126:5003");
 
         var socket = new SocketIOClient.SocketIO(uri, new SocketIOClient.SocketIOOptions
         {
@@ -30,11 +42,31 @@ public class webrtc : MonoBehaviour
         socket.OnDisconnected += Socket_OnDisconnected;
         socket.OnReconnecting += Socket_OnReconnecting;
 
+        int index = 0;
         socket.On("update-user-list", response =>
         {
-            Debug.Log("update-user-list 1: " + JsonConvert.SerializeObject(response));
-            Debug.Log("update-user-list 2: " + response.ToString());
+            List<string> obj = response.GetValue<List<string>>();
+            Debug.Log("update-user-list: ");
+            obj.ForEach(socket_id =>
+            {
+                try
+                {
+                    Debug.Log("Peer Socket id (" + index + ") => " + socket_id);
+                    index++;
+                    Dispatcher.Invoke(() =>
+                    {
+                        GameObject newObj = Instantiate(btn, container.transform);
+                        newObj.transform.SetParent(container.transform);
+                        newObj.transform.Find("text").GetComponent<TextMeshProUGUI>().SetText(socket_id);
+                    });
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Exception caught." + e);
+                }
+            });
         });
+
 
         socket.ConnectAsync();
     }
@@ -53,8 +85,14 @@ public class webrtc : MonoBehaviour
     {
         Debug.Log("Socket_OnConnected");
         var socket = sender as SocketIO;
-        Debug.Log("Socket.Id:" + socket.Id);
-        await socket.EmitAsync("hi", "SocketIOClient.Sample");
+        
+        Dictionary<string, string> socket_id = JsonConvert.DeserializeObject<Dictionary<string, string>>(socket.Id);
+        Debug.Log("My Socket Id 1 => " + socket_id["sid"]);
+
+        //ISocketId obj = JsonConvert.DeserializeObject<ISocketId>(socket.Id);
+        //Debug.Log("My Socket Id 4 => " + obj.sid);
+
+        await socket.EmitAsync("hi", new Dictionary<string, string>() {{ "foo", "bar" }});
 
         //await socket.EmitAsync("ack", response =>
         //{
