@@ -11,31 +11,29 @@ using Unity.WebRTC;
 using UnityEngine.UI;
 
 
-public class webrtc : MonoBehaviour
-{
+public class webrtc : MonoBehaviour {
     public GameObject btn;
     public GameObject container;
 
     //socket members
     public Uri uri = new Uri("http://192.168.0.126:5003");
     public static string MySocketId;
-    public static string PeerSocketId;
     public static SocketIO MySocket;
 
     //rtc members
     public static bool isAlreadyCalling = false;
     private RTCPeerConnection peerConnection;
     private RTCDataChannel dataChannel, receiveChannel;
-    private RTCOfferOptions OfferOptions = new RTCOfferOptions
-    {
+    private RTCOfferOptions OfferOptions = new RTCOfferOptions {
         iceRestart = false,
         offerToReceiveAudio = false,
         offerToReceiveVideo = false
     };
-    private RTCAnswerOptions AnswerOptions = new RTCAnswerOptions
-    {
+    private RTCAnswerOptions AnswerOptions = new RTCAnswerOptions {
         iceRestart = false,
     };
+
+    private delegate void SDPCallback(RTCSessionDescription desc, string socket_id);
 
     private void Awake() {
         // Initialize WebRTC
@@ -55,9 +53,8 @@ public class webrtc : MonoBehaviour
 
 
         // Initialize WebSocket
-        MySocket = new SocketIO(uri, new SocketIOOptions
-        {
-            Query = new Dictionary<string, string>{ {"token", "v3" } },
+        MySocket = new SocketIO(uri, new SocketIOOptions {
+            Query = new Dictionary<string, string> { { "token", "v3" } },
             EIO = 4
         });
 
@@ -69,17 +66,6 @@ public class webrtc : MonoBehaviour
         MySocket.OnReconnecting += Socket_OnReconnecting;
     }
 
-    IEnumerator CallUser(string socket_id) {
-        Debug.Log("$peerConnection createOffer start {socket_id}");
-        var createOffer = peerConnection.CreateOffer(ref OfferOptions);
-        yield return createOffer;
-
-        if (!createOffer.IsError) {
-            yield return StartCoroutine(Rtc_OnCreateOfferSuccess(createOffer.Desc, socket_id));
-        } else {
-            Debug.Log("$peerConnection createOffer error {createOffer.Error}");
-        }
-    }
 
     void Start() {
         GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
@@ -96,13 +82,12 @@ public class webrtc : MonoBehaviour
                     index++;
                     Dispatcher.Invoke(() => {
                         GameObject.Find("MySocketId").GetComponent<TextMeshProUGUI>().SetText("MySocketId => " + MySocketId);
-                        if (socket_id != MySocketId)
-                        {
+                        if (socket_id != MySocketId) {
                             GameObject newObj = Instantiate(btn, container.transform);
                             newObj.transform.SetParent(container.transform);
                             newObj.transform.Find("text").GetComponent<TextMeshProUGUI>().SetText("Call " + socket_id);
                             newObj.GetComponent<Button>().onClick.AddListener(delegate {
-                                StartCoroutine(CallUser(socket_id));
+                                StartCoroutine(MakeCall(socket_id));
                             });
                         }
                     });
@@ -114,49 +99,95 @@ public class webrtc : MonoBehaviour
 
         MySocket.On("answer-made", response => {
             ISocketIoWebRTCAnswer obj = response.GetValue<ISocketIoWebRTCAnswer>();
-            PeerSocketId = obj.socket;
-            Dispatcher.Invoke(() => { StartCoroutine(Rtc_OnCreateAnswerSuccess(obj.answer)); });
+            Dispatcher.Invoke(() => {
+                StartCoroutine(Rtc_SetRemoteSDP(obj.answer, obj.socket, (desc, socket_id) => {
+                    Debug.Log($"peerConnection SetRemoteDescription complete");
+                    if (isAlreadyCalling == false) {
+                        StartCoroutine(MakeCall(socket_id));
+                        isAlreadyCalling = true;
+                    }
+                })); 
+            });
             //var debug = JsonConvert.SerializeObject(obj.answer, Formatting.Indented); Debug.Log(debug);
             //var answer = new RTCSessionDescription { type = RTCSdpType.Answer, sdp = obj.answer.sdp };
         });
 
+        MySocket.On("call-made", response => {
+            ISocketIoWebRTCOffer obj = response.GetValue<ISocketIoWebRTCOffer>();
+            Dispatcher.Invoke(() => {
+                StartCoroutine(Rtc_SetRemoteSDP(obj.offer, obj.socket, (desc, socket_id) => {
+                    Debug.Log($"peerConnection SetRemoteDescription complete");
+                    StartCoroutine(MakeAnswer(socket_id, (answer, _socket_id) => {
+                        StartCoroutine(Rtc_SetLocalSDP(answer, _socket_id, (_answer, to) => {
+                            Debug.Log($"peerConnection SetLocalDescription complete");
+                            MySocket.EmitAsync("make-answer", new Dictionary<string, object>() {
+                                { "answer", _answer },
+                                { "to", to }
+                            });
+                        }));
+                    }));
+                }));
+            });
+        });
+
         MySocket.ConnectAsync();
     }
-    IEnumerator Rtc_OnCreateAnswerSuccess(RTCSessionDescription desc) {
+
+    IEnumerator MakeAnswer(string socket_id, SDPCallback sdpCallback) {
+        Debug.Log("$peerConnection createAnswer start {socket_id}");
+        var createAnswer = peerConnection.CreateAnswer(ref AnswerOptions);
+        yield return createAnswer;
+
+        if (!createAnswer.IsError) {
+            sdpCallback(createAnswer.Desc, socket_id);
+        } else {
+            Debug.Log("$peerConnection createOffer error {createAnswer.Error}");
+        }
+    }
+    IEnumerator MakeCall(string socket_id) {
+        Debug.Log("$peerConnection createOffer start {socket_id}");
+        var createOffer = peerConnection.CreateOffer(ref OfferOptions);
+        yield return createOffer;
+
+        if (!createOffer.IsError) {
+            yield return StartCoroutine(Rtc_SetLocalSDP(createOffer.Desc, socket_id, (offer, to) => {
+                Debug.Log($"peerConnection SetLocalDescription complete");
+                MySocket.EmitAsync("make-call", new Dictionary<string, object>() {
+                    { "offer", offer },
+                    { "to", to }
+                });
+            }));
+        } else {
+            Debug.Log("$peerConnection createOffer error {createOffer.Error}");
+        }
+    }
+    IEnumerator Rtc_SetRemoteSDP(RTCSessionDescription desc, string socket_id, SDPCallback sdpCallback) {
         Debug.Log($"peerConnection setRemoteDescription start {desc.sdp}");
         var setRemote = peerConnection.SetRemoteDescription(ref desc);
         yield return setRemote;
 
         if (!setRemote.IsError) {
-            Debug.Log($"peerConnection SetRemoteDescription complete");
-            if (isAlreadyCalling == false) {
-                StartCoroutine(CallUser(PeerSocketId));
-                isAlreadyCalling = true;
-            }
+            sdpCallback(desc, socket_id);
         } else {
             Debug.Log($"peerConnection SetRemoteDescription error {setRemote.Error}");
         }
     }
-    IEnumerator Rtc_OnCreateOfferSuccess(RTCSessionDescription desc, string socket_id) {
+
+    IEnumerator Rtc_SetLocalSDP(RTCSessionDescription desc, string socket_id, SDPCallback sdpCallback) {
         Debug.Log($"peerConnection setLocalDescription start {desc.sdp} {socket_id}");
         var setLocal = peerConnection.SetLocalDescription(ref desc);
         yield return setLocal;
 
         if (!setLocal.IsError) {
-            Debug.Log($"peerConnection SetLocalDescription complete");
-            MySocket.EmitAsync("call-user", new Dictionary<string, object>() {
-                { "offer", desc },
-                { "to", socket_id }
-            });
+            sdpCallback(desc, socket_id);
         } else {
             Debug.Log($"peerConnection SetLocalDescription error {setLocal.Error}");
         }
     }
 
-    void Rtc_OnIceConnectionChange(RTCPeerConnection peerConnection, RTCIceConnectionState state)
-    {
-        switch (state)
-        {
+
+    void Rtc_OnIceConnectionChange(RTCPeerConnection peerConnection, RTCIceConnectionState state) {
+        switch (state) {
             case RTCIceConnectionState.New:
                 Debug.Log($"peerConnection IceConnectionState: New");
                 break;
@@ -186,14 +217,12 @@ public class webrtc : MonoBehaviour
         }
     }
 
-    void Rtc_OnIceCandidate(RTCPeerConnection peerConnection, RTCIceCandidate candidate)
-    {
+    void Rtc_OnIceCandidate(RTCPeerConnection peerConnection, RTCIceCandidate candidate) {
         peerConnection.AddIceCandidate(candidate);
         Debug.Log($"Add peerConnection ICE candidate:\n {candidate.Candidate}");
     }
 
-    private static async void Socket_OnConnected(object sender, EventArgs e)
-    {
+    private static async void Socket_OnConnected(object sender, EventArgs e) {
         SocketIO socket = sender as SocketIO;
         Dictionary<string, string> socket_dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(socket.Id);
         MySocketId = socket_dict["sid"];
@@ -205,15 +234,13 @@ public class webrtc : MonoBehaviour
     private static void Socket_OnPing(object sender, EventArgs e) { Debug.Log($"Socket Ping => {e}"); }
     private static void Socket_OnPong(object sender, TimeSpan e) { Debug.Log($"Socket Pong => {e.TotalMilliseconds}"); }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
         if (peerConnection != null) { peerConnection.Close(); }
         WebRTC.Dispose();
     }
 }
 
-public class MyConnectInterval : IConnectInterval
-{
+public class MyConnectInterval : IConnectInterval {
     public MyConnectInterval() { delay = 1000; }
 
     double delay;
@@ -233,13 +260,14 @@ public class MyConnectInterval : IConnectInterval
 
 
 
-public class ISocketId
-{
+public class ISocketId {
     public KeyValuePair<string, string> sid { get; set; }
 }
-
-public class ISocketIoWebRTCAnswer
-{
+public class ISocketIoWebRTCAnswer {
     public string socket { get; set; }
     public RTCSessionDescription answer { get; set; }
+}
+public class ISocketIoWebRTCOffer {
+    public string socket { get; set; }
+    public RTCSessionDescription offer { get; set; }
 }
