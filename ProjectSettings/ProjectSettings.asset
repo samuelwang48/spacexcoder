@@ -669,7 +669,9 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
+    1: CLAYXELS_RETOPO
     4: CLAYXELS_RETOPO
+    13: CLAYXELS_RETOPO
   platformArchitecture: {}
   scriptingBackend:
     Standalone: 0
