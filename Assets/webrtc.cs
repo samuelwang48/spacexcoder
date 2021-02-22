@@ -9,15 +9,17 @@ using UnityEngine;
 using UnityToolbag;
 using Unity.WebRTC;
 using UnityEngine.UI;
-
+using System.IO;
 
 public class webrtc : MonoBehaviour {
     public GameObject btn;
     public GameObject container;
+    public static TMP_InputField Output;
+    public static string OutputText = "";
 
     //socket members
     public Uri uri = new Uri("http://192.168.0.126:5003");
-    public static string MySocketId;
+    public static string MySocketId = "Unknown";
     public static SocketIO MySocket;
 
     //rtc members
@@ -42,11 +44,11 @@ public class webrtc : MonoBehaviour {
         peerConnection = new RTCPeerConnection(ref config);
         peerConnection.OnIceCandidate = candidate => { Rtc_OnIceCandidate(peerConnection, candidate); };
         peerConnection.OnIceConnectionChange = state => { Rtc_OnIceConnectionChange(peerConnection, state); };
-        peerConnection.OnIceGatheringStateChange = state => { Debug.Log("XXX " + state); };
+        peerConnection.OnIceGatheringStateChange = state => { DebugLog("XXX " + state); };
 
         peerConnection.OnDataChannel = channel => {
             receiveChannel = channel;
-            receiveChannel.OnMessage = bytes => { Debug.Log("Received!!! => " + System.Text.Encoding.UTF8.GetString(bytes)); };
+            receiveChannel.OnMessage = bytes => { DebugLog("Received!!! => " + System.Text.Encoding.UTF8.GetString(bytes)); };
         };
         dataChannel = peerConnection.CreateDataChannel("sendChannel", new RTCDataChannelInit());
         dataChannel.OnOpen = () => { };
@@ -59,6 +61,7 @@ public class webrtc : MonoBehaviour {
         });
 
         MySocket.GetConnectInterval = () => new MyConnectInterval();
+        MySocket.OnError += Socket_OnError;
         MySocket.OnConnected += Socket_OnConnected;
         MySocket.OnPing += Socket_OnPing;
         MySocket.OnPong += Socket_OnPong;
@@ -66,20 +69,31 @@ public class webrtc : MonoBehaviour {
         MySocket.OnReconnecting += Socket_OnReconnecting;
     }
 
+    public static void DebugLog(string output) {
+        Debug.Log(output);
+        Dispatcher.Invoke(() => {
+            Output.SetTextWithoutNotify(OutputText + "\n" + output);
+            OutputText = OutputText + "\n" + output;
+        });
+    }
 
     void Start() {
+        Output = GameObject.Find("Output").GetComponent<TMP_InputField>();
+
         GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
             dataChannel.Send("Hello from SpaceXCoder!");
         });
-        GameObject.Find("Output").GetComponent<TMP_InputField>().SetTextWithoutNotify("Listening...");
+
+        DebugLog($"BEGIN... { MySocketId} ");
+        DebugLog($"Listening... { MySocketId} ");
 
         int index = 0;
         MySocket.On("update-user-list", response => {
             List<string> obj = response.GetValue<List<string>>();
-            Debug.Log("update-user-list: ");
+            DebugLog("update-user-list: ");
             obj.ForEach(socket_id => {
                 try {
-                    Debug.Log("Peer Socket id (" + index + ") => " + socket_id);
+                    DebugLog("Peer Socket id (" + index + ") => " + socket_id);
                     index++;
                     Dispatcher.Invoke(() => {
                         GameObject.Find("MySocketId").GetComponent<TextMeshProUGUI>().SetText("MySocketId => " + MySocketId);
@@ -93,7 +107,7 @@ public class webrtc : MonoBehaviour {
                         }
                     });
                 } catch (Exception e) {
-                    Debug.Log("Exception caught." + e);
+                    DebugLog("Exception caught." + e);
                 }
             });
         });
@@ -102,14 +116,14 @@ public class webrtc : MonoBehaviour {
             ISocketIoWebRTCAnswer obj = response.GetValue<ISocketIoWebRTCAnswer>();
             Dispatcher.Invoke(() => {
                 StartCoroutine(Rtc_SetRemoteSDP(obj.answer, obj.socket, (desc, socket_id) => {
-                    Debug.Log($"peerConnection SetRemoteDescription complete");
+                    DebugLog($"peerConnection SetRemoteDescription complete");
                     if (isAlreadyCalling == false) {
                         StartCoroutine(MakeCall(socket_id));
                         isAlreadyCalling = true;
                     }
                 })); 
             });
-            //var debug = JsonConvert.SerializeObject(obj.answer, Formatting.Indented); Debug.Log(debug);
+            //var debug = JsonConvert.SerializeObject(obj.answer, Formatting.Indented); DebugLog(debug);
             //var answer = new RTCSessionDescription { type = RTCSdpType.Answer, sdp = obj.answer.sdp };
         });
 
@@ -117,10 +131,10 @@ public class webrtc : MonoBehaviour {
             ISocketIoWebRTCOffer obj = response.GetValue<ISocketIoWebRTCOffer>();
             Dispatcher.Invoke(() => {
                 StartCoroutine(Rtc_SetRemoteSDP(obj.offer, obj.socket, (desc, socket_id) => {
-                    Debug.Log($"peerConnection SetRemoteDescription complete");
+                    DebugLog($"peerConnection SetRemoteDescription complete");
                     StartCoroutine(MakeAnswer(socket_id, (answer, _socket_id) => {
                         StartCoroutine(Rtc_SetLocalSDP(answer, _socket_id, (_answer, to) => {
-                            Debug.Log($"peerConnection SetLocalDescription complete");
+                            DebugLog($"peerConnection SetLocalDescription complete");
                             MySocket.EmitAsync("make-answer", new Dictionary<string, object>() {
                                 { "answer", _answer },
                                 { "to", to }
@@ -135,54 +149,54 @@ public class webrtc : MonoBehaviour {
     }
 
     IEnumerator MakeAnswer(string socket_id, SDPCallback sdpCallback) {
-        Debug.Log("$peerConnection createAnswer start {socket_id}");
+        DebugLog("$peerConnection createAnswer start {socket_id}");
         var createAnswer = peerConnection.CreateAnswer(ref AnswerOptions);
         yield return createAnswer;
 
         if (!createAnswer.IsError) {
             sdpCallback(createAnswer.Desc, socket_id);
         } else {
-            Debug.Log("$peerConnection createOffer error {createAnswer.Error}");
+            DebugLog("$peerConnection createOffer error {createAnswer.Error}");
         }
     }
     IEnumerator MakeCall(string socket_id) {
-        Debug.Log("$peerConnection createOffer start {socket_id}");
+        DebugLog("$peerConnection createOffer start {socket_id}");
         var createOffer = peerConnection.CreateOffer(ref OfferOptions);
         yield return createOffer;
 
         if (!createOffer.IsError) {
             yield return StartCoroutine(Rtc_SetLocalSDP(createOffer.Desc, socket_id, (offer, to) => {
-                Debug.Log($"peerConnection SetLocalDescription complete");
+                DebugLog($"peerConnection SetLocalDescription complete");
                 MySocket.EmitAsync("make-call", new Dictionary<string, object>() {
                     { "offer", offer },
                     { "to", to }
                 });
             }));
         } else {
-            Debug.Log("$peerConnection createOffer error {createOffer.Error}");
+            DebugLog("$peerConnection createOffer error {createOffer.Error}");
         }
     }
     IEnumerator Rtc_SetRemoteSDP(RTCSessionDescription desc, string socket_id, SDPCallback sdpCallback) {
-        Debug.Log($"peerConnection setRemoteDescription start {desc.sdp}");
+        DebugLog($"peerConnection setRemoteDescription start {desc.sdp}");
         var setRemote = peerConnection.SetRemoteDescription(ref desc);
         yield return setRemote;
 
         if (!setRemote.IsError) {
             sdpCallback(desc, socket_id);
         } else {
-            Debug.Log($"peerConnection SetRemoteDescription error {setRemote.Error}");
+            DebugLog($"peerConnection SetRemoteDescription error {setRemote.Error}");
         }
     }
 
     IEnumerator Rtc_SetLocalSDP(RTCSessionDescription desc, string socket_id, SDPCallback sdpCallback) {
-        Debug.Log($"peerConnection setLocalDescription start {desc.sdp} {socket_id}");
+        DebugLog($"peerConnection setLocalDescription start {desc.sdp} {socket_id}");
         var setLocal = peerConnection.SetLocalDescription(ref desc);
         yield return setLocal;
 
         if (!setLocal.IsError) {
             sdpCallback(desc, socket_id);
         } else {
-            Debug.Log($"peerConnection SetLocalDescription error {setLocal.Error}");
+            DebugLog($"peerConnection SetLocalDescription error {setLocal.Error}");
         }
     }
 
@@ -190,28 +204,28 @@ public class webrtc : MonoBehaviour {
     void Rtc_OnIceConnectionChange(RTCPeerConnection peerConnection, RTCIceConnectionState state) {
         switch (state) {
             case RTCIceConnectionState.New:
-                Debug.Log($"peerConnection IceConnectionState: New");
+                DebugLog($"peerConnection IceConnectionState: New");
                 break;
             case RTCIceConnectionState.Checking:
-                Debug.Log($"peerConnection IceConnectionState: Checking");
+                DebugLog($"peerConnection IceConnectionState: Checking");
                 break;
             case RTCIceConnectionState.Closed:
-                Debug.Log($"peerConnection IceConnectionState: Closed");
+                DebugLog($"peerConnection IceConnectionState: Closed");
                 break;
             case RTCIceConnectionState.Completed:
-                Debug.Log($"peerConnection IceConnectionState: Completed");
+                DebugLog($"peerConnection IceConnectionState: Completed");
                 break;
             case RTCIceConnectionState.Connected:
-                Debug.Log($"peerConnection IceConnectionState: Connected");
+                DebugLog($"peerConnection IceConnectionState: Connected");
                 break;
             case RTCIceConnectionState.Disconnected:
-                Debug.Log($"peerConnection IceConnectionState: Disconnected");
+                DebugLog($"peerConnection IceConnectionState: Disconnected");
                 break;
             case RTCIceConnectionState.Failed:
-                Debug.Log($"peerConnection IceConnectionState: Failed");
+                DebugLog($"peerConnection IceConnectionState: Failed");
                 break;
             case RTCIceConnectionState.Max:
-                Debug.Log($"peerConnection IceConnectionState: Max");
+                DebugLog($"peerConnection IceConnectionState: Max");
                 break;
             default:
                 break;
@@ -220,27 +234,33 @@ public class webrtc : MonoBehaviour {
 
     void Rtc_OnIceCandidate(RTCPeerConnection peerConnection, RTCIceCandidate candidate) {
         peerConnection.AddIceCandidate(candidate);
-        Debug.Log($"Add peerConnection ICE candidate:\n {candidate.Candidate}");
+        DebugLog($"Add peerConnection ICE candidate:\n {candidate.Candidate}");
     }
 
     private static async void Socket_OnConnected(object sender, EventArgs e) {
         SocketIO socket = sender as SocketIO;
         Dictionary<string, string> socket_dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(socket.Id);
         MySocketId = socket_dict["sid"];
-        Debug.Log($"Socket Connected MySocketId => {MySocketId} | Socket Event => {e}");
+        DebugLog($"Socket Connected MySocketId => {MySocketId} | Socket Event => {e}");
         await MySocket.EmitAsync("hi", new Dictionary<string, string>() { { "hi", "from SpaceXCoder" } });
     }
-    private static void Socket_OnReconnecting(object sender, int e) { Debug.Log($"Socket Reconnecting: attempt = {e}"); }
-    private static void Socket_OnDisconnected(object sender, string e) { Debug.Log($"Socket Disconnect: {e}"); }
-    private static void Socket_OnPing(object sender, EventArgs e) { Debug.Log($"Socket Ping => {e}"); }
-    private static void Socket_OnPong(object sender, TimeSpan e) { Debug.Log($"Socket Pong => {e.TotalMilliseconds}"); }
+
+    private static void Socket_OnError(object sender, string e) { DebugLog($"Socket ErrorEvent: attempt = {e}"); }
+    private static void Socket_OnReconnecting(object sender, int e) { DebugLog($"Socket Reconnecting: attempt = {e}"); }
+    private static void Socket_OnDisconnected(object sender, string e) { DebugLog($"Socket Disconnect: {e}"); }
+    private static void Socket_OnPing(object sender, EventArgs e) { DebugLog($"Socket Ping => {e}"); }
+    private static void Socket_OnPong(object sender, TimeSpan e) { DebugLog($"Socket Pong => {e.TotalMilliseconds}"); }
 
     private void OnDestroy() {
         if (peerConnection != null) { peerConnection.Close(); }
         WebRTC.Dispose();
         MySocket.DisconnectAsync();
     }
+
 }
+
+
+
 
 public class MyConnectInterval : IConnectInterval {
     public MyConnectInterval() { delay = 1000; }
@@ -249,10 +269,6 @@ public class MyConnectInterval : IConnectInterval {
     public int GetDelay() { Debug.Log("GetDelay: " + delay); return (int)delay; }
     public double NextDealy() { Debug.Log("NextDealy: " + (delay + 1000)); return delay += 1000; }
 }
-
-
-
-
 
 
 
