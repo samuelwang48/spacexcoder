@@ -18,7 +18,7 @@ public class webrtc : MonoBehaviour {
     public static string OutputText = "";
 
     //socket members
-    public Uri uri = new Uri("http://192.168.0.126:5003");
+    public Uri uri = new Uri("https://server-dev.rukkou.com:5003");
     public static string MySocketId = "Unknown";
     public static SocketIO MySocket;
 
