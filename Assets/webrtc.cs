@@ -238,6 +238,7 @@ public class webrtc : MonoBehaviour {
     private void OnDestroy() {
         if (peerConnection != null) { peerConnection.Close(); }
         WebRTC.Dispose();
+        MySocket.DisconnectAsync();
     }
 }
 
