@@ -38,13 +38,31 @@ public class webrtc : MonoBehaviour {
     private delegate void SDPCallback(RTCSessionDescription desc, string socket_id);
 
     private void Awake() {
+    }
+
+    public static void DebugLog(string output) {
+        Debug.Log(output);
+        Dispatcher.Invoke(() => {
+            Output.SetTextWithoutNotify(OutputText + output + "\n");
+            OutputText = OutputText + output + "\n";
+        });
+    }
+
+    void Start() {
+        Output = GameObject.Find("Output").GetComponent<TMP_InputField>();
+        DebugLog($"Listening...");
+
         // Initialize WebRTC
+        DebugLog("WebRTC Initialize");
         WebRTC.Initialize();
+
         RTCConfiguration config = default;
+
+        DebugLog($"RTCPeerConnection {config}");
         peerConnection = new RTCPeerConnection(ref config);
         peerConnection.OnIceCandidate = candidate => { Rtc_OnIceCandidate(peerConnection, candidate); };
         peerConnection.OnIceConnectionChange = state => { Rtc_OnIceConnectionChange(peerConnection, state); };
-        peerConnection.OnIceGatheringStateChange = state => { DebugLog("XXX " + state); };
+        peerConnection.OnIceGatheringStateChange = state => { DebugLog("peerConnection " + state); };
 
         peerConnection.OnDataChannel = channel => {
             receiveChannel = channel;
@@ -55,6 +73,7 @@ public class webrtc : MonoBehaviour {
 
 
         // Initialize WebSocket
+        DebugLog("WebSocket Initialize");
         MySocket = new SocketIO(uri, new SocketIOOptions {
             Query = new Dictionary<string, string> { { "token", "v3" } },
             EIO = 4
@@ -67,25 +86,11 @@ public class webrtc : MonoBehaviour {
         MySocket.OnPong += Socket_OnPong;
         MySocket.OnDisconnected += Socket_OnDisconnected;
         MySocket.OnReconnecting += Socket_OnReconnecting;
-    }
 
-    public static void DebugLog(string output) {
-        Debug.Log(output);
-        Dispatcher.Invoke(() => {
-            Output.SetTextWithoutNotify(OutputText + "\n" + output);
-            OutputText = OutputText + "\n" + output;
-        });
-    }
-
-    void Start() {
-        Output = GameObject.Find("Output").GetComponent<TMP_InputField>();
 
         GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
             dataChannel.Send("Hello from SpaceXCoder!");
         });
-
-        DebugLog($"BEGIN... { MySocketId} ");
-        DebugLog($"Listening... { MySocketId} ");
 
         int index = 0;
         MySocket.On("update-user-list", response => {
@@ -245,7 +250,7 @@ public class webrtc : MonoBehaviour {
         await MySocket.EmitAsync("hi", new Dictionary<string, string>() { { "hi", "from SpaceXCoder" } });
     }
 
-    private static void Socket_OnError(object sender, string e) { DebugLog($"Socket ErrorEvent: attempt = {e}"); }
+    private static void Socket_OnError(object sender, string e) { DebugLog($"Socket Error: attempt = {e}"); }
     private static void Socket_OnReconnecting(object sender, int e) { DebugLog($"Socket Reconnecting: attempt = {e}"); }
     private static void Socket_OnDisconnected(object sender, string e) { DebugLog($"Socket Disconnect: {e}"); }
     private static void Socket_OnPing(object sender, EventArgs e) { DebugLog($"Socket Ping => {e}"); }
