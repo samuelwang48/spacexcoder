@@ -672,7 +672,8 @@ PlayerSettings:
     1: CLAYXELS_RETOPO
     4: CLAYXELS_RETOPO
     13: CLAYXELS_RETOPO
-  platformArchitecture: {}
+  platformArchitecture:
+    iPhone: 1
   scriptingBackend:
     Standalone: 0
   il2cppCompilerConfiguration: {}
