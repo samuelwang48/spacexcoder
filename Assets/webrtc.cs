@@ -71,6 +71,7 @@ public class webrtc : MonoBehaviour {
         GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
             dataChannel.Send("Hello from SpaceXCoder!");
         });
+        GameObject.Find("Output").GetComponent<TMP_InputField>().SetTextWithoutNotify("Listening...");
 
         int index = 0;
         MySocket.On("update-user-list", response => {
