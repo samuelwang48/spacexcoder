@@ -11,6 +11,11 @@ using Unity.WebRTC;
 using UnityEngine.UI;
 using System.IO;
 
+public class MySocketIO : SocketIO {
+    public MySocketIO(Uri uri, SocketIOOptions options) : base(uri, options) {
+    }
+}
+
 public class webrtc : MonoBehaviour {
     public GameObject btn;
     public GameObject container;
@@ -48,33 +53,12 @@ public class webrtc : MonoBehaviour {
         });
     }
 
-    void Start() {
-        Output = GameObject.Find("Output").GetComponent<TMP_InputField>();
-        DebugLog($"Listening...");
-
-        // Initialize WebRTC
-        DebugLog("WebRTC Initialize");
-        WebRTC.Initialize();
-
-        RTCConfiguration config = default;
-
-        DebugLog($"RTCPeerConnection {config}");
-        peerConnection = new RTCPeerConnection(ref config);
-        peerConnection.OnIceCandidate = candidate => { Rtc_OnIceCandidate(peerConnection, candidate); };
-        peerConnection.OnIceConnectionChange = state => { Rtc_OnIceConnectionChange(peerConnection, state); };
-        peerConnection.OnIceGatheringStateChange = state => { DebugLog("peerConnection " + state); };
-
-        peerConnection.OnDataChannel = channel => {
-            receiveChannel = channel;
-            receiveChannel.OnMessage = bytes => { DebugLog("Received!!! => " + System.Text.Encoding.UTF8.GetString(bytes)); };
-        };
-        dataChannel = peerConnection.CreateDataChannel("sendChannel", new RTCDataChannelInit());
-        dataChannel.OnOpen = () => { };
+    void WebsocketConnect() {
 
 
         // Initialize WebSocket
         DebugLog("WebSocket Initialize");
-        MySocket = new SocketIO(uri, new SocketIOOptions {
+        MySocket = new MySocketIO(uri, new SocketIOOptions {
             Query = new Dictionary<string, string> { { "token", "v3" } },
             EIO = 4
         });
@@ -86,11 +70,6 @@ public class webrtc : MonoBehaviour {
         MySocket.OnPong += Socket_OnPong;
         MySocket.OnDisconnected += Socket_OnDisconnected;
         MySocket.OnReconnecting += Socket_OnReconnecting;
-
-
-        GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
-            dataChannel.Send("Hello from SpaceXCoder!");
-        });
 
         int index = 0;
         MySocket.On("update-user-list", response => {
@@ -126,7 +105,7 @@ public class webrtc : MonoBehaviour {
                         StartCoroutine(MakeCall(socket_id));
                         isAlreadyCalling = true;
                     }
-                })); 
+                }));
             });
             //var debug = JsonConvert.SerializeObject(obj.answer, Formatting.Indented); DebugLog(debug);
             //var answer = new RTCSessionDescription { type = RTCSdpType.Answer, sdp = obj.answer.sdp };
@@ -151,6 +130,40 @@ public class webrtc : MonoBehaviour {
         });
 
         MySocket.ConnectAsync();
+    }
+
+    void Start() {
+        Output = GameObject.Find("Output").GetComponent<TMP_InputField>();
+        DebugLog($"Listening...");
+
+        // Initialize WebRTC
+        DebugLog("WebRTC Initialize");
+        WebRTC.Initialize();
+
+        RTCConfiguration config = default;
+
+        DebugLog($"RTCPeerConnection {config}");
+        peerConnection = new RTCPeerConnection(ref config);
+        peerConnection.OnIceCandidate = candidate => { Rtc_OnIceCandidate(peerConnection, candidate); };
+        peerConnection.OnIceConnectionChange = state => { Rtc_OnIceConnectionChange(peerConnection, state); };
+        peerConnection.OnIceGatheringStateChange = state => { DebugLog("peerConnection " + state); };
+
+        peerConnection.OnDataChannel = channel => {
+            receiveChannel = channel;
+            receiveChannel.OnMessage = bytes => { DebugLog("Received!!! => " + System.Text.Encoding.UTF8.GetString(bytes)); };
+        };
+        dataChannel = peerConnection.CreateDataChannel("sendChannel", new RTCDataChannelInit());
+        dataChannel.OnOpen = () => { };
+
+
+
+        GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
+            dataChannel.Send("Hello from SpaceXCoder!");
+        });
+
+        GameObject.Find("WSConnect").GetComponent<Button>().onClick.AddListener(delegate {
+            WebsocketConnect();
+        });
     }
 
     IEnumerator MakeAnswer(string socket_id, SDPCallback sdpCallback) {
