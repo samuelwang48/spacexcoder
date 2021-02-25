@@ -10,7 +10,7 @@ PlayerSettings:
   AndroidEnableSustainedPerformanceMode: 0
   defaultScreenOrientation: 0
   targetDevice: 2
-  useOnDemandResources: 0
+  useOnDemandResources: 1
   accelerometerFrequency: 60
   companyName: Samuel Wang
   productName: Space x Coder
@@ -52,7 +52,7 @@ PlayerSettings:
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
-  iosUseCustomAppBackgroundBehavior: 0
+  iosUseCustomAppBackgroundBehavior: 1
   iosAllowHTTPDownload: 1
   allowedAutorotateToPortrait: 1
   allowedAutorotateToPortraitUpsideDown: 1
@@ -70,11 +70,11 @@ PlayerSettings:
   macRetinaSupport: 1
   runInBackground: 1
   captureSingleScreen: 0
-  muteOtherAudioSources: 0
-  Prepare IOS For Recording: 0
-  Force IOS Speakers When Recording: 0
+  muteOtherAudioSources: 1
+  Prepare IOS For Recording: 1
+  Force IOS Speakers When Recording: 1
   deferSystemGesturesMode: 0
-  hideHomeButton: 0
+  hideHomeButton: 1
   submitAnalytics: 1
   usePlayerLog: 1
   bakeCollisionMeshes: 1
@@ -186,12 +186,12 @@ PlayerSettings:
   StripUnusedMeshComponents: 1
   VertexChannelCompressionMask: 4054
   iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 10.0
+  iOSTargetOSVersionString: 11.0
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
   tvOSTargetOSVersionString: 10.0
   uIPrerenderedIcon: 0
-  uIRequiresPersistentWiFi: 0
+  uIRequiresPersistentWiFi: 1
   uIRequiresFullScreen: 1
   uIStatusBarHidden: 0
   uIExitOnSuspend: 0
@@ -227,11 +227,11 @@ PlayerSettings:
   iOSLaunchScreenCustomStoryboardPath: 
   iOSDeviceRequirements: []
   iOSURLSchemes: []
-  iOSBackgroundModes: 0
+  iOSBackgroundModes: 511
   iOSMetalForceHardShadows: 0
   metalEditorSupport: 1
   metalAPIValidation: 1
-  iOSRenderExtraFrameOnPause: 0
+  iOSRenderExtraFrameOnPause: 1
   iosCopyPluginsCodeInsteadOfSymlink: 0
   appleDeveloperTeamID: 
   iOSManualSigningProvisioningProfileID: 
@@ -239,9 +239,9 @@ PlayerSettings:
   iOSManualSigningProvisioningProfileType: 0
   tvOSManualSigningProvisioningProfileType: 0
   appleEnableAutomaticSigning: 0
-  iOSRequireARKit: 0
+  iOSRequireARKit: 1
   iOSAutomaticallyDetectAndAddCapabilities: 1
-  appleEnableProMotion: 0
+  appleEnableProMotion: 1
   clonedFromGUID: 5f34be1353de5cf4398729fda238591b
   templatePackageId: com.unity.template.2d@1.3.0
   templateDefaultScene: Assets/Scenes/SampleScene.unity
@@ -442,7 +442,7 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: 
+  cameraUsageDescription: Required for augmented reality support.
   locationUsageDescription: 
   microphoneUsageDescription: 
   switchNetLibKey: 
