@@ -10,20 +10,21 @@ using UnityToolbag;
 using Unity.WebRTC;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.Networking;
 
 public class webrtc : MonoBehaviour {
-    public GameObject btn;
-    public GameObject container;
-    public static TMP_InputField Output;
-    public static string OutputText = "";
+    private GameObject btn;
+    private GameObject container;
+    private static TMP_InputField Output;
+    private static string OutputText = "";
 
     //socket members
-    public Uri uri = new Uri("http://server-dev.rukkou.com:5003");
-    public static string MySocketId = "Unknown";
-    public static SocketIO MySocket;
+    private Uri uri = new Uri("https://server-dev.rukkou.com:5003");
+    private static string MySocketId = "Unknown";
+    private static SocketIO MySocket;
 
     //rtc members
-    public static bool isAlreadyCalling = false;
+    private static bool isAlreadyCalling = false;
     private RTCPeerConnection peerConnection;
     private RTCDataChannel dataChannel, receiveChannel;
     private RTCOfferOptions OfferOptions = new RTCOfferOptions {
@@ -38,6 +39,7 @@ public class webrtc : MonoBehaviour {
     private delegate void SDPCallback(RTCSessionDescription desc, string socket_id);
 
     private void Awake() {
+
         // Initialize WebRTC
         WebRTC.Initialize();
         RTCConfiguration config = default;
@@ -154,6 +156,8 @@ public class webrtc : MonoBehaviour {
     }
 
     void Start() {
+        btn = GameObject.Find("Button");
+        container = GameObject.Find("Container");
         Output = GameObject.Find("Output").GetComponent<TMP_InputField>();
 
         GameObject.Find("Send").GetComponent<Button>().onClick.AddListener(delegate {
@@ -163,6 +167,30 @@ public class webrtc : MonoBehaviour {
         GameObject.Find("WSConnect").GetComponent<Button>().onClick.AddListener(delegate {
             WebsocketConnect();
         });
+
+        GameObject.Find("http_GET").GetComponent<Button>().onClick.AddListener(delegate {
+            StartCoroutine(GetText());
+        });
+
+
+        string uuid = System.Guid.NewGuid().ToString();
+        DebugLog($"System.Guid.NewGuid() {uuid}");
+
+    }
+
+    IEnumerator GetText() {
+        UnityWebRequest www = UnityWebRequest.Get("https://server-dev.rukkou.com:5003/text");
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError) {
+            Debug.Log(www.error);
+        } else {
+            // Show results as text
+            Debug.Log(www.downloadHandler.text);
+
+            // Or retrieve results as binary data
+            byte[] results = www.downloadHandler.data;
+        }
     }
 
     IEnumerator MakeAnswer(string socket_id, SDPCallback sdpCallback) {
