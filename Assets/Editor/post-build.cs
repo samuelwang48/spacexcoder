@@ -9,6 +9,7 @@ public class PostBuilder : MonoBehaviour {
     [PostProcessBuildAttribute(1)]
     public static void PostProcessBuildAttribute(BuildTarget target, string pathToBuiltProject) {
         if (target == BuildTarget.iOS) {
+            /*
             string projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
 
             PBXProject pbxProject = new PBXProject();
@@ -19,6 +20,7 @@ public class PostBuilder : MonoBehaviour {
             var targetName = PBXProject.GetUnityTargetName();
             var targetGuid = pbxProject.TargetGuidByName(targetName);
 #endif
+            
             pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
             pbxProject.WriteToFile(projectPath);
 
@@ -26,6 +28,7 @@ public class PostBuilder : MonoBehaviour {
 
             projectInString = projectInString.Replace("ENABLE_BITCODE = YES;", $"ENABLE_BITCODE = NO;");
             File.WriteAllText(projectPath, projectInString);
+            */
         }
     }
 }

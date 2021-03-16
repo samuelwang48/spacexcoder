@@ -6,18 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/webrtc.unity
-    guid: 6f18358f5edd24b2cb9833be2f278272
-  - enabled: 0
     path: Assets/Scenes/Main Scene.unity
     guid: 822613e90fe004439bdadfdd28e0c225
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Stage_0.unity
     guid: 41698ffe847c1408582a17c00a410a10
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Game Scene.unity
     guid: 7e06a632333f14be686ba658badb446f
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Vehicles.unity
     guid: b60b944f512ccce47ac231f32b89a47b
+  - enabled: 0
+    path: Assets/Scenes/webrtc.unity
+    guid: 6f18358f5edd24b2cb9833be2f278272
   m_configObjects: {}

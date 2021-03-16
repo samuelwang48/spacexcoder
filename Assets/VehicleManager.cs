@@ -91,18 +91,7 @@ public class VehicleManager : MonoBehaviour
     void NewProgram()
     {
         Debug.Log("New Program");
-        Application.OpenURL("http://192.168.0.126:8000/demos/code/index.html");
-        // Add a full-screen UniWebView component.
-        //var webView = gameObject.AddComponent<UniWebView>();
-        //webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
-
-        // Load a URL.
-        //webView.Load("http://192.168.0.126:8000/demos/code/index.html");
-
-        // Show it.
-        //webView.Show();
-
-        Debug.Log("webView ready");
+        Application.OpenURL("https://server-dev.rukkou.com");
     }
 
     // Update is called once per frame
